@@ -72,7 +72,7 @@ public class JDBC {
         } catch(Exception e) {
         	// sinon on la cree
         	s.execute("CREATE TABLE Velo  ( " +
-        			" num INT NOT NULL PRIMARY KEY, " +
+        			" id INT NOT NULL PRIMARY KEY, " +
         			" login VARCHAR( 256 ), "+
         			" mdp VARCHAR( 256 ), "+
         			" nom VARCHAR( 256 ), "+
