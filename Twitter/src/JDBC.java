@@ -27,7 +27,7 @@ public class JDBC {
 	        // suppression des tables
 	        suppressionTables();
 	        
-	        // création des tables	        
+	        // crÃ©ation des tables	        
 	        //creationTableVelo(s);
 	        
 	        // Insertions et tests
@@ -58,7 +58,7 @@ public class JDBC {
     
     
 	/**
-	 * Creation des tables après verification de leur non existence
+	 * Creation des tables aprï¿½s verification de leur non existence
 	 * @param s
 	 * @throws SQLException
 	 */
