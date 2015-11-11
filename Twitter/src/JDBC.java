@@ -13,7 +13,6 @@ import java.util.TreeMap;
 
 
 public class JDBC {
-	//Test
 	private Connection conn;
 	
 	
@@ -49,6 +48,7 @@ public class JDBC {
     	Statement s;
 		try {
 			s = conn.createStatement();
+			s.execute("drop table UTILISATEURS; drop table MESSAGES; drop table EST_ABONNE; drop table POSTER; drop table RECEVOIR;");
 			//s.execute("drop table station; drop table utilisateur; drop table velo;") ;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -64,14 +64,14 @@ public class JDBC {
 	 */
 	
 	
-	public void createTableUtilisateur(Statement s) throws SQLException {
+	public void createTables(Statement s) throws SQLException {
 		 // On regarde si la table existe deja
-        String query = "SELECT id FROM Utilisateur LIMIT 1";
+        String query = "SELECT id FROM UTILISATEURS LIMIT 1";
         try {
         	s.executeQuery(query);
         } catch(Exception e) {
         	// sinon on la cree
-        	s.execute("CREATE TABLE Velo  ( " +
+        	s.execute("CREATE TABLE UTILISATEURS  ( " +
         			" id INT NOT NULL PRIMARY KEY, " +
         			" login VARCHAR( 256 ), "+
         			" mdp VARCHAR( 256 ), "+
@@ -79,8 +79,61 @@ public class JDBC {
         			" prenom VARCHAR( 256 ), "
         			);
         }
+        // On regarde si la table existe deja
+        String query = "SELECT idM FROM MESSAGES LIMIT 1";
+        try {
+        	s.executeQuery(query);
+        } catch(Exception e) {
+        	// sinon on la cree
+        	s.execute("DROP TABLE MESSAGES");
+        	s.execute("create table MESSAGES  ( " +
+        			" idM int auto_increment NOT NULL PRIMARY KEY, " +
+        			" contenuM VARCHAR( 256 ) , " +
+        			" dateM DATE," +
+        			" heureM TIME," +
+        			" locM VARCHAR (50))"
+        			);
+        }
+        // On regarde si la table existe deja
+        String query = "SELECT idUSuiveur FROM EST_ABONNE LIMIT 1";
+        try {
+        	s.executeQuery(query);
+        } catch(Exception e) {
+        	// sinon on la cree
+        	s.execute("DROP TABLE EST_ABONNE");
+        	s.execute("create table EST_ABONNE  ( " +
+        			" idUSuiveur int FOREIGN KEY REFERENCES UTILISATEUR(idU), " +
+        			" idUSuivi int FOREIGN KEY REFERENCES UTILISATEUR(idU))" + 
+        			"CONSTRAINT pk_est_abonne PRIMARY KEY (idUSuiveur, idUSuivi)"
+        			);
+        }
+        // On regarde si la table existe deja
+        String query = "SELECT idM FROM POSTER LIMIT 1";
+        try {
+        	s.executeQuery(query);
+        } catch(Exception e) {
+        	// sinon on la cree
+        	s.execute("DROP TABLE POSTER");
+        	s.execute("create table POSTER  ( " +
+        			" idM int FOREIGN KEY REFERENCES MESSAGES(idM), " +
+        			" idU int FOREIGN KEY REFERENCES UTILISATEUR(idU))" + 
+        			"CONSTRAINT pk_poster PRIMARY KEY (idM, idU)"
+        			);
+        }
+        // On regarde si la table existe deja
+        String query = "SELECT idM FROM RECEVOIR LIMIT 1";
+        try {
+        	s.executeQuery(query);
+        } catch(Exception e) {
+        	// sinon on la cree
+        	s.execute("DROP TABLE RECEVOIR");
+        	s.execute("create table RECEVOIR  ( " +
+        			" idM int FOREIGN KEY REFERENCES MESSAGES(idM), " +
+        			" idU int FOREIGN KEY REFERENCES UTILISATEUR(idU))" + 
+        			"CONSTRAINT pk_poster PRIMARY KEY (idM, idU)"
+        			);
+        }
 	}
-	
 	
         
         /**
