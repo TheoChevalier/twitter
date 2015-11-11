@@ -28,7 +28,7 @@ public class JDBC {
 	        suppressionTables();
 	        
 	        // création des tables	        
-	        //creationTableVelo(s);
+	        createTables(s);
 	        
 	        // Insertions et tests
 
@@ -76,16 +76,15 @@ public class JDBC {
         			" login VARCHAR( 256 ), "+
         			" mdp VARCHAR( 256 ), "+
         			" nom VARCHAR( 256 ), "+
-        			" prenom VARCHAR( 256 ), "
+        			" prenom VARCHAR( 256 )) "
         			);
         }
         // On regarde si la table existe deja
-        String query = "SELECT idM FROM MESSAGES LIMIT 1";
+        query = "SELECT idM FROM MESSAGES LIMIT 1";
         try {
         	s.executeQuery(query);
         } catch(Exception e) {
         	// sinon on la cree
-        	s.execute("DROP TABLE MESSAGES");
         	s.execute("create table MESSAGES  ( " +
         			" idM int auto_increment NOT NULL PRIMARY KEY, " +
         			" contenuM VARCHAR( 256 ) , " +
@@ -95,42 +94,45 @@ public class JDBC {
         			);
         }
         // On regarde si la table existe deja
-        String query = "SELECT idUSuiveur FROM EST_ABONNE LIMIT 1";
+        query = "SELECT idUSuiveur FROM EST_ABONNE LIMIT 1";
         try {
         	s.executeQuery(query);
         } catch(Exception e) {
         	// sinon on la cree
-        	s.execute("DROP TABLE EST_ABONNE");
         	s.execute("create table EST_ABONNE  ( " +
-        			" idUSuiveur int FOREIGN KEY REFERENCES UTILISATEUR(idU), " +
-        			" idUSuivi int FOREIGN KEY REFERENCES UTILISATEUR(idU))" + 
-        			"CONSTRAINT pk_est_abonne PRIMARY KEY (idUSuiveur, idUSuivi)"
+        			" idUSuiveur int, " +
+        			" idUSuivi int," +
+        			" FOREIGN KEY (idUSuiveur) REFERENCES UTILISATEURS(id)," + 
+        			" FOREIGN KEY (idUSuivi) REFERENCES UTILISATEURS(id)," + 
+        			"PRIMARY KEY (idUSuiveur, idUSuivi))"
         			);
         }
         // On regarde si la table existe deja
-        String query = "SELECT idM FROM POSTER LIMIT 1";
+        query = "SELECT idM FROM POSTER LIMIT 1";
         try {
         	s.executeQuery(query);
         } catch(Exception e) {
         	// sinon on la cree
-        	s.execute("DROP TABLE POSTER");
         	s.execute("create table POSTER  ( " +
-        			" idM int FOREIGN KEY REFERENCES MESSAGES(idM), " +
-        			" idU int FOREIGN KEY REFERENCES UTILISATEUR(idU))" + 
-        			"CONSTRAINT pk_poster PRIMARY KEY (idM, idU)"
+        			" idM int, " +
+        			" idU int, " + 
+        			" FOREIGN KEY (idM) REFERENCES MESSAGES(idM)," +
+        			" FOREIGN KEY (idU) REFERENCES UTILISATEURS(id)," +
+        			"PRIMARY KEY (idM, idU))"
         			);
         }
         // On regarde si la table existe deja
-        String query = "SELECT idM FROM RECEVOIR LIMIT 1";
+        query = "SELECT idM FROM RECEVOIR LIMIT 1";
         try {
         	s.executeQuery(query);
         } catch(Exception e) {
         	// sinon on la cree
-        	s.execute("DROP TABLE RECEVOIR");
         	s.execute("create table RECEVOIR  ( " +
-        			" idM int FOREIGN KEY REFERENCES MESSAGES(idM), " +
-        			" idU int FOREIGN KEY REFERENCES UTILISATEUR(idU))" + 
-        			"CONSTRAINT pk_poster PRIMARY KEY (idM, idU)"
+        			" idM int, " +
+        			" idU int, " + 
+        			"FOREIGN KEY (idM) REFERENCES MESSAGES(idM), " +
+        			"FOREIGN KEY (idU) REFERENCES UTILISATEURS(id)," + 
+        			"PRIMARY KEY (idM, idU))"
         			);
         }
 	}
@@ -159,7 +161,7 @@ public class JDBC {
 	
         public static void main(String[] args) {
         	
-        	JDBC bd = new JDBC("BD");
+        	JDBC bd = new JDBC("Twitter");
 
         	// test
         	
