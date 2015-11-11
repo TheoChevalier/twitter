@@ -163,9 +163,6 @@ public class JDBC {
         	
         	JDBC bd = new JDBC("Twitter");
 
-        	// test
-        	
-
     	}
 
 	
