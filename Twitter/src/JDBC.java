@@ -58,7 +58,7 @@ public class JDBC {
     
     
 	/**
-	 * Creation des tables apr�s verification de leur non existence
+	 * Création des tables après vérification de leur non existence
 	 * @param s
 	 * @throws SQLException
 	 */
