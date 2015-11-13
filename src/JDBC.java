@@ -72,11 +72,11 @@ public class JDBC {
         } catch(Exception e) {
         	// sinon on la cree
         	s.execute("CREATE TABLE UTILISATEURS  ( " +
-        			" id INT NOT NULL PRIMARY KEY, " +
-        			" login VARCHAR( 256 ), "+
-        			" mdp VARCHAR( 256 ), "+
-        			" nom VARCHAR( 256 ), "+
-        			" prenom VARCHAR( 256 )) "
+        			" idU int auto_increment NOT NULL PRIMARY KEY, " +
+        			" loginU VARCHAR( 256 ), "+
+        			" mdpU VARCHAR( 256 ), "+
+        			" nomU VARCHAR( 256 ), "+
+        			" prenomU VARCHAR( 256 )) "
         			);
         }
         // On regarde si la table existe deja
@@ -102,8 +102,8 @@ public class JDBC {
         	s.execute("create table EST_ABONNE  ( " +
         			" idUSuiveur int, " +
         			" idUSuivi int," +
-        			" FOREIGN KEY (idUSuiveur) REFERENCES UTILISATEURS(id)," + 
-        			" FOREIGN KEY (idUSuivi) REFERENCES UTILISATEURS(id)," + 
+        			" FOREIGN KEY (idUSuiveur) REFERENCES UTILISATEURS(idU)," + 
+        			" FOREIGN KEY (idUSuivi) REFERENCES UTILISATEURS(idU)," + 
         			"PRIMARY KEY (idUSuiveur, idUSuivi))"
         			);
         }
@@ -117,7 +117,7 @@ public class JDBC {
         			" idM int, " +
         			" idU int, " + 
         			" FOREIGN KEY (idM) REFERENCES MESSAGES(idM)," +
-        			" FOREIGN KEY (idU) REFERENCES UTILISATEURS(id)," +
+        			" FOREIGN KEY (idU) REFERENCES UTILISATEURS(idU)," +
         			"PRIMARY KEY (idM, idU))"
         			);
         }
@@ -131,7 +131,7 @@ public class JDBC {
         			" idM int, " +
         			" idU int, " + 
         			"FOREIGN KEY (idM) REFERENCES MESSAGES(idM), " +
-        			"FOREIGN KEY (idU) REFERENCES UTILISATEURS(id)," + 
+        			"FOREIGN KEY (idU) REFERENCES UTILISATEURS(idU)," + 
         			"PRIMARY KEY (idM, idU))"
         			);
         }
@@ -145,12 +145,11 @@ public class JDBC {
          * @throws SQLException
          */
         
-        public void ajouterVelo(int num, String etat, int station) {
+        public void ajouterUtilisateur(String loginU, String mdpU, String nomU, String prenomU) {
         	Statement s;
 			try {
 				s = conn.createStatement();
-				s.execute("insert into VELO values (" + num + ", " + " '" + etat + "'," + station + " )") ;
-				//incrementerNbVelos(station);
+				s.execute("INSERT INTO Utilisateurs(" + "'" +loginU + "'," + "'" + mdpU + "'," + "'" + nomU + "'," + "'" + prenomU + "'" + " )") ;
 				
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -158,7 +157,58 @@ public class JDBC {
         	
         }
 	
-	
+        public void ajouterMessage(String contenuM, String dateM, String heureM, String locM) {
+        	Statement s;
+			try {
+				s = conn.createStatement();
+				s.execute("INSERT INTO Messages(" + "'" +contenuM + "'," + "'" + dateM + "'," + "'" + heureM + "'," + "'" + locM + "'" + " )") ;
+				
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+        	
+        }
+        
+        public void ajouterEst_Abonne(int idUSuiveur, int idUSuivi) {
+        	Statement s;
+			try {
+				s = conn.createStatement();
+				s.execute("INSERT INTO Est_Abonne(" + idUSuiveur + "," + idUSuivi + " )") ;
+				
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+        	
+        }
+        
+        public void ajouterPoster(int idM, int idU) {
+        	Statement s;
+			try {
+				s = conn.createStatement();
+				s.execute("INSERT INTO Poster(" + idM + "," + idU + " )") ;
+				
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+        	
+        }      
+        
+        public void ajouterRecevoir(int idM, int idU) {
+        	Statement s;
+			try {
+				s = conn.createStatement();
+				s.execute("INSERT INTO Recevoir(" + idM + "," + idU + " )") ;
+				
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+        	
+        }     
+        
         public static void main(String[] args) {
         	
         	JDBC bd = new JDBC("Twitter");
