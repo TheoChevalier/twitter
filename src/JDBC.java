@@ -66,7 +66,7 @@ public class JDBC {
 	
 	public void createTables(Statement s) throws SQLException {
 		 // On regarde si la table existe deja
-        String query = "SELECT id FROM UTILISATEURS LIMIT 1";
+        String query = "SELECT idU FROM UTILISATEURS LIMIT 1";
         try {
         	s.executeQuery(query);
         } catch(Exception e) {
@@ -213,6 +213,7 @@ public class JDBC {
         	
         	JDBC bd = new JDBC("Twitter");
 
+        	System.out.println("Création de la base réussie");
     	}
 
 	
