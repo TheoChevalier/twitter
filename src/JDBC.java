@@ -215,7 +215,7 @@ public class JDBC {
         public static boolean checkConnection(TypeConnection c) {
         	try {
 		        Statement s = conn.createStatement();
-		        ResultSet rs = s.executeQuery("SELECT idU, loginU, dpU FROM UTILISATEURS WHERE loginU = " + c.getLogin() + " AND mdpU = " + c.getPassword() + ")");
+		        ResultSet rs = s.executeQuery("SELECT idU, loginU, mdpU FROM UTILISATEURS WHERE loginU = '" + c.getLogin() + "' AND mdpU = '" + c.getPassword() + "'");
 		        
 		        //return rs.next();
 		        return true;

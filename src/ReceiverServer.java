@@ -2,6 +2,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
@@ -12,20 +13,24 @@ import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import Types.TypeConnection;
 
 public class ReceiverServer implements MessageListener {
 
+	
     private MessageConsumer messageReceiverConnection = null;
     private Session session = null;
     private Queue queueDest = null;
     private String queueName = "QueueReq";
     private Connection connection = null;
     private Context context = null;
+    private JDBC base = null;
 
-    public ReceiverServer( Context context, Connection connection) {
+    public ReceiverServer(JDBC base, Context context, Connection connection) {
+    	this.base = base;
         this.connection = connection;
         this.context = context;
         this.init();
@@ -65,6 +70,32 @@ public class ReceiverServer implements MessageListener {
   
         } catch (JMSException ex) {
             Logger.getLogger(ReceiverServer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public static void main(String[] args) {
+        try {
+            //initialisation de la connection
+            ConnectionFactory factory = null;
+            Connection connection = null;
+            Context context = null;
+            //configuration
+            String factoryName = "ConnectionFactory";
+            // create the JNDI initial context
+            context = new InitialContext();
+            // look up the ConnectionFactory
+            factory = (ConnectionFactory) context.lookup(factoryName);
+            // look up the Destination
+            // create the connection
+            connection = factory.createConnection();
+
+            JDBC bd = new JDBC ("Twitter");
+            new ReceiverServer(bd, context, connection);
+            
+        } catch (JMSException exception) {
+            exception.printStackTrace();
+        } catch (NamingException exception) {
+            exception.printStackTrace();
         }
     }
 
