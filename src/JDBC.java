@@ -10,10 +10,12 @@ import java.util.HashMap;
 import java.util.Scanner;
 import java.util.TreeMap;
 
+import Types.TypeConnection;
+
 
 
 public class JDBC {
-	private Connection conn;
+	private static Connection conn;
 	
 	
 	public JDBC(String nomBD) {
@@ -207,7 +209,21 @@ public class JDBC {
 				e.printStackTrace();
 			}
         	
-        }     
+        }
+        
+        
+        public static boolean checkConnection(TypeConnection c) {
+        	try {
+		        Statement s = conn.createStatement();
+		        ResultSet rs = s.executeQuery("SELECT idU, loginU, dpU FROM UTILISATEURS WHERE loginU = " + c.getLogin() + " AND mdpU = " + c.getPassword() + ")");
+		        
+		        //return rs.next();
+		        return true;
+        	} catch (SQLException e) {
+				e.printStackTrace();
+			}
+        	return false;
+        }
         
         public static void main(String[] args) {
         	
