@@ -13,23 +13,39 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import Types.TypeConnection;
+import Types.TypeInscription;
 
-public class UtilisateurSender {
-
+public class UtilisateurSender{
+    Session session = null;
+    MessageProducer sender = null;
 	
 	public static void main(String[] args) {
-		SeConnecter();
+		
+		// Instancier la classe actuelle, lancer des connexions et créer différents types de messages
+		
+		/*
+
+		UtilisateurSender senderInscription = new UtilisateurSender();
+		senderInscription.startJMSConnection();
+		senderInscription.inscrireUtilisateur("toto", "1234", "Mr Toto", "Toto");
+		
+		// Création d’un nouvel objet sender pour ne pas partager les sessions et les files temporaires
+		UtilisateurSender senderSeConnecter = new UtilisateurSender();
+		senderSeConnecter.startJMSConnection();
+		senderSeConnecter.seConnecter("toto", "1234");
+
+		*/
+		System.out.println("Décommenter les lignes dans le main de UtilisateurSender pour que je sois utile.");
 	}
-	public static String SeConnecter() {
+	
+	public void startJMSConnection() {
         Context context = null;
         ConnectionFactory factory = null;
         Connection connection = null;
         String factoryName = "ConnectionFactory";
         String destName = "QueueReq";
         Destination dest = null;
-        Session session = null;
-        MessageProducer sender = null;
-
+        
         try {
             // create the JNDI initial context.
             context = new InitialContext();
@@ -44,53 +60,74 @@ public class UtilisateurSender {
             connection = factory.createConnection();
 
             // create the session
-            session = connection.createSession(
+            this.session = connection.createSession(
                 false, Session.AUTO_ACKNOWLEDGE);
 
             // create the sender
-            sender = session.createProducer(dest);
+            this.sender = this.session.createProducer(dest);
 
             // start the connection, to enable message sends
             connection.start();
-           
-        	TypeConnection c = new TypeConnection("toto", "1234");
-            ObjectMessage objectMessage = session.createObjectMessage(c);
-            objectMessage.setJMSType("Connection");
-            Destination temp = session.createTemporaryQueue();
-            MessageConsumer tempConsumer = session.createConsumer(temp);
-            objectMessage.setJMSReplyTo(temp);
-            sender.send(objectMessage);
-            Message rep = tempConsumer.receive();
-
-            if (rep instanceof TextMessage) {
-                TextMessage text = (TextMessage) rep;
-                System.out.println("Received: " + text.getText());
-                return text.getText();
-            }
-
         } catch (JMSException exception) {
             exception.printStackTrace();
         } catch (NamingException exception) {
             exception.printStackTrace();
         } finally {
             // close the context
-            if (context != null) {
-                try {
-                    context.close();
-                } catch (NamingException exception) {
-                    exception.printStackTrace();
-                }
-            }
 
-            // close the connection
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (JMSException exception) {
-                    exception.printStackTrace();
-                }
-            }
         }
-        return "Not connected";
 	}
+
+	public boolean seConnecter(String login, String password) {
+		Session session = this.session;
+        try {
+        	// Création et envoi
+        	TypeConnection c = new TypeConnection(login, password);
+            ObjectMessage objectMessage = session.createObjectMessage(c);
+            objectMessage.setJMSType("Connection");
+            Destination temp = session.createTemporaryQueue();
+            MessageConsumer tempConsumer = session.createConsumer(temp);
+            objectMessage.setJMSReplyTo(temp);
+            this.sender.send(objectMessage);
+            
+            // Réponse sur file temporaire
+            Message rep = tempConsumer.receive();
+
+            if (rep instanceof TextMessage) {
+                TextMessage text = (TextMessage) rep;
+                System.out.println("Received: " + text.getText());
+                return true;
+            }
+        } catch (JMSException exception) {
+            exception.printStackTrace();
+        }
+        return false;
+	}
+	
+	public boolean inscrireUtilisateur(String login, String password, String nom, String prenom) {
+		Session session = this.session;
+        try {
+        	// Création et envoi
+        	TypeInscription i = new TypeInscription(login, password, nom, prenom);
+            ObjectMessage objectMessage = session.createObjectMessage(i);
+            objectMessage.setJMSType("Inscription");
+            Destination temp = session.createTemporaryQueue();
+            MessageConsumer tempConsumer = session.createConsumer(temp);
+            objectMessage.setJMSReplyTo(temp);
+            this.sender.send(objectMessage);
+            
+            // Réponse sur file temporaire
+            Message rep = tempConsumer.receive();
+
+            if (rep instanceof TextMessage) {
+                TextMessage text = (TextMessage) rep;
+                System.out.println("Received: " + text.getText());
+                return true;
+            }
+        } catch (JMSException exception) {
+            exception.printStackTrace();
+        }
+        return false;
+	}
+
 }

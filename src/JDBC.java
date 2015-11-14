@@ -11,6 +11,7 @@ import java.util.Scanner;
 import java.util.TreeMap;
 
 import Types.TypeConnection;
+import Types.TypeInscription;
 
 
 
@@ -147,82 +148,86 @@ public class JDBC {
          * @throws SQLException
          */
         
-        public void ajouterUtilisateur(String loginU, String mdpU, String nomU, String prenomU) {
+        public boolean ajouterUtilisateur(String loginU, String mdpU, String nomU, String prenomU) {
         	Statement s;
 			try {
 				s = conn.createStatement();
-				s.execute("INSERT INTO Utilisateurs(" + "'" +loginU + "'," + "'" + mdpU + "'," + "'" + nomU + "'," + "'" + prenomU + "'" + " )") ;
+				s.execute("INSERT INTO Utilisateurs (loginU, mdpU, nomU, prenomU) VALUES ('" +loginU + "'," + "'" + mdpU + "'," + "'" + nomU + "'," + "'" + prenomU + "'" + " )");
+				return true;
 				
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-        	
+        	return false;
         }
 	
-        public void ajouterMessage(String contenuM, String dateM, String heureM, String locM) {
+        public boolean ajouterMessage(String contenuM, String dateM, String heureM, String locM) {
         	Statement s;
 			try {
 				s = conn.createStatement();
-				s.execute("INSERT INTO Messages(" + "'" +contenuM + "'," + "'" + dateM + "'," + "'" + heureM + "'," + "'" + locM + "'" + " )") ;
-				
+				s.execute("INSERT INTO Messages (contenuM, dateM, heureM, locM) VALUES ('" +contenuM + "'," + "'" + dateM + "'," + "'" + heureM + "'," + "'" + locM + "'" + " )") ;
+				return true;
 				
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-        	
+        	return false;
         }
         
-        public void ajouterEst_Abonne(int idUSuiveur, int idUSuivi) {
+        public boolean ajouterEst_Abonne(int idUSuiveur, int idUSuivi) {
         	Statement s;
 			try {
 				s = conn.createStatement();
 				s.execute("INSERT INTO Est_Abonne(" + idUSuiveur + "," + idUSuivi + " )") ;
-				
+				return true;
 				
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-        	
+        	return false;
         }
         
-        public void ajouterPoster(int idM, int idU) {
+        public boolean ajouterPoster(int idM, int idU) {
         	Statement s;
 			try {
 				s = conn.createStatement();
 				s.execute("INSERT INTO Poster(" + idM + "," + idU + " )") ;
-				
+				return true;
 				
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-        	
+        	return false;
         }      
         
-        public void ajouterRecevoir(int idM, int idU) {
+        public boolean ajouterRecevoir(int idM, int idU) {
         	Statement s;
 			try {
 				s = conn.createStatement();
 				s.execute("INSERT INTO Recevoir(" + idM + "," + idU + " )") ;
-				
+				return true;
 				
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-        	
+        	return false;
         }
         
         
-        public static boolean checkConnection(TypeConnection c) {
+        public boolean checkConnection(TypeConnection c) {
         	try {
 		        Statement s = conn.createStatement();
 		        ResultSet rs = s.executeQuery("SELECT idU, loginU, mdpU FROM UTILISATEURS WHERE loginU = '" + c.getLogin() + "' AND mdpU = '" + c.getPassword() + "'");
 		        
-		        //return rs.next();
-		        return true;
+		        return rs.next();
         	} catch (SQLException e) {
 				e.printStackTrace();
 			}
         	return false;
+        }
+        
+        public boolean inscrireUtilisateur(TypeInscription i) {
+        	return ajouterUtilisateur(i.getLogin(), i.getPassword(), i.getNom(), i.getPrenom());
         }
         
         public static void main(String[] args) {

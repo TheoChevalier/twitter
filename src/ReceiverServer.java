@@ -17,11 +17,12 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import Types.TypeConnection;
+import Types.TypeInscription;
 
 public class ReceiverServer implements MessageListener {
 
 	
-    private MessageConsumer messageReceiverConnection = null;
+    private MessageConsumer mc = null;
     private Session session = null;
     private Queue queueDest = null;
     private String queueName = "QueueReq";
@@ -36,13 +37,14 @@ public class ReceiverServer implements MessageListener {
         this.init();
     }
     
+    
     public void init() {
         try {
             queueDest = (Queue) context.lookup(queueName);
             session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            messageReceiverConnection = session.createConsumer(queueDest, "JMSType IN ('Connection')");
+            mc = session.createConsumer(queueDest);
             MessageListener listener = this;
-            messageReceiverConnection.setMessageListener(listener);
+            mc.setMessageListener(listener);
 
             connection.start();
             System.out.println("Waiting for incoming messages…");
@@ -51,25 +53,6 @@ public class ReceiverServer implements MessageListener {
             exception.printStackTrace();
         } catch (NamingException exception) {
             exception.printStackTrace();
-        }
-    }
-    
-    public void onMessage(Message message) {
-        try {
-                if (message != null) {
-                	ObjectMessage om = (ObjectMessage) message;
-                	TypeConnection c = (TypeConnection) om.getObject();
-                    String reply = JDBC.checkConnection(c) ? "Connected." : "Not connected.";
-                    MessageProducer replyProducer = session.createProducer(message.getJMSReplyTo());
-                    TextMessage replyMessage = session.createTextMessage();
-                    replyMessage.setText(reply);
-                    replyMessage.setJMSCorrelationID(message.getJMSMessageID());
-                    replyProducer.send(replyMessage);
-                    System.out.println("Envoi dans la file de : " + replyMessage);
-                }
-  
-        } catch (JMSException ex) {
-            Logger.getLogger(ReceiverServer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -96,6 +79,41 @@ public class ReceiverServer implements MessageListener {
             exception.printStackTrace();
         } catch (NamingException exception) {
             exception.printStackTrace();
+        }
+    }
+    
+    public void onMessage(Message message) {
+        try {
+            if (message != null) {
+            	String reply = "";
+				ObjectMessage om = (ObjectMessage) message;
+
+				switch(om.getJMSType()) {
+					case "Connection":
+				    	TypeConnection c = (TypeConnection) om.getObject();
+				    	reply = base.checkConnection(c) ? "Connected." : "Not connected.";
+				        break;
+					case "Inscription":
+						TypeInscription i = (TypeInscription) om.getObject();
+				        reply = base.inscrireUtilisateur(i) ? "Signed up." : "Not signed up.";
+				        break;
+				    default:
+				    	reply = "Oh noes! Server caught an unknown message.";
+				    	break;
+				}
+
+				// Envoyer réponse sur file temporaire
+			    MessageProducer replyProducer;
+				replyProducer = session.createProducer(message.getJMSReplyTo());
+			    TextMessage replyMessage = session.createTextMessage();
+			    replyMessage.setText(reply);
+			    replyMessage.setJMSCorrelationID(message.getJMSMessageID());
+			    replyProducer.send(replyMessage);
+			    System.out.println("Envoi dans la file de : " + replyMessage);
+            }
+  
+        } catch (JMSException ex) {
+            Logger.getLogger(ReceiverServer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
