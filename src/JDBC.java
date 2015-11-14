@@ -28,7 +28,7 @@ public class JDBC {
 	        Statement s = conn.createStatement();
 	
 	        // suppression des tables
-	        suppressionTables();
+	        //suppressionTables();
 	        
 	        // création des tables	        
 	        createTables(s);

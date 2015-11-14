@@ -28,14 +28,14 @@ public class UtilisateurSender{
 		UtilisateurSender senderInscription = new UtilisateurSender();
 		senderInscription.startJMSConnection();
 		senderInscription.inscrireUtilisateur("toto", "1234", "Mr Toto", "Toto");
+		*/
 		
 		// Création d’un nouvel objet sender pour ne pas partager les sessions et les files temporaires
 		UtilisateurSender senderSeConnecter = new UtilisateurSender();
 		senderSeConnecter.startJMSConnection();
 		senderSeConnecter.seConnecter("toto", "1234");
 
-		*/
-		System.out.println("Décommenter les lignes dans le main de UtilisateurSender pour que je sois utile.");
+		System.out.println("Décommenter les lignes dans le main de UtilisateurSender pour créer une première fois l’utilisateur toto.");
 	}
 	
 	public void startJMSConnection() {
