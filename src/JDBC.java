@@ -11,6 +11,7 @@ import java.util.Scanner;
 import java.util.TreeMap;
 
 import Types.TypeConnection;
+import Types.TypeFollow;
 import Types.TypeInscription;
 
 
@@ -174,17 +175,48 @@ public class JDBC {
         	return false;
         }
         
-        public boolean ajouterEst_Abonne(int idUSuiveur, int idUSuivi) {
+        public int ajouterEst_Abonne(TypeFollow f) {
         	Statement s;
-			try {
-				s = conn.createStatement();
-				s.execute("INSERT INTO Est_Abonne(" + idUSuiveur + "," + idUSuivi + " )") ;
-				return true;
-				
-			} catch (SQLException e) {
+            int idSuiveur, idSuivi;
+            String queryidUSuiveur = "SELECT idU FROM UTILISATEURS WHERE loginU ='" + f.getLoginSuiveur() + "'";
+            String queryidUSuivi = "SELECT idU FROM UTILISATEURS WHERE loginU ='" + f.getLoginSuivi() + "'";
+            
+            // Vérifier si l’entrée existe déjà
+            try {
+            	s = conn.createStatement();
+            	
+            	// Récupérer l’id du suiveur
+            	ResultSet rs = s.executeQuery(queryidUSuiveur);
+            	rs.next();
+            	idSuiveur = rs.getInt(1);
+            	
+            	// Récupérer l’id du suivi
+            	rs = s.executeQuery(queryidUSuivi);
+            	rs.next();
+            	idSuivi = rs.getInt(1);
+
+            	// Vérification d’unicité
+            	String queryDupe = "SELECT * FROM Est_Abonne WHERE idUSuiveur ='" + idSuiveur + "' AND idUSuivi='" + idSuivi + "'";
+            	rs = s.executeQuery(queryDupe);
+            	if (rs.next()) {
+            		return 1;
+            	} else {
+                	// Ajouter le follower
+    				try {
+    					s = conn.createStatement();
+    					s.execute("INSERT INTO Est_Abonne VALUES ('" + idSuiveur + "','" + idSuivi + "' )") ;
+    					return 0;
+    					
+    				} catch (SQLException e2) {
+    					e2.printStackTrace();
+    					return 1;
+    				}
+            	}
+            } catch (SQLException e) {
 				e.printStackTrace();
-			}
-        	return false;
+            }
+
+        	return 2;
         }
         
         public boolean ajouterPoster(int idM, int idU) {

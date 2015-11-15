@@ -11,12 +11,14 @@ import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Queue;
 import javax.jms.Session;
+import javax.jms.StreamMessage;
 import javax.jms.TextMessage;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import Types.TypeConnection;
+import Types.TypeFollow;
 import Types.TypeInscription;
 
 public class ReceiverServer implements MessageListener {
@@ -45,7 +47,6 @@ public class ReceiverServer implements MessageListener {
             mc = session.createConsumer(queueDest);
             MessageListener listener = this;
             mc.setMessageListener(listener);
-
             connection.start();
             System.out.println("Waiting for incoming messages…");
 
@@ -92,29 +93,57 @@ public class ReceiverServer implements MessageListener {
 					case "Connection":
 				    	TypeConnection c = (TypeConnection) om.getObject();
 				    	reply = base.checkConnection(c) ? "Connected." : "Not connected.";
+				    	reply(message, reply);
 				        break;
 					case "Inscription":
 						TypeInscription i = (TypeInscription) om.getObject();
 				        reply = base.inscrireUtilisateur(i) ? "Signed up." : "Not signed up.";
+				        reply(message, reply);
+				        break;
+					case "Follow":
+						TypeFollow f = (TypeFollow) om.getObject();
+				        reply(message, base.ajouterEst_Abonne(f));
 				        break;
 				    default:
 				    	reply = "Oh noes! Server caught an unknown message.";
 				    	break;
 				}
-
-				// Envoyer réponse sur file temporaire
-			    MessageProducer replyProducer;
-				replyProducer = session.createProducer(message.getJMSReplyTo());
-			    TextMessage replyMessage = session.createTextMessage();
-			    replyMessage.setText(reply);
-			    replyMessage.setJMSCorrelationID(message.getJMSMessageID());
-			    replyProducer.send(replyMessage);
-			    System.out.println("Envoi dans la file de : " + replyMessage);
             }
   
         } catch (JMSException ex) {
             Logger.getLogger(ReceiverServer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    // Répondre un String sur la file temporaire
+    private void reply (Message message, String s) {
+	    try {
+			// Envoyer réponse sur file temporaire
+		    MessageProducer replyProducer;
+			replyProducer = session.createProducer(message.getJMSReplyTo());
+		    TextMessage replyMessage = session.createTextMessage();
+		    replyMessage.setText(s);
+		    replyMessage.setJMSCorrelationID(message.getJMSMessageID());
+		    replyProducer.send(replyMessage);
+		} catch (JMSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
 
+    // Répondre un int sur la file temporaire
+    private void reply (Message message, int i) {
+	    try {
+			// Envoyer réponse sur file temporaire
+		    MessageProducer replyProducer;
+			replyProducer = session.createProducer(message.getJMSReplyTo());
+		    StreamMessage replyMessage = session.createStreamMessage();
+		    replyMessage.writeInt(i);
+		    replyMessage.setJMSCorrelationID(message.getJMSMessageID());
+		    replyProducer.send(replyMessage);
+		} catch (JMSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
 }

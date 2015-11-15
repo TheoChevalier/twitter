@@ -7,12 +7,14 @@ import javax.jms.MessageConsumer;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
+import javax.jms.StreamMessage;
 import javax.jms.TextMessage;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import Types.TypeConnection;
+import Types.TypeFollow;
 import Types.TypeInscription;
 
 public class UtilisateurSender{
@@ -22,18 +24,21 @@ public class UtilisateurSender{
 	public static void main(String[] args) {
 		
 		// Instancier la classe actuelle, lancer des connexions et créer différents types de messages
-		
-		/*
 
-		UtilisateurSender senderInscription = new UtilisateurSender();
+		/*UtilisateurSender senderInscription = new UtilisateurSender();
 		senderInscription.startJMSConnection();
-		senderInscription.inscrireUtilisateur("toto", "1234", "Mr Toto", "Toto");
+		senderInscription.inscrireUtilisateur("titi", "1234", "Mr Titi", "Titi");
+
 		*/
-		
 		// Création d’un nouvel objet sender pour ne pas partager les sessions et les files temporaires
 		UtilisateurSender senderSeConnecter = new UtilisateurSender();
 		senderSeConnecter.startJMSConnection();
 		senderSeConnecter.seConnecter("toto", "1234");
+		
+		// Création d’un nouvel objet sender pour ne pas partager les sessions et les files temporaires
+		UtilisateurSender senderFollow = new UtilisateurSender();
+		senderFollow.startJMSConnection();
+		senderFollow.follow("toto", "titi");
 
 		System.out.println("Décommenter les lignes dans le main de UtilisateurSender pour créer une première fois l’utilisateur toto.");
 	}
@@ -128,6 +133,40 @@ public class UtilisateurSender{
             exception.printStackTrace();
         }
         return false;
+	}
+	
+	public void follow (String login1, String login2) {
+		Session session = this.session;
+        try {
+        	// Création et envoi
+        	TypeFollow f = new TypeFollow(login1, login2);
+            ObjectMessage objectMessage = session.createObjectMessage(f);
+            objectMessage.setJMSType("Follow");
+            Destination temp = session.createTemporaryQueue();
+            MessageConsumer tempConsumer = session.createConsumer(temp);
+            objectMessage.setJMSReplyTo(temp);
+            this.sender.send(objectMessage);
+            
+            // Réponse sur file temporaire
+            Message rep = tempConsumer.receive();
+
+            if (rep instanceof StreamMessage) {
+            	StreamMessage stream = (StreamMessage) rep;
+            	switch(stream.readInt()) {
+	            	case 1:
+	            		System.out.println("You’re already following this user.");
+	            		break;
+	            	case 0:
+	            		System.out.println("You’re now following this user.");
+	            		break;
+	            	default:
+	            		System.out.println("Oops, an error occured while trying to follow this user. Try again later.");
+	            		break;
+            	}
+            }
+        } catch (JMSException exception) {
+            exception.printStackTrace();
+        }
 	}
 
 }
