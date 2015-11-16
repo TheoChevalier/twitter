@@ -7,12 +7,14 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 import java.util.TreeMap;
 
 import Types.TypeConnection;
 import Types.TypeFollow;
 import Types.TypeInscription;
+import Types.TypeRecherche;
 
 
 
@@ -173,6 +175,22 @@ public class JDBC {
 				e.printStackTrace();
 			}
         	return false;
+        }
+        
+        public List<String> rechercherUtilisateur(TypeRecherche r){
+        	List<String> liste =  new ArrayList<String>() ;
+        	try {
+		        Statement s = conn.createStatement();
+		        ResultSet rs = s.executeQuery("SELECT loginU FROM UTILISATEURS WHERE loginU LIKE '%" + r.getLogin() + "%'");
+		        
+		        while (rs.next()){
+		        	liste.add(rs.getString("loginU"));
+		        }
+		        return liste;
+        	} catch (SQLException e) {
+				e.printStackTrace();
+			}
+        	return null;
         }
         
         public int ajouterEst_Abonne(TypeFollow f) {

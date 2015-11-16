@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,6 +21,7 @@ import javax.naming.NamingException;
 import Types.TypeConnection;
 import Types.TypeFollow;
 import Types.TypeInscription;
+import Types.TypeRecherche;
 
 public class ReceiverServer implements MessageListener {
 
@@ -104,6 +106,10 @@ public class ReceiverServer implements MessageListener {
 						TypeFollow f = (TypeFollow) om.getObject();
 				        reply(message, base.ajouterEst_Abonne(f));
 				        break;
+					case "Recherche":
+						TypeRecherche r = (TypeRecherche) om.getObject();
+				        reply(message, base.rechercherUtilisateur(r));
+				        break;
 				    default:
 				    	reply = "Oh noes! Server caught an unknown message.";
 				    	break;
@@ -139,6 +145,29 @@ public class ReceiverServer implements MessageListener {
 			replyProducer = session.createProducer(message.getJMSReplyTo());
 		    StreamMessage replyMessage = session.createStreamMessage();
 		    replyMessage.writeInt(i);
+		    replyMessage.setJMSCorrelationID(message.getJMSMessageID());
+		    replyProducer.send(replyMessage);
+		} catch (JMSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+ // Répondre une liste sur la file temporaire
+    private void reply (Message message, List<String> liste) {
+	    try {
+			// Envoyer réponse sur file temporaire
+		    MessageProducer replyProducer;
+			replyProducer = session.createProducer(message.getJMSReplyTo());
+		    StreamMessage replyMessage = session.createStreamMessage();
+		    if(! liste.isEmpty()) {
+		    	for (String login : liste) {
+			    	replyMessage.writeString(login);
+				}
+		    	replyMessage.setIntProperty("Size", liste.size());
+		    } else {
+		    	replyMessage.setIntProperty("Size", 0);
+		    }
 		    replyMessage.setJMSCorrelationID(message.getJMSMessageID());
 		    replyProducer.send(replyMessage);
 		} catch (JMSException e) {
