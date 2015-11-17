@@ -39,7 +39,8 @@ public class UtilisateurSender{
 		senderSeConnecter.startJMSConnection();
 		senderSeConnecter.seConnecter("toto", "1234");
 		senderSeConnecter.rehercherUtilisateur("tit");
-		senderSeConnecter.listeFollowers("titi");
+		senderSeConnecter.listeFollowers("toto");
+		senderSeConnecter.nombreMessage("toto");
 		
 		// Création d’un nouvel objet sender pour ne pas partager les sessions et les files temporaires
 		UtilisateurSender senderFollow = new UtilisateurSender();
@@ -239,6 +240,38 @@ public class UtilisateurSender{
                 	}
         			System.out.println("All your followers: " + liste.toString());
         		}
+            	return true;
+            }
+        } catch (JMSException exception) {
+            exception.printStackTrace();
+        }
+        return false;
+	}
+	
+	public boolean nombreMessage(String login) {
+		Session session = this.session;
+		int nbMessages;
+        try {
+        	// Création et envoi
+        	TypeRecherche r = new TypeRecherche(login);
+            ObjectMessage objectMessage = session.createObjectMessage(r);
+            objectMessage.setJMSType("NombreMessages");
+            Destination temp = session.createTemporaryQueue();
+            MessageConsumer tempConsumer = session.createConsumer(temp);
+            objectMessage.setJMSReplyTo(temp);
+            this.sender.send(objectMessage);
+            
+            // Réponse sur file temporaire
+            Message rep = tempConsumer.receive();
+
+            if (rep instanceof StreamMessage) {
+            	StreamMessage text = (StreamMessage) rep;
+            	nbMessages = text.readInt();
+            	if (nbMessages != 0){
+            		System.out.println("Number of all your tweets: " + nbMessages);
+            	} else {
+            		System.out.println("You don't have any tweet.");
+            	}
             	return true;
             }
         } catch (JMSException exception) {

@@ -114,6 +114,10 @@ public class ReceiverServer implements MessageListener {
 						TypeRecherche user = (TypeRecherche) om.getObject();
 				        reply(message, base.listeFollowers(user));
 				        break;
+					case "NombreMessages":
+						TypeRecherche login = (TypeRecherche) om.getObject();
+				        reply(message, base.countMessages(login));
+				        break;
 				    default:
 				    	reply = "Oh noes! Server caught an unknown message.";
 				    	break;
