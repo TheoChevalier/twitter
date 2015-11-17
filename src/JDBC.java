@@ -193,6 +193,22 @@ public class JDBC {
         	return null;
         }
         
+        public List<String> listeFollowers(TypeRecherche r){
+        	List<String> liste =  new ArrayList<String>() ;
+        	try {
+		        Statement s = conn.createStatement();
+		        ResultSet rs = s.executeQuery("SELECT U.loginU FROM EST_ABONNE E, UTILISATEURS USuiveur, UTILISATEURS U WHERE USuiveur.idu = E.iduSuiveur AND E.iduSuivi = U.idu AND USuiveur.loginu = '" + r.getLogin() + "'");
+		        
+		        while (rs.next()){
+		        	liste.add(rs.getString("loginU"));
+		        }
+		        return liste;
+        	} catch (SQLException e) {
+				e.printStackTrace();
+			}
+        	return null;
+        }
+        
         public int ajouterEst_Abonne(TypeFollow f) {
         	Statement s;
             int idSuiveur, idSuivi;
