@@ -193,11 +193,27 @@ public class JDBC {
         	return null;
         }
         
-        public List<String> listeFollowers(TypeRecherche r){
+        public List<String> listeFollow(TypeRecherche r){
         	List<String> liste =  new ArrayList<String>() ;
         	try {
 		        Statement s = conn.createStatement();
 		        ResultSet rs = s.executeQuery("SELECT U.loginU FROM EST_ABONNE E, UTILISATEURS USuiveur, UTILISATEURS U WHERE USuiveur.idu = E.iduSuiveur AND E.iduSuivi = U.idu AND USuiveur.loginu = '" + r.getLogin() + "'");
+		        
+		        while (rs.next()){
+		        	liste.add(rs.getString("loginU"));
+		        }
+		        return liste;
+        	} catch (SQLException e) {
+				e.printStackTrace();
+			}
+        	return null;
+        }
+        
+        public List<String> listeFollowers(TypeRecherche r){
+        	List<String> liste =  new ArrayList<String>() ;
+        	try {
+		        Statement s = conn.createStatement();
+		        ResultSet rs = s.executeQuery("SELECT UR.loginU FROM RECEVOIR R, POSTER P, UTILISATEURS UR, UTILISATEURS UP WHERE UR.idU = R.idU AND P.idM = R.idM AND UP.idU = P.idU AND UP.loginU = '" + r.getLogin() + "'");
 		        
 		        while (rs.next()){
 		        	liste.add(rs.getString("loginU"));

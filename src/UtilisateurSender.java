@@ -39,8 +39,9 @@ public class UtilisateurSender{
 		senderSeConnecter.startJMSConnection();
 		senderSeConnecter.seConnecter("toto", "1234");
 		senderSeConnecter.rehercherUtilisateur("tit");
-		senderSeConnecter.listeFollowers("toto");
+		senderSeConnecter.listeFollow("toto");
 		senderSeConnecter.nombreMessage("toto");
+		senderSeConnecter.listeFollowers("toto");
 		
 		// Création d’un nouvel objet sender pour ne pas partager les sessions et les files temporaires
 		UtilisateurSender senderFollow = new UtilisateurSender();
@@ -212,7 +213,7 @@ public class UtilisateurSender{
         return false;
 	}
 	
-	public boolean listeFollowers(String login) {
+	public boolean listeFollow(String login) {
 		Session session = this.session;
 		int i=0;
 		List<String> liste =  new ArrayList<String>() ;
@@ -220,7 +221,7 @@ public class UtilisateurSender{
         	// Création et envoi
         	TypeRecherche r = new TypeRecherche(login);
             ObjectMessage objectMessage = session.createObjectMessage(r);
-            objectMessage.setJMSType("Followers");
+            objectMessage.setJMSType("ListeFollow");
             Destination temp = session.createTemporaryQueue();
             MessageConsumer tempConsumer = session.createConsumer(temp);
             objectMessage.setJMSReplyTo(temp);
@@ -232,7 +233,43 @@ public class UtilisateurSender{
             if (rep instanceof StreamMessage) {
             	StreamMessage text = (StreamMessage) rep;
             	if (text.getIntProperty("Size") == 0) {
-        			System.out.println("You don't have any followers.");        			
+        			System.out.println("You don't follow anyone.");        			
+        		} else {
+        			while (i < text.getIntProperty("Size")) {
+                		liste.add(text.readString());
+                		i++;
+                	}
+        			System.out.println("All users you follow: " + liste.toString());
+        		}
+            	return true;
+            }
+        } catch (JMSException exception) {
+            exception.printStackTrace();
+        }
+        return false;
+	}
+	
+	public boolean listeFollowers(String login) {
+		Session session = this.session;
+		int i=0;
+		List<String> liste =  new ArrayList<String>() ;
+        try {
+        	// Création et envoi
+        	TypeRecherche r = new TypeRecherche(login);
+            ObjectMessage objectMessage = session.createObjectMessage(r);
+            objectMessage.setJMSType("listeFollowers");
+            Destination temp = session.createTemporaryQueue();
+            MessageConsumer tempConsumer = session.createConsumer(temp);
+            objectMessage.setJMSReplyTo(temp);
+            this.sender.send(objectMessage);
+            
+            // Réponse sur file temporaire
+            Message rep = tempConsumer.receive();
+
+            if (rep instanceof StreamMessage) {
+            	StreamMessage text = (StreamMessage) rep;
+            	if (text.getIntProperty("Size") == 0) {
+        			System.out.println("No one is following you.");        			
         		} else {
         			while (i < text.getIntProperty("Size")) {
                 		liste.add(text.readString());

@@ -86,6 +86,7 @@ public class ReceiverServer implements MessageListener {
     }
     
     public void onMessage(Message message) {
+    	TypeRecherche r;
         try {
             if (message != null) {
             	String reply = "";
@@ -107,17 +108,21 @@ public class ReceiverServer implements MessageListener {
 				        reply(message, base.ajouterEst_Abonne(f));
 				        break;
 					case "Recherche":
-						TypeRecherche r = (TypeRecherche) om.getObject();
+						r = (TypeRecherche) om.getObject();
 				        reply(message, base.rechercherUtilisateur(r));
 				        break;
-					case "Followers":
-						TypeRecherche user = (TypeRecherche) om.getObject();
-				        reply(message, base.listeFollowers(user));
+					case "ListeFollow":
+						r = (TypeRecherche) om.getObject();
+				        reply(message, base.listeFollow(r));
 				        break;
 					case "NombreMessages":
-						TypeRecherche login = (TypeRecherche) om.getObject();
-				        reply(message, base.countMessages(login));
+						r = (TypeRecherche) om.getObject();
+				        reply(message, base.countMessages(r));
 				        break;
+					case "listeFollowers":
+						r = (TypeRecherche) om.getObject();
+				        reply(message, base.listeFollowers(r));
+				        break;    
 				    default:
 				    	reply = "Oh noes! Server caught an unknown message.";
 				    	break;
