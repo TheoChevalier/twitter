@@ -24,6 +24,7 @@ public class Connexion extends JFrame {
 	private JPanel contentPane;
 	private JTextField tbxLogin;
 	private JPasswordField tbxMdp;
+	private UtilisateurSender senderSeConnecter;
 
 	/**
 	 * Launch the application.
@@ -88,10 +89,12 @@ public class Connexion extends JFrame {
 		btnConnexion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (! tbxLogin.getText().isEmpty() && ! tbxMdp.getText().isEmpty()) {
-					UtilisateurSender senderSeConnecter = new UtilisateurSender();
+					senderSeConnecter = new UtilisateurSender();
 					senderSeConnecter.startJMSConnection();
 					if (senderSeConnecter.seConnecter(tbxLogin.getText(), tbxMdp.getText())) {
 						lblResult.setText("Connected.");
+						MainView frame = new MainView(senderSeConnecter, tbxLogin.getText());
+						frame.setVisible(true);
 					} else {
 						lblResult.setText("Not connected.");
 					}

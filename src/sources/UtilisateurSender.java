@@ -297,7 +297,7 @@ public class UtilisateurSender{
         return false;
 	}
 	
-	public boolean nombreMessage(String login) {
+	public int nombreMessage(String login) {
 		Session session = this.session;
 		int nbMessages;
         try {
@@ -321,12 +321,12 @@ public class UtilisateurSender{
             	} else {
             		System.out.println("You don't have any tweet.");
             	}
-            	return true;
+            	return nbMessages;
             }
         } catch (JMSException exception) {
             exception.printStackTrace();
         }
-        return false;
+        return -1;
 	}
 
 }
