@@ -1,4 +1,6 @@
+package sources;
 import java.util.ArrayList;
+
 import java.util.List;
 
 import javax.jms.Connection;
@@ -35,7 +37,7 @@ public class UtilisateurSender{
 
 		*/
 		// Création d’un nouvel objet sender pour ne pas partager les sessions et les files temporaires
-		UtilisateurSender senderSeConnecter = new UtilisateurSender();
+		/*UtilisateurSender senderSeConnecter = new UtilisateurSender();
 		senderSeConnecter.startJMSConnection();
 		senderSeConnecter.seConnecter("toto", "1234");
 		senderSeConnecter.rehercherUtilisateur("tit");
@@ -47,7 +49,7 @@ public class UtilisateurSender{
 		UtilisateurSender senderFollow = new UtilisateurSender();
 		senderFollow.startJMSConnection();
 		senderFollow.follow("toto", "titi");
-
+*/
 		System.out.println("Décommenter les lignes dans le main de UtilisateurSender pour créer une première fois l’utilisateur toto.");
 	}
 	
@@ -108,8 +110,13 @@ public class UtilisateurSender{
 
             if (rep instanceof TextMessage) {
                 TextMessage text = (TextMessage) rep;
-                System.out.println("Received: " + text.getText());
-                return true;
+                String resp = text.getText();
+                System.out.println("Received: " + resp);
+                if (resp.equals("Connected.")) {
+                	return true;
+                } else {
+                	return false;
+                }
             }
         } catch (JMSException exception) {
             exception.printStackTrace();

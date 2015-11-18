@@ -6,12 +6,18 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import Types.TypeConnection;
+import sources.UtilisateurSender;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Connexion extends JFrame {
 
@@ -68,12 +74,33 @@ public class Connexion extends JFrame {
 		contentPane.add(tbxLogin);
 		tbxLogin.setColumns(10);
 		
-		JButton btnConnexion = new JButton("Sign in");
-		btnConnexion.setBounds(168, 192, 97, 25);
-		contentPane.add(btnConnexion);
-		
 		tbxMdp = new JPasswordField();
 		tbxMdp.setBounds(164, 132, 168, 22);
 		contentPane.add(tbxMdp);
+		
+		JLabel lblResult = new JLabel("");
+		lblResult.setHorizontalAlignment(SwingConstants.CENTER);
+		lblResult.setFont(new Font("Tahoma", Font.ITALIC, 14));
+		lblResult.setBounds(12, 182, 408, 27);
+		contentPane.add(lblResult);
+		
+		JButton btnConnexion = new JButton("Sign in");
+		btnConnexion.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (! tbxLogin.getText().isEmpty() && ! tbxMdp.getText().isEmpty()) {
+					UtilisateurSender senderSeConnecter = new UtilisateurSender();
+					senderSeConnecter.startJMSConnection();
+					if (senderSeConnecter.seConnecter(tbxLogin.getText(), tbxMdp.getText())) {
+						lblResult.setText("Connected.");
+					} else {
+						lblResult.setText("Not connected.");
+					}
+				} else {
+					lblResult.setText("Please fill in all fields.");
+				}
+			}
+		});
+		btnConnexion.setBounds(168, 215, 97, 25);
+		contentPane.add(btnConnexion);
 	}
 }
