@@ -140,9 +140,14 @@ public class UtilisateurSender{
             Message rep = tempConsumer.receive();
 
             if (rep instanceof TextMessage) {
-                TextMessage text = (TextMessage) rep;
-                System.out.println("Received: " + text.getText());
-                return true;
+            	TextMessage text = (TextMessage) rep;
+                String resp = text.getText();
+                System.out.println("Received: " + resp);
+                if (resp.equals("Signed up.")) {
+                	return true;
+                } else {
+                	return false;
+                }
             }
         } catch (JMSException exception) {
             exception.printStackTrace();
