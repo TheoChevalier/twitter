@@ -189,7 +189,7 @@ public class UtilisateurSender{
         }
 	}
 	
-	public boolean rehercherUtilisateur(String login) {
+	public List<String> rehercherUtilisateur(String login) {
 		Session session = this.session;
 		int i=0;
 		List<String> liste =  new ArrayList<String>() ;
@@ -217,15 +217,15 @@ public class UtilisateurSender{
                 	}
         			System.out.println("User list: " + liste.toString());
         		}
-            	return true;
+            	return liste;
             }
         } catch (JMSException exception) {
             exception.printStackTrace();
         }
-        return false;
+        return null;
 	}
 	
-	public boolean listeFollow(String login) {
+	public List<String> listeFollow(String login) {
 		Session session = this.session;
 		int i=0;
 		List<String> liste =  new ArrayList<String>() ;
@@ -253,15 +253,15 @@ public class UtilisateurSender{
                 	}
         			System.out.println("All users you follow: " + liste.toString());
         		}
-            	return true;
+            	return liste;
             }
         } catch (JMSException exception) {
             exception.printStackTrace();
         }
-        return false;
+        return null;
 	}
 	
-	public boolean listeFollowers(String login) {
+	public List<String> listeFollowers(String login) {
 		Session session = this.session;
 		int i=0;
 		List<String> liste =  new ArrayList<String>() ;
@@ -289,12 +289,12 @@ public class UtilisateurSender{
                 	}
         			System.out.println("All your followers: " + liste.toString());
         		}
-            	return true;
+            	return liste;
             }
         } catch (JMSException exception) {
             exception.printStackTrace();
         }
-        return false;
+        return null;
 	}
 	
 	public int nombreMessage(String login) {
