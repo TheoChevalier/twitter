@@ -55,7 +55,7 @@ public class JDBC {
     	Statement s;
 		try {
 			s = conn.createStatement();
-			s.execute("drop table UTILISATEURS; drop table MESSAGES; drop table EST_ABONNE; drop table POSTER; drop table RECEVOIR;");
+			s.execute("drop table UTILISATEURS; drop table MESSAGES; drop table EST_ABONNE; drop table RECEVOIR;");
 			//s.execute("drop table station; drop table utilisateur; drop table velo;") ;
 		} catch (SQLException e) {
 			e.printStackTrace();
