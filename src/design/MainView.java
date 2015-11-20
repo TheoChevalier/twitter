@@ -129,7 +129,7 @@ public class MainView extends JFrame {
 						lblResultResearchUser.setText("No result.");
 					}
 				} else {
-					lblResultResearchUser.setText("Please, enter a login to do the reasearch.");
+					lblResultResearchUser.setText("Please, enter a login to search.");
 				}
 			}
 		});
@@ -142,7 +142,7 @@ public class MainView extends JFrame {
 		contentPane.add(tbxFindUser);
 		tbxFindUser.setColumns(10);
 		
-		JLabel lblResearchAUser = new JLabel("Research a user to follow:");
+		JLabel lblResearchAUser = new JLabel("Search a user to follow:");
 		lblResearchAUser.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblResearchAUser.setBounds(45, 324, 273, 19);
 		contentPane.add(lblResearchAUser);
@@ -151,7 +151,17 @@ public class MainView extends JFrame {
 		btnFollow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (! listUserToFollow.isSelectionEmpty()) {
-					sender.follow(login, listUserToFollow.getSelectedValue().toString());
+	            	switch(sender.follow(login, listUserToFollow.getSelectedValue().toString())) {
+	            	case 1:
+	            		lblResultResearchUser.setText("You’re already following this user.");
+	            		break;
+	            	case 0:
+	            		lblResultResearchUser.setText("You’re now following this user.");
+	            		break;
+	            	default:
+	            		lblResultResearchUser.setText("Oops, an error occured while trying to follow this user. Try again later.");
+	            		break;
+            	}
 				} else {
 					lblResultResearchUser.setText("Select a user to follow him.");
 				}

@@ -155,7 +155,7 @@ public class UtilisateurSender{
         return false;
 	}
 	
-	public void follow (String login1, String login2) {
+	public int follow (String login1, String login2) {
 		Session session = this.session;
         try {
         	// Création et envoi
@@ -172,21 +172,12 @@ public class UtilisateurSender{
 
             if (rep instanceof StreamMessage) {
             	StreamMessage stream = (StreamMessage) rep;
-            	switch(stream.readInt()) {
-	            	case 1:
-	            		System.out.println("You’re already following this user.");
-	            		break;
-	            	case 0:
-	            		System.out.println("You’re now following this user.");
-	            		break;
-	            	default:
-	            		System.out.println("Oops, an error occured while trying to follow this user. Try again later.");
-	            		break;
-            	}
+            	return stream.readInt();
             }
         } catch (JMSException exception) {
             exception.printStackTrace();
         }
+        return 2;
 	}
 	
 	public List<String> rehercherUtilisateur(String login) {
