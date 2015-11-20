@@ -218,7 +218,7 @@ public class JDBC {
         	int nbMessages = 0;
         	try {
 		        Statement s = conn.createStatement();
-		        ResultSet rs = s.executeQuery("SELECT COUNT(P.*) FROM UTILISATEURS U, POSTER P WHERE U.idu = P.idU AND U.loginu = '" + r.getLogin() + "'");
+		        ResultSet rs = s.executeQuery("SELECT COUNT(M.*) FROM UTILISATEURS U, MESSAGES M WHERE U.idU = M.idU AND U.loginu = '" + r.getLogin() + "'");
 		        
 		        if (rs.next()){
 		        	nbMessages = rs.getInt(1);
