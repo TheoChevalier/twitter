@@ -40,7 +40,7 @@ public class ReceiverServer implements MessageListener {
     	this.base = base;
         this.connection = connection;
         this.context = context;
-        this.init();
+        init();
     }
     
     

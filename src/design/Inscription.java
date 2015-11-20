@@ -112,18 +112,22 @@ public class Inscription extends JFrame {
 		btnSignUp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (! tbxLogin.getText().isEmpty() && ! tbxMdp.getText().isEmpty() && ! tbxNom.getText().isEmpty() && ! tbxPrenom.getText().isEmpty()) {
-					UtilisateurSender senderInscription = new UtilisateurSender();
-					senderInscription.startJMSConnection();
-					boolean signUp = senderInscription.inscrireUtilisateur(
-							tbxLogin.getText(),
-							tbxMdp.getText(),
-							tbxNom.getText(),
-							tbxPrenom.getText()
-					);
-					if (signUp) {
-						lblResult.setText("Your registration is now complete.");
+					if (tbxMdp.getText().length() >= 4) {
+						UtilisateurSender senderInscription = new UtilisateurSender();
+						senderInscription.startJMSConnection();
+						boolean signUp = senderInscription.inscrireUtilisateur(
+								tbxLogin.getText(),
+								tbxMdp.getText(),
+								tbxNom.getText(),
+								tbxPrenom.getText()
+						);
+						if (signUp) {
+							lblResult.setText("Your registration is now complete.");
+						} else {
+							lblResult.setText("An error occured. Please try again later.");
+						}
 					} else {
-						lblResult.setText("An error occured. Please try again later.");
+						lblResult.setText("Your password must be at least 4 characters long.");
 					}
 				} else {
 					lblResult.setText("Please fill in all fields.");
