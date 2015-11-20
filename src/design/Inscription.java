@@ -102,7 +102,7 @@ public class Inscription extends JFrame {
 		contentPane.add(tbxPrenom);
 		tbxPrenom.setColumns(10);
 		
-		JLabel lblResult = new JLabel("");
+		final JLabel lblResult = new JLabel("");
 		lblResult.setHorizontalAlignment(SwingConstants.CENTER);
 		lblResult.setFont(new Font("Tahoma", Font.ITALIC, 15));
 		lblResult.setBounds(12, 199, 408, 27);
@@ -121,9 +121,9 @@ public class Inscription extends JFrame {
 							tbxPrenom.getText()
 					);
 					if (signUp) {
-						lblResult.setText("You're registration is now completed.");
+						lblResult.setText("Your registration is now complete.");
 					} else {
-						lblResult.setText("An error occured. Please try again.");
+						lblResult.setText("An error occured. Please try again later.");
 					}
 				}
 			}

@@ -47,7 +47,7 @@ public class MainView extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public MainView(UtilisateurSender sender, String login) {
+	public MainView(final UtilisateurSender sender, final String login) {
 		this.sender = sender;
 		this.login = login;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -108,13 +108,13 @@ public class MainView extends JFrame {
 		lblResultListFollowers.setBounds(327, 284, 208, 27);
 		contentPane.add(lblResultListFollowers);
 		
-		JLabel lblResultResearchUser = new JLabel("");
+		final JLabel lblResultResearchUser = new JLabel("");
 		lblResultResearchUser.setHorizontalAlignment(SwingConstants.CENTER);
 		lblResultResearchUser.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblResultResearchUser.setBounds(22, 503, 296, 27);
 		contentPane.add(lblResultResearchUser);
 		
-		JList listUserToFollow = new JList();
+		final JList listUserToFollow = new JList();
 		listUserToFollow.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listUserToFollow.setBounds(45, 392, 165, 98);
 		contentPane.add(listUserToFollow);

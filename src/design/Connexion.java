@@ -79,7 +79,7 @@ public class Connexion extends JFrame {
 		tbxMdp.setBounds(164, 132, 168, 22);
 		contentPane.add(tbxMdp);
 		
-		JLabel lblResult = new JLabel("");
+		final JLabel lblResult = new JLabel("");
 		lblResult.setHorizontalAlignment(SwingConstants.CENTER);
 		lblResult.setFont(new Font("Tahoma", Font.ITALIC, 14));
 		lblResult.setBounds(12, 182, 408, 27);
