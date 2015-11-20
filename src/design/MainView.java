@@ -140,7 +140,7 @@ public class MainView extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if (! tbxFindUser.getText().isEmpty()) {
 					String login = (String)((JButton)arg0.getSource()).getClientProperty("login");
-					List<String> listUserToFollowArray = sender.rehercherUtilisateur(tbxFindUser.getText(), login);
+					List<String> listUserToFollowArray = sender.rechercherUtilisateur(tbxFindUser.getText(), login);
 					listUserToFollow.setListData(listUserToFollowArray.toArray());
 					if (listUserToFollowArray.isEmpty()) {
 						lblResultResearchUser.setText("No result.");
