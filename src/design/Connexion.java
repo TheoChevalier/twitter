@@ -90,7 +90,6 @@ public class Connexion extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if (! tbxLogin.getText().isEmpty() && ! tbxMdp.getText().isEmpty()) {
 					senderSeConnecter = new UtilisateurSender();
-					senderSeConnecter.startJMSConnection();
 					if (senderSeConnecter.seConnecter(tbxLogin.getText(), tbxMdp.getText())) {
 						lblResult.setText("Connected.");
 						MainView frame = new MainView(senderSeConnecter, tbxLogin.getText());

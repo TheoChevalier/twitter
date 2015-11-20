@@ -57,7 +57,6 @@ public class JDBC {
 		try {
 			s = conn.createStatement();
 			s.execute("drop table UTILISATEURS; drop table MESSAGES; drop table EST_ABONNE; drop table RECEVOIR;");
-			//s.execute("drop table station; drop table utilisateur; drop table velo;") ;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -278,6 +277,43 @@ public class JDBC {
 				e.printStackTrace();
             }
 
+        	return 2;
+        }
+        
+        public int seDesabonner(TypeFollow f){
+        	Statement s;
+            int idSuiveur, idSuivi;
+            String queryidUSuiveur = "SELECT idU FROM UTILISATEURS WHERE loginU ='" + f.getLoginSuiveur() + "'";
+            String queryidUSuivi = "SELECT idU FROM UTILISATEURS WHERE loginU ='" + f.getLoginSuivi() + "'";
+            
+            // Vérifier si l’entrée existe déjà
+            try {
+            	s = conn.createStatement();
+            	
+            	// Récupérer l’id du suiveur
+            	ResultSet rs = s.executeQuery(queryidUSuiveur);
+            	rs.next();
+            	idSuiveur = rs.getInt(1);
+            	
+            	// Récupérer l’id du suivi
+            	rs = s.executeQuery(queryidUSuivi);
+            	rs.next();
+            	idSuivi = rs.getInt(1);
+
+            	// Vérification du lien
+            	String queryDupe = "SELECT * FROM Est_Abonne WHERE idUSuiveur ='" + idSuiveur + "' AND idUSuivi='" + idSuivi + "'";
+            	rs = s.executeQuery(queryDupe);
+            	if (rs.next()) {
+            		// Supprimer le follower
+            		s.execute("DELETE FROM Est_Abonne WHERE idUSuiveur='" + idSuiveur + "' AND idUSuivi='" + idSuivi + "'") ;
+            		return 0;
+            	} else {
+            		//login1 ne follow pas login2
+                	return 1;
+            	}
+            } catch (SQLException e) {
+				e.printStackTrace();
+            }
         	return 2;
         }
 

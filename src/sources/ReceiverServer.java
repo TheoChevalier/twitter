@@ -88,6 +88,7 @@ public class ReceiverServer implements MessageListener {
     
     public void onMessage(Message message) {
     	TypeRecherche r;
+    	TypeFollow f;
         try {
             if (message != null) {
             	String reply = "";
@@ -105,8 +106,12 @@ public class ReceiverServer implements MessageListener {
 				        reply(message, reply);
 				        break;
 					case "Follow":
-						TypeFollow f = (TypeFollow) om.getObject();
+						f = (TypeFollow) om.getObject();
 				        reply(message, base.ajouterEst_Abonne(f));
+				        break;
+					case "Unfollow":
+						f = (TypeFollow) om.getObject();
+				        reply(message, base.seDesabonner(f));
 				        break;
 					case "Recherche":
 						r = (TypeRecherche) om.getObject();

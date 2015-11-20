@@ -24,8 +24,8 @@ import Types.TypeInscription;
 import Types.TypeRecherche;
 
 public class UtilisateurSender{
-    Session session = null;
-    MessageProducer sender = null;
+    private Session session = null;
+    private MessageProducer sender = null;
 	
 	public static void main(String[] args) {
 		
@@ -51,6 +51,10 @@ public class UtilisateurSender{
 		senderFollow.follow("toto", "titi");
 */
 		System.out.println("Décommenter les lignes dans le main de UtilisateurSender pour créer une première fois l’utilisateur toto.");
+	}
+	public UtilisateurSender() {
+		super();
+		this.startJMSConnection();
 	}
 	
 	public void startJMSConnection() {
@@ -162,6 +166,31 @@ public class UtilisateurSender{
         	TypeFollow f = new TypeFollow(login1, login2);
             ObjectMessage objectMessage = session.createObjectMessage(f);
             objectMessage.setJMSType("Follow");
+            Destination temp = session.createTemporaryQueue();
+            MessageConsumer tempConsumer = session.createConsumer(temp);
+            objectMessage.setJMSReplyTo(temp);
+            this.sender.send(objectMessage);
+            
+            // Réponse sur file temporaire
+            Message rep = tempConsumer.receive();
+
+            if (rep instanceof StreamMessage) {
+            	StreamMessage stream = (StreamMessage) rep;
+            	return stream.readInt();
+            }
+        } catch (JMSException exception) {
+            exception.printStackTrace();
+        }
+        return 2;
+	}
+	
+	public int unfollow (String login1, String login2) {
+		Session session = this.session;
+        try {
+        	// Création et envoi
+        	TypeFollow f = new TypeFollow(login1, login2);
+            ObjectMessage objectMessage = session.createObjectMessage(f);
+            objectMessage.setJMSType("Unfollow");
             Destination temp = session.createTemporaryQueue();
             MessageConsumer tempConsumer = session.createConsumer(temp);
             objectMessage.setJMSReplyTo(temp);
