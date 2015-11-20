@@ -77,9 +77,13 @@ public class MainView extends JFrame {
 		lblWelcomeToTwitter.setFont(new Font("Tahoma", Font.BOLD, 22));
 		lblWelcomeToTwitter.setBounds(12, 13, 716, 27);
 		contentPane.add(lblWelcomeToTwitter);
-		
+
 		List<String> listFollowArray = sender.listeFollow(login);
-		JList listFollow = new JList(listFollowArray.toArray());
+		final DefaultListModel listModelFollow = new DefaultListModel();
+		for(String f:listFollowArray) {
+			listModelFollow.addElement(f);
+		}
+		final JList listFollow = new JList(listModelFollow);
 		listFollow.setBounds(45, 152, 165, 119);
 		contentPane.add(listFollow);
 		
@@ -166,7 +170,7 @@ public class MainView extends JFrame {
 	            		break;
 	            	case 0:
 	            		lblResultResearchUser.setText("You’re now following this user.");
-	            		listModelFollowers.addElement(listUserToFollow.getSelectedValue().toString());
+	            		listModelFollow.addElement(listUserToFollow.getSelectedValue().toString());
 	            		break;
 	            	default:
 	            		lblResultResearchUser.setText("Oops, an error occured while trying to follow this user. Try again later.");
@@ -185,11 +189,11 @@ public class MainView extends JFrame {
 		lblPostAMessage.setBounds(45, 543, 199, 33);
 		contentPane.add(lblPostAMessage);
 		
-		JTextPane tbxContenu = new JTextPane();
+		final JTextPane tbxContenu = new JTextPane();
 		tbxContenu.setBounds(45, 579, 381, 80);
 		contentPane.add(tbxContenu);
 		
-		JLabel lblResultPostMsg = new JLabel("");
+		final JLabel lblResultPostMsg = new JLabel("");
 		lblResultPostMsg.setHorizontalAlignment(SwingConstants.CENTER);
 		lblResultPostMsg.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblResultPostMsg.setBounds(45, 673, 381, 27);
