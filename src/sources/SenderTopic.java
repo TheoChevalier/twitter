@@ -59,11 +59,12 @@ public class SenderTopic {
 	}
 
 	
-	public void send(String message, boolean geoloc)
+	public void send(String message, String login, boolean geoloc)
 	{
 		try {
 			
 			ObjectMessage objectMessage = session.createObjectMessage(message);
+			objectMessage.setStringProperty("login", login);
 			
 			if (geoloc)
 			{
