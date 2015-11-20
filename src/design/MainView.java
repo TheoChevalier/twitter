@@ -6,6 +6,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 
 import sources.UtilisateurSender;
 
@@ -22,6 +23,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.ListSelectionModel;
 import javax.swing.JTextPane;
+import javax.swing.JTable;
 
 public class MainView extends JFrame {
 
@@ -29,6 +31,7 @@ public class MainView extends JFrame {
 	private UtilisateurSender sender;
 	private String login;
 	private JTextField tbxFindUser;
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -53,7 +56,7 @@ public class MainView extends JFrame {
 		this.sender = sender;
 		this.login = login;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 758, 760);
+		setBounds(100, 100, 758, 1200);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -61,12 +64,12 @@ public class MainView extends JFrame {
 		
 		JLabel lblTweets = new JLabel("Number of Tweets:");
 		lblTweets.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblTweets.setBounds(12, 84, 129, 19);
+		lblTweets.setBounds(12, 84, 142, 19);
 		contentPane.add(lblTweets);
 		
 		JLabel lblNbMsg = new JLabel("New label");
 		lblNbMsg.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblNbMsg.setBounds(154, 86, 56, 16);
+		lblNbMsg.setBounds(174, 85, 56, 16);
 		contentPane.add(lblNbMsg);
 		
 		String nb = Integer.toString(sender.nombreMessage(login));
@@ -242,6 +245,33 @@ public class MainView extends JFrame {
 		});
 		btnUnfollow.setBounds(221, 198, 97, 25);
 		contentPane.add(btnUnfollow);
+		
+		// ### FIXME: ÇA MARCHE PÔ.
+		String[] columnNames = {"First Name", "Last Name", "Sport", "# of Years", "Vegetarian"};
+		Object[][] data = {{"First Name", "Last Name", "Sport", "# of Years", "No"}};
+
+		table = new JTable(data, columnNames);
+        DefaultTableModel dtm = new DefaultTableModel();
+
+        Object [] rowData = new Object[4];
+        for (int i = 0; i < rowData.length; ++i)
+        {
+            rowData[i] = "MAGGLE";
+        }
+        dtm.addRow(rowData);
+
+        table.setModel(dtm);
+        dtm.fireTableDataChanged();
+        //////////////////////////
+
+		table.setBounds(45, 800, 683, 244);
+		contentPane.add(table);
+		
+		JLabel label = new JLabel("Twitter feed");
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setFont(new Font("Dialog", Font.BOLD, 22));
+		label.setBounds(45, 761, 683, 27);
+		contentPane.add(label);
 		
 		if (listFollowArray.isEmpty()) {
 			lblResultListFollow.setText("You’re not following anyone.");
