@@ -209,7 +209,7 @@ public class UtilisateurSender{
         return 2;
 	}
 	
-	public List<String> rehercherUtilisateur(String login, String loginAppelant) {
+	public List<String> rechercherUtilisateur(String login, String loginAppelant) {
 		Session session = this.session;
 		int i=0;
 		List<String> liste =  new ArrayList<String>() ;

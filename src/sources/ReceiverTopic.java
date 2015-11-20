@@ -17,16 +17,16 @@ public class ReceiverTopic implements MessageListener {
     private JDBC base = null;
     
     
-    public ReceiverTopic( Context context, Connection connection) {
+    public ReceiverTopic (Context context, Connection connection, String topic) {
         super();
 
         this.connection = connection;
         this.context = context;
-        init();
+        init(topic);
     }
 	
 
-    public void init() {
+    public void init(String topicName) {
         try {
         	topicDest = (Topic) context.lookup(topicName);
             session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -61,11 +61,15 @@ public class ReceiverTopic implements MessageListener {
 			{
 				base.ajouterMessage(message,"");
 				//base.ajouterMessage(m.toString(),"");
+				
+				System.out.println("Message reçu de TopicMess");
 			}
 			else if (dest.toString() == "TopicMessGeo")
 			{
 				base.ajouterMessage(message,om.getStringProperty("loc"));
 				//base.ajouterMessage(m.toString(),"");
+				
+				System.out.println("Message reçu de TopicMessGeo");
 			}
 			
 		} catch (JMSException e) {
@@ -75,6 +79,38 @@ public class ReceiverTopic implements MessageListener {
 		
 
 	}
+	
+	
+
+    public static void main(String[] args) {
+        try {
+            //initialisation de la connection
+            ConnectionFactory factory = null;
+            Connection connection = null;
+            Context context = null;
+            //configuration
+            String factoryName = "ConnectionFactory";
+            // create the JNDI initial context
+            context = new InitialContext();
+            // look up the ConnectionFactory
+            factory = (ConnectionFactory) context.lookup(factoryName);
+            // look up the Destination
+            // create the connection
+            connection = factory.createConnection();
+
+            JDBC bd = new JDBC ("Twitter");
+            ReceiverTopic topic = new ReceiverTopic(context, connection, "TopicMess");
+            ReceiverTopic topicGeo = new ReceiverTopic(context, connection, "TopicMessGeo");
+            
+            
+        } catch (JMSException exception) {
+            exception.printStackTrace();
+        } catch (NamingException exception) {
+            exception.printStackTrace();
+        }
+    }
+    
+    
     
 	
 }
