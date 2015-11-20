@@ -72,7 +72,7 @@ public class MainView extends JFrame {
 		String nb = Integer.toString(sender.nombreMessage(login));
 		lblNbMsg.setText(nb);
 		
-		JLabel lblWelcomeToTwitter = new JLabel("Welcome to Twitter " + login);
+		JLabel lblWelcomeToTwitter = new JLabel("Welcome to Twitter, " + login + "!");
 		lblWelcomeToTwitter.setHorizontalAlignment(SwingConstants.CENTER);
 		lblWelcomeToTwitter.setFont(new Font("Tahoma", Font.BOLD, 22));
 		lblWelcomeToTwitter.setBounds(12, 13, 716, 27);
@@ -142,7 +142,7 @@ public class MainView extends JFrame {
 						lblResultResearchUser.setText("No result.");
 					}
 				} else {
-					lblResultResearchUser.setText("Please, enter a login to search.");
+					lblResultResearchUser.setText("Please type a login to search.");
 				}
 			}
 		});
@@ -212,7 +212,7 @@ public class MainView extends JFrame {
 		btnSend.setBounds(438, 634, 97, 25);
 		contentPane.add(btnSend);
 		
-		JLabel lblResultUnfollow = new JLabel("");
+		final JLabel lblResultUnfollow = new JLabel("");
 		lblResultUnfollow.setHorizontalAlignment(SwingConstants.CENTER);
 		lblResultUnfollow.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblResultUnfollow.setBounds(222, 236, 302, 27);
@@ -224,10 +224,12 @@ public class MainView extends JFrame {
 				if (! listFollow.isSelectionEmpty()) {
 	            	switch(sender.unfollow(login, listFollow.getSelectedValue().toString())) {
 	            	case 1:
-	            		lblResultUnfollow.setText("You're not following this user yet.");
+	            		lblResultUnfollow.setText("You’re not following this user yet.");
 	            		break;
 	            	case 0:
-	            		lblResultUnfollow.setText("You're not following this user anymore.");
+	            		lblResultUnfollow.setText("You’re not following this user anymore.");
+	            		int selectedIndex = listFollow.getSelectedIndex();
+	            		listModelFollow.remove(selectedIndex);
 	            		break;
 	            	default:
 	            		lblResultUnfollow.setText("Oops, an error occured while trying to unfollow this user. Try again later.");
@@ -242,7 +244,7 @@ public class MainView extends JFrame {
 		contentPane.add(btnUnfollow);
 		
 		if (listFollowArray.isEmpty()) {
-			lblResultListFollow.setText("You don't follow anyone.");
+			lblResultListFollow.setText("You’re not following anyone.");
 		}
 		if (listFollowersArray.isEmpty()) {
 			lblResultListFollowers.setText("No one is following you.");
