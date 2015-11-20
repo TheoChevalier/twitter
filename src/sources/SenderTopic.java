@@ -11,14 +11,19 @@ public class SenderTopic {
     MessageProducer senderGeo = null;
 	
 
+    public SenderTopic()
+    {
+    	
+    }
+    
 	public void startJMSConnection() {
         Context context = null;
         ConnectionFactory factory = null;
         Connection connection = null;
         String factoryName = "ConnectionFactory";
         
-        String TopicDest = "TopicMess";
-        String TopicDestGeo = "TopicMessGeo";
+        String topicDest = "TopicMess";
+        String topicDestGeo = "TopicMessGeo";
         
         Destination dest = null;
         Destination destGeo = null;
@@ -31,8 +36,8 @@ public class SenderTopic {
             factory = (ConnectionFactory) context.lookup(factoryName);
 
             // look up the Destination
-            dest = (Destination) context.lookup(TopicDest);
-            destGeo = (Destination) context.lookup(TopicDestGeo);
+            dest = (Destination) context.lookup(topicDest);
+            destGeo = (Destination) context.lookup(topicDestGeo);
             
             // create the connection
             connection = factory.createConnection();
@@ -59,14 +64,16 @@ public class SenderTopic {
 	}
 
 	
-	public void send(String message, String login, boolean geoloc)
+	public void send(String message, String login, String loc)
 	{
 		try {
 			
 			ObjectMessage objectMessage = session.createObjectMessage(message);
 			objectMessage.setStringProperty("login", login);
+			objectMessage.setStringProperty("loc", loc);
 			
-			if (geoloc)
+			
+			if (loc == "")
 			{
 				senderGeo.send(objectMessage);
 				System.out.println("Message envoyé sur TopicMess");
