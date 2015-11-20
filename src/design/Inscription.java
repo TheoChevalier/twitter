@@ -66,7 +66,7 @@ public class Inscription extends JFrame {
 		
 		JLabel lblNewLabel = new JLabel("Password:");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel.setBounds(65, 106, 73, 16);
+		lblNewLabel.setBounds(65, 106, 84, 16);
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("Name:");
@@ -113,6 +113,7 @@ public class Inscription extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if (! tbxLogin.getText().isEmpty() && ! tbxMdp.getText().isEmpty() && ! tbxNom.getText().isEmpty() && ! tbxPrenom.getText().isEmpty()) {
 					UtilisateurSender senderInscription = new UtilisateurSender();
+					senderInscription.startJMSConnection();
 					boolean signUp = senderInscription.inscrireUtilisateur(
 							tbxLogin.getText(),
 							tbxMdp.getText(),

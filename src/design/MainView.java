@@ -16,6 +16,7 @@ import java.util.List;
 
 import javax.swing.SwingConstants;
 import javax.swing.JList;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -95,18 +96,23 @@ public class MainView extends JFrame {
 		
 		JLabel lblFollowers = new JLabel("Followers:");
 		lblFollowers.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblFollowers.setBounds(536, 122, 129, 19);
+		lblFollowers.setBounds(343, 122, 129, 19);
 		contentPane.add(lblFollowers);
 		
 		List<String> listFollowersArray = sender.listeFollowers(login);
-		JList listFollowers = new JList(listFollowersArray.toArray());
-		listFollowers.setBounds(536, 152, 165, 119);
+		final DefaultListModel listModelFollowers = new DefaultListModel();
+		for(String f:listFollowersArray) {
+			listModelFollowers.addElement(f);
+		}
+		final JList listFollowers = new JList(listModelFollowers);
+		
+		listFollowers.setBounds(343, 152, 165, 119);
 		contentPane.add(listFollowers);
 		
 		JLabel lblResultListFollowers = new JLabel("");
 		lblResultListFollowers.setHorizontalAlignment(SwingConstants.CENTER);
 		lblResultListFollowers.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblResultListFollowers.setBounds(520, 284, 208, 27);
+		lblResultListFollowers.setBounds(327, 284, 208, 27);
 		contentPane.add(lblResultListFollowers);
 		
 		final JLabel lblResultResearchUser = new JLabel("");
@@ -160,6 +166,7 @@ public class MainView extends JFrame {
 	            		break;
 	            	case 0:
 	            		lblResultResearchUser.setText("You’re now following this user.");
+	            		listModelFollowers.addElement(listUserToFollow.getSelectedValue().toString());
 	            		break;
 	            	default:
 	            		lblResultResearchUser.setText("Oops, an error occured while trying to follow this user. Try again later.");
@@ -172,35 +179,6 @@ public class MainView extends JFrame {
 		});
 		btnFollow.setBounds(221, 432, 97, 25);
 		contentPane.add(btnFollow);
-		
-		JLabel lblResultUnfollow = new JLabel("");
-		lblResultUnfollow.setHorizontalAlignment(SwingConstants.CENTER);
-		lblResultUnfollow.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblResultUnfollow.setBounds(222, 236, 302, 27);
-		contentPane.add(lblResultUnfollow);
-		
-		JButton btnUnfollow = new JButton("Unfollow");
-		btnUnfollow.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if (! listFollow.isSelectionEmpty()) {
-	            	switch(sender.unfollow(login, listFollow.getSelectedValue().toString())) {
-	            	case 1:
-	            		lblResultUnfollow.setText("You're not following this user yet.");
-	            		break;
-	            	case 0:
-	            		lblResultUnfollow.setText("You're not following this user anymore.");
-	            		break;
-	            	default:
-	            		lblResultUnfollow.setText("Oops, an error occured while trying to unfollow this user. Try again later.");
-	            		break;
-            	}
-				} else {
-					lblResultUnfollow.setText("Select a user to unfollow him.");
-				}
-			}
-		});
-		btnUnfollow.setBounds(222, 198, 97, 25);
-		contentPane.add(btnUnfollow);
 		
 		JLabel lblPostAMessage = new JLabel("Post a message:");
 		lblPostAMessage.setFont(new Font("Tahoma", Font.PLAIN, 15));
