@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
@@ -153,11 +154,13 @@ public class JDBC {
         	return false;
         }
 	
-        public boolean ajouterMessage(String contenuM, String dateM, String heureM, String locM) {
+        public boolean ajouterMessage(String contenuM, String locM) {
         	Statement s;
+        	String timestamp = String.valueOf(new Date().getTime());
+        	System.out.println(timestamp);
 			try {
 				s = conn.createStatement();
-				s.execute("INSERT INTO Messages (contenuM, dateM, heureM, locM) VALUES ('" +contenuM + "'," + "'" + dateM + "'," + "'" + heureM + "'," + "'" + locM + "'" + " )") ;
+				s.execute("INSERT INTO Messages (contenuM, timestampM, locM) VALUES ('" +contenuM + "'," + "'" + timestamp + "'," + "'" + locM + "'" + " )") ;
 				return true;
 				
 			} catch (SQLException e) {
@@ -273,20 +276,7 @@ public class JDBC {
 
         	return 2;
         }
-        
-        public boolean ajouterPoster(int idM, int idU) {
-        	Statement s;
-			try {
-				s = conn.createStatement();
-				s.execute("INSERT INTO Poster(" + idM + "," + idU + " )") ;
-				return true;
-				
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-        	return false;
-        }      
-        
+
         public boolean ajouterRecevoir(int idM, int idU) {
         	Statement s;
 			try {
