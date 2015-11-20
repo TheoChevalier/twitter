@@ -16,6 +16,7 @@ import java.util.TreeMap;
 import Types.TypeConnection;
 import Types.TypeFollow;
 import Types.TypeInscription;
+import Types.TypeModificationProfil;
 import Types.TypeRecherche;
 
 
@@ -156,6 +157,24 @@ public class JDBC {
 			}
         	return false;
         }
+        
+        public int majUtilisateur(TypeModificationProfil tmp) {
+        	Statement s;
+			try {
+				s = conn.createStatement();
+				if (! tmp.getAncienLogin().equals(tmp.getLogin())) {
+					ResultSet rs = s.executeQuery("SELECT loginU FROM Utilisateurs WHERE loginU = '" + tmp.getLogin() + "'");
+					if (rs.next()){
+						return 1;
+					}	
+				}
+				s.execute("UPDATE Utilisateurs SET loginU = '" + tmp.getLogin() + "', mdpU = '" + tmp.getPassword() + "', nomU = '" + tmp.getNom() + "', prenomU = '" + tmp.getPrenom() + "' WHERE loginU = '" + tmp.getAncienLogin() + "'");
+				return 0;
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+        	return 2;
+        }
 	
         public boolean ajouterMessage(String contenuM, String locM) {
         	Statement s;
@@ -186,6 +205,20 @@ public class JDBC {
 				e.printStackTrace();
 			}
         	return null;
+        }
+        
+        public TypeInscription getUtilisateur(TypeRecherche r){
+        	TypeInscription user = null;
+        	try {
+		        Statement s = conn.createStatement();
+		        ResultSet rs = s.executeQuery("SELECT * FROM UTILISATEURS WHERE loginU = '" + r.getLogin() + "'");
+		        while (rs.next()){
+		        	user = new TypeInscription(rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
+		        }
+        	} catch (SQLException e) {
+				e.printStackTrace();
+			}
+        	return user;
         }
         
         public List<String> listeFollow(TypeRecherche r){

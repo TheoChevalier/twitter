@@ -21,6 +21,7 @@ import javax.naming.NamingException;
 import Types.TypeConnection;
 import Types.TypeFollow;
 import Types.TypeInscription;
+import Types.TypeModificationProfil;
 import Types.TypeRecherche;
 
 public class UtilisateurSender{
@@ -159,6 +160,32 @@ public class UtilisateurSender{
         return false;
 	}
 	
+	public int updateUtilisateur(String ancienLogin, String login, String password, String nom, String prenom) {
+		Session session = this.session;
+        try {
+        	// Création et envoi
+        	TypeModificationProfil mp = new TypeModificationProfil(ancienLogin, login, password, nom, prenom);
+            ObjectMessage objectMessage = session.createObjectMessage(mp);
+            objectMessage.setJMSType("Modification");
+            Destination temp = session.createTemporaryQueue();
+            MessageConsumer tempConsumer = session.createConsumer(temp);
+            objectMessage.setJMSReplyTo(temp);
+            this.sender.send(objectMessage);
+            
+         // Réponse sur file temporaire
+            Message rep = tempConsumer.receive();
+
+            if (rep instanceof StreamMessage) {
+            	StreamMessage stream = (StreamMessage) rep;
+            	return stream.readInt();
+            }
+            
+        } catch (JMSException exception) {
+            exception.printStackTrace();
+        }
+        return 2;
+	}
+	
 	public int follow (String login1, String login2) {
 		Session session = this.session;
         try {
@@ -182,6 +209,33 @@ public class UtilisateurSender{
             exception.printStackTrace();
         }
         return 2;
+	}
+	
+	public TypeInscription getUtilisateur (String login) {
+		Session session = this.session;
+        try {
+        	// Création et envoi
+        	TypeRecherche r = new TypeRecherche(login);
+            ObjectMessage objectMessage = session.createObjectMessage(r);
+            objectMessage.setJMSType("GetUtilisateur");
+            Destination temp = session.createTemporaryQueue();
+            MessageConsumer tempConsumer = session.createConsumer(temp);
+            objectMessage.setJMSReplyTo(temp);
+            this.sender.send(objectMessage);
+            
+            // Réponse sur file temporaire
+            Message rep = tempConsumer.receive();
+
+            if (rep instanceof ObjectMessage) {
+            	ObjectMessage om = (ObjectMessage) rep;
+            	// récupération de l'objet transporté
+            	TypeInscription o = (TypeInscription) om.getObject();
+            	return o;
+            }
+        } catch (JMSException exception) {
+            exception.printStackTrace();
+        }
+        return null;
 	}
 	
 	public int unfollow (String login1, String login2) {

@@ -22,6 +22,7 @@ import javax.naming.NamingException;
 import Types.TypeConnection;
 import Types.TypeFollow;
 import Types.TypeInscription;
+import Types.TypeModificationProfil;
 import Types.TypeRecherche;
 
 public class ReceiverServer implements MessageListener {
@@ -128,7 +129,15 @@ public class ReceiverServer implements MessageListener {
 					case "listeFollowers":
 						r = (TypeRecherche) om.getObject();
 				        reply(message, base.listeFollowers(r));
-				        break;    
+				        break; 
+					case "GetUtilisateur":
+						r = (TypeRecherche) om.getObject();
+				        reply(message, base.getUtilisateur(r));
+				        break;
+					case "Modification":
+						TypeModificationProfil tmp = (TypeModificationProfil) om.getObject();
+				        reply(message, base.majUtilisateur(tmp));
+				        break; 
 				    default:
 				    	reply = "Oh noes! Server caught an unknown message.";
 				    	break;
@@ -148,6 +157,22 @@ public class ReceiverServer implements MessageListener {
 			replyProducer = session.createProducer(message.getJMSReplyTo());
 		    TextMessage replyMessage = session.createTextMessage();
 		    replyMessage.setText(s);
+		    replyMessage.setJMSCorrelationID(message.getJMSMessageID());
+		    replyProducer.send(replyMessage);
+		} catch (JMSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
+    
+    // Répondre un Object sur la file temporaire
+    private void reply (Message message, TypeInscription user) {
+	    try {
+			// Envoyer réponse sur file temporaire
+		    MessageProducer replyProducer;
+			replyProducer = session.createProducer(message.getJMSReplyTo());
+		    ObjectMessage replyMessage = session.createObjectMessage();
+		    replyMessage.setObject(user);
 		    replyMessage.setJMSCorrelationID(message.getJMSMessageID());
 		    replyProducer.send(replyMessage);
 		} catch (JMSException e) {

@@ -237,6 +237,17 @@ public class MainView extends JFrame {
 		btnUnfollow.setBounds(221, 198, 97, 25);
 		contentPane.add(btnUnfollow);
 		
+		JButton btnUpdateYourProfile = new JButton("Update your profile");
+		btnUpdateYourProfile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Profile frame = new Profile(sender, login);
+				frame.setVisible(true);
+			}
+		});
+		btnUpdateYourProfile.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnUpdateYourProfile.setBounds(536, 60, 177, 25);
+		contentPane.add(btnUpdateYourProfile);
+		
 		if (listFollowArray.isEmpty()) {
 			lblResultListFollow.setText("You don't follow anyone.");
 		}
