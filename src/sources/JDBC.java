@@ -96,8 +96,9 @@ public class JDBC {
         			" idM int auto_increment NOT NULL PRIMARY KEY, " +
         			" contenuM VARCHAR( 256 ) , " +
         			" timestampM VARCHAR(15)," +
-        			" locM VARCHAR (50))," +
-        			" idU INT"
+        			" locM VARCHAR (50)," +
+        			" idU int," +
+        			" FOREIGN KEY (idU) REFERENCES UTILISATEURS(idU))"
         			);
         }
         // On regarde si la table existe deja
