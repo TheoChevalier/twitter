@@ -120,10 +120,12 @@ public class MainView extends JFrame {
 		contentPane.add(listUserToFollow);
 		
 		JButton btnResearch = new JButton("Search");
+		btnResearch.putClientProperty("login", login );
 		btnResearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (! tbxFindUser.getText().isEmpty()) {
-					List<String> listUserToFollowArray = sender.rehercherUtilisateur(tbxFindUser.getText());
+					String login = (String)((JButton)arg0.getSource()).getClientProperty("login");
+					List<String> listUserToFollowArray = sender.rehercherUtilisateur(tbxFindUser.getText(), login);
 					listUserToFollow.setListData(listUserToFollowArray.toArray());
 					if (listUserToFollowArray.isEmpty()) {
 						lblResultResearchUser.setText("No result.");

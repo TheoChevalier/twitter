@@ -180,7 +180,7 @@ public class UtilisateurSender{
         return 2;
 	}
 	
-	public List<String> rehercherUtilisateur(String login) {
+	public List<String> rehercherUtilisateur(String login, String loginAppelant) {
 		Session session = this.session;
 		int i=0;
 		List<String> liste =  new ArrayList<String>() ;
@@ -208,6 +208,14 @@ public class UtilisateurSender{
                 	}
         			System.out.println("User list: " + liste.toString());
         		}
+            	System.out.println("Appelant: " + loginAppelant);
+                for (int j = 0;  j < liste.size(); j++) {
+                    String tempName = liste.get(j);
+                    if (tempName.equals(loginAppelant)) {
+                    	liste.remove(j);
+                    }
+                }
+
             	return liste;
             }
         } catch (JMSException exception) {
