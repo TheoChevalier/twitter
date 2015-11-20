@@ -119,7 +119,7 @@ public class MainView extends JFrame {
 		listUserToFollow.setBounds(45, 392, 165, 98);
 		contentPane.add(listUserToFollow);
 		
-		JButton btnResearch = new JButton("Research");
+		JButton btnResearch = new JButton("Search");
 		btnResearch.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (! tbxFindUser.getText().isEmpty()) {

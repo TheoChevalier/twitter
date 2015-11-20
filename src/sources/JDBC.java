@@ -95,9 +95,9 @@ public class JDBC {
         	s.execute("create table MESSAGES  ( " +
         			" idM int auto_increment NOT NULL PRIMARY KEY, " +
         			" contenuM VARCHAR( 256 ) , " +
-        			" dateM DATE," +
-        			" heureM TIME," +
-        			" locM VARCHAR (50))"
+        			" timestampM VARCHAR(15)," +
+        			" locM VARCHAR (50))," +
+        			" idU INT"
         			);
         }
         // On regarde si la table existe deja
@@ -114,20 +114,7 @@ public class JDBC {
         			"PRIMARY KEY (idUSuiveur, idUSuivi))"
         			);
         }
-        // On regarde si la table existe deja
-        query = "SELECT idM FROM POSTER LIMIT 1";
-        try {
-        	s.executeQuery(query);
-        } catch(Exception e) {
-        	// sinon on la cree
-        	s.execute("create table POSTER  ( " +
-        			" idM int, " +
-        			" idU int, " + 
-        			" FOREIGN KEY (idM) REFERENCES MESSAGES(idM)," +
-        			" FOREIGN KEY (idU) REFERENCES UTILISATEURS(idU)," +
-        			"PRIMARY KEY (idM, idU))"
-        			);
-        }
+
         // On regarde si la table existe deja
         query = "SELECT idM FROM RECEVOIR LIMIT 1";
         try {
