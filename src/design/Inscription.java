@@ -112,7 +112,7 @@ public class Inscription extends JFrame {
 		btnSignUp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (! tbxLogin.getText().isEmpty() && ! tbxMdp.getText().isEmpty() && ! tbxNom.getText().isEmpty() && ! tbxPrenom.getText().isEmpty()) {
-					if (tbxMdp.getText().length() > 4) {
+					if (tbxMdp.getText().length() >= 4) {
 						UtilisateurSender senderInscription = new UtilisateurSender();
 						senderInscription.startJMSConnection();
 						boolean signUp = senderInscription.inscrireUtilisateur(
