@@ -145,9 +145,13 @@ public class JDBC {
         	Statement s;
 			try {
 				s = conn.createStatement();
-				s.execute("INSERT INTO Utilisateurs (loginU, mdpU, nomU, prenomU) VALUES ('" +loginU + "'," + "'" + mdpU + "'," + "'" + nomU + "'," + "'" + prenomU + "'" + " )");
-				return true;
-				
+				ResultSet rs = s.executeQuery("SELECT loginU FROM Utilisateurs WHERE loginU = '" + loginU + "'");
+				if (rs.next()){
+					return false;
+				} else {
+					s.execute("INSERT INTO Utilisateurs (loginU, mdpU, nomU, prenomU) VALUES ('" +loginU + "'," + "'" + mdpU + "'," + "'" + nomU + "'," + "'" + prenomU + "'" + " )");
+					return true;
+				}				
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

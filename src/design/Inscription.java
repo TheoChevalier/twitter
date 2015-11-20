@@ -125,6 +125,8 @@ public class Inscription extends JFrame {
 					} else {
 						lblResult.setText("An error occured. Please try again later.");
 					}
+				} else {
+					lblResult.setText("Please fill in all fields.");
 				}
 			}
 		});
