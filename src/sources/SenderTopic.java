@@ -8,7 +8,7 @@ public class SenderTopic {
 
 	Session session = null;
     MessageProducer sender = null;
-	
+    MessageProducer senderGeo = null;
 	
 
 	public void startJMSConnection() {
@@ -17,8 +17,11 @@ public class SenderTopic {
         Connection connection = null;
         String factoryName = "ConnectionFactory";
         
-        String destName = "TopicMess";
+        String TopicDest = "TopicMess";
+        String TopicDestGeo = "TopicMessGeo";
+        
         Destination dest = null;
+        Destination destGeo = null;
         
         try {
             // create the JNDI initial context.
@@ -28,8 +31,9 @@ public class SenderTopic {
             factory = (ConnectionFactory) context.lookup(factoryName);
 
             // look up the Destination
-            dest = (Destination) context.lookup(destName);
-
+            dest = (Destination) context.lookup(TopicDest);
+            destGeo = (Destination) context.lookup(TopicDestGeo);
+            
             // create the connection
             connection = factory.createConnection();
 
@@ -37,9 +41,11 @@ public class SenderTopic {
             this.session = connection.createSession(
                 false, Session.AUTO_ACKNOWLEDGE);
 
-            // create the sender
+            // create the sender : deux producteurs : géolocalisé et non géolocalisé
             this.sender = this.session.createProducer(dest);
-
+            this.senderGeo = this.session.createProducer(destGeo);
+            
+            
             // start the connection, to enable message sends
             connection.start();
         } catch (JMSException exception) {
@@ -53,16 +59,31 @@ public class SenderTopic {
 	}
 
 	
+	public void send(String message, String login, boolean geoloc)
+	{
+		try {
+			
+			ObjectMessage objectMessage = session.createObjectMessage(message);
+			objectMessage.setStringProperty("login", login);
+			
+			if (geoloc)
+			{
+				senderGeo.send(objectMessage);
+				System.out.println("Message envoyé sur TopicMess");
+			}
+			else
+			{
+				sender.send(objectMessage);
+				System.out.println("Message envoyé sur TopicMessGeo");
+			}
+			
+			
+		} catch (JMSException e) {
+			e.printStackTrace();
+		}
+		
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	}
 	
 	
 	
