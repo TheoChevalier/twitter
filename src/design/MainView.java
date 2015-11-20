@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
@@ -245,12 +246,16 @@ public class MainView extends JFrame {
 		});
 		btnUnfollow.setBounds(221, 198, 97, 25);
 		contentPane.add(btnUnfollow);
-		
-		// ### FIXME: ÇA MARCHE PÔ.
-		String[] columnNames = {"First Name", "Last Name", "Sport", "# of Years", "Vegetarian"};
-		Object[][] data = {{"First Name", "Last Name", "Sport", "# of Years", "No"}};
 
-		table = new JTable(data, columnNames);
+        DefaultTableModel model = new DefaultTableModel(new Object[][] {
+            { "some", "text" } },
+            new Object[] { "Column 1", "Column 2" });
+
+		
+		table = new JTable(model);
+		
+        getContentPane().add(new JScrollPane(table), BorderLayout.CENTER);
+		/*
         DefaultTableModel dtm = new DefaultTableModel();
 
         Object [] rowData = new Object[4];
@@ -262,7 +267,9 @@ public class MainView extends JFrame {
 
         table.setModel(dtm);
         dtm.fireTableDataChanged();
-        //////////////////////////
+        //////////////////////////*/
+        
+
 
 		table.setBounds(45, 800, 683, 244);
 		contentPane.add(table);
