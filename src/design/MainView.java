@@ -20,6 +20,7 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.ListSelectionModel;
+import javax.swing.JTextPane;
 
 public class MainView extends JFrame {
 
@@ -51,7 +52,7 @@ public class MainView extends JFrame {
 		this.sender = sender;
 		this.login = login;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 758, 603);
+		setBounds(100, 100, 758, 760);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -73,7 +74,7 @@ public class MainView extends JFrame {
 		JLabel lblWelcomeToTwitter = new JLabel("Welcome to Twitter " + login);
 		lblWelcomeToTwitter.setHorizontalAlignment(SwingConstants.CENTER);
 		lblWelcomeToTwitter.setFont(new Font("Tahoma", Font.BOLD, 22));
-		lblWelcomeToTwitter.setBounds(12, 13, 523, 27);
+		lblWelcomeToTwitter.setBounds(12, 13, 716, 27);
 		contentPane.add(lblWelcomeToTwitter);
 		
 		List<String> listFollowArray = sender.listeFollow(login);
@@ -200,6 +201,34 @@ public class MainView extends JFrame {
 		});
 		btnUnfollow.setBounds(222, 198, 97, 25);
 		contentPane.add(btnUnfollow);
+		
+		JLabel lblPostAMessage = new JLabel("Post a message:");
+		lblPostAMessage.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblPostAMessage.setBounds(45, 543, 199, 33);
+		contentPane.add(lblPostAMessage);
+		
+		JTextPane tbxContenu = new JTextPane();
+		tbxContenu.setBounds(45, 579, 381, 80);
+		contentPane.add(tbxContenu);
+		
+		JLabel lblResultPostMsg = new JLabel("");
+		lblResultPostMsg.setHorizontalAlignment(SwingConstants.CENTER);
+		lblResultPostMsg.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblResultPostMsg.setBounds(45, 673, 381, 27);
+		contentPane.add(lblResultPostMsg);
+		
+		JButton btnSend = new JButton("Send");
+		btnSend.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(! tbxContenu.getText().isEmpty()) {
+					
+				} else {
+					lblResultPostMsg.setText("Please fill in all fields.");
+				}
+			}
+		});
+		btnSend.setBounds(438, 634, 97, 25);
+		contentPane.add(btnSend);
 		
 		if (listFollowArray.isEmpty()) {
 			lblResultListFollow.setText("You don't follow anyone.");
