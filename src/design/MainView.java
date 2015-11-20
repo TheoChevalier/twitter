@@ -96,7 +96,7 @@ public class MainView extends JFrame {
 		
 		JLabel lblFollowers = new JLabel("Followers:");
 		lblFollowers.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblFollowers.setBounds(343, 122, 129, 19);
+		lblFollowers.setBounds(536, 120, 129, 19);
 		contentPane.add(lblFollowers);
 		
 		List<String> listFollowersArray = sender.listeFollowers(login);
@@ -106,13 +106,13 @@ public class MainView extends JFrame {
 		}
 		final JList listFollowers = new JList(listModelFollowers);
 		
-		listFollowers.setBounds(343, 152, 165, 119);
+		listFollowers.setBounds(536, 150, 165, 119);
 		contentPane.add(listFollowers);
 		
 		JLabel lblResultListFollowers = new JLabel("");
 		lblResultListFollowers.setHorizontalAlignment(SwingConstants.CENTER);
 		lblResultListFollowers.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblResultListFollowers.setBounds(327, 284, 208, 27);
+		lblResultListFollowers.setBounds(520, 282, 208, 27);
 		contentPane.add(lblResultListFollowers);
 		
 		final JLabel lblResultResearchUser = new JLabel("");
@@ -207,6 +207,35 @@ public class MainView extends JFrame {
 		});
 		btnSend.setBounds(438, 634, 97, 25);
 		contentPane.add(btnSend);
+		
+		JLabel lblResultUnfollow = new JLabel("");
+		lblResultUnfollow.setHorizontalAlignment(SwingConstants.CENTER);
+		lblResultUnfollow.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblResultUnfollow.setBounds(222, 236, 302, 27);
+		contentPane.add(lblResultUnfollow);
+		
+		JButton btnUnfollow = new JButton("Unfollow");
+		btnUnfollow.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (! listFollow.isSelectionEmpty()) {
+	            	switch(sender.unfollow(login, listFollow.getSelectedValue().toString())) {
+	            	case 1:
+	            		lblResultUnfollow.setText("You're not following this user yet.");
+	            		break;
+	            	case 0:
+	            		lblResultUnfollow.setText("You're not following this user anymore.");
+	            		break;
+	            	default:
+	            		lblResultUnfollow.setText("Oops, an error occured while trying to unfollow this user. Try again later.");
+	            		break;
+            	}
+				} else {
+					lblResultUnfollow.setText("Select a user to unfollow him.");
+				}
+			}
+		});
+		btnUnfollow.setBounds(221, 198, 97, 25);
+		contentPane.add(btnUnfollow);
 		
 		if (listFollowArray.isEmpty()) {
 			lblResultListFollow.setText("You don't follow anyone.");
