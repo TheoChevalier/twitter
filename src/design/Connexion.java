@@ -47,7 +47,7 @@ public class Connexion extends JFrame {
 	 */
 	public Connexion() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 450, 352);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -63,10 +63,10 @@ public class Connexion extends JFrame {
 		lblMdp.setBounds(41, 138, 99, 16);
 		contentPane.add(lblMdp);
 		
-		JLabel lblConnexion = new JLabel("Sign in");
+		JLabel lblConnexion = new JLabel("Log In");
 		lblConnexion.setHorizontalAlignment(SwingConstants.CENTER);
 		lblConnexion.setFont(new Font("Tahoma", Font.BOLD, 22));
-		lblConnexion.setBounds(12, 13, 408, 27);
+		lblConnexion.setBounds(12, 27, 408, 27);
 		contentPane.add(lblConnexion);
 		
 		tbxLogin = new JTextField();
@@ -81,11 +81,12 @@ public class Connexion extends JFrame {
 		
 		final JLabel lblResult = new JLabel("");
 		lblResult.setHorizontalAlignment(SwingConstants.CENTER);
-		lblResult.setFont(new Font("Tahoma", Font.ITALIC, 14));
-		lblResult.setBounds(12, 182, 408, 27);
+		lblResult.setFont(new Font("Tahoma", Font.ITALIC, 15));
+		lblResult.setBounds(12, 167, 408, 27);
 		contentPane.add(lblResult);
 		
-		JButton btnConnexion = new JButton("Sign in");
+		JButton btnConnexion = new JButton("Log In");
+		btnConnexion.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnConnexion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (! tbxLogin.getText().isEmpty() && ! tbxMdp.getText().isEmpty()) {
@@ -102,7 +103,24 @@ public class Connexion extends JFrame {
 				}
 			}
 		});
-		btnConnexion.setBounds(168, 215, 97, 25);
+		btnConnexion.setBounds(164, 204, 97, 25);
 		contentPane.add(btnConnexion);
+		this.getRootPane().setDefaultButton(btnConnexion);
+		
+		JLabel lblNewLabel = new JLabel("Don’t have an account?");
+		lblNewLabel.setFont(new Font("Tahoma", Font.ITALIC, 15));
+		lblNewLabel.setBounds(149, 255, 208, 37);
+		contentPane.add(lblNewLabel);
+		
+		JButton btnSignUp = new JButton("Sign Up");
+		btnSignUp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Inscription frame = new Inscription();
+				frame.setVisible(true);
+			}
+		});
+		btnSignUp.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnSignUp.setBounds(323, 262, 97, 25);
+		contentPane.add(btnSignUp);
 	}
 }

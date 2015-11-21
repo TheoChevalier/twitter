@@ -55,7 +55,7 @@ public class Profile extends JFrame {
 		this.sender = sender;
 		this.login = login;
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 322);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -147,8 +147,18 @@ public class Profile extends JFrame {
 			}
 		});
 		btnSignUp.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnSignUp.setBounds(164, 239, 97, 25);
+		btnSignUp.setBounds(93, 237, 97, 25);
 		contentPane.add(btnSignUp);
+		
+		JButton btnCancel = new JButton("Cancel");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+			}
+		});
+		btnCancel.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnCancel.setBounds(254, 238, 97, 25);
+		contentPane.add(btnCancel);
 		
 		TypeInscription user = sender.getUtilisateur(login);
 		if (user != null) {

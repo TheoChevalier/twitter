@@ -56,7 +56,7 @@ public class MainView extends JFrame {
 	public MainView(final UtilisateurSender sender, final String login) {
 		this.sender = sender;
 		this.login = login;
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 758, 1200);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
