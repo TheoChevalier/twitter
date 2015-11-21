@@ -126,6 +126,7 @@ public class Inscription extends JFrame {
 						} else {
 							lblResult.setText("An error occured. Please try again later.");
 						}
+						senderInscription.seDeconnecter();
 					} else {
 						lblResult.setText("Your password must be at least 4 characters long.");
 					}

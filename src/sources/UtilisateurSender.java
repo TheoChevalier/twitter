@@ -27,6 +27,10 @@ import Types.TypeRecherche;
 public class UtilisateurSender{
     private Session session = null;
     private MessageProducer sender = null;
+    private Context context = null;
+    private ConnectionFactory factory = null;
+    private Connection connection = null;
+    
 	
 	public static void main(String[] args) {
 		
@@ -59,25 +63,25 @@ public class UtilisateurSender{
 	}
 	
 	public void startJMSConnection() {
-        Context context = null;
-        ConnectionFactory factory = null;
-        Connection connection = null;
+        this.context = null;
+        this.factory = null;
+        this.connection = null;
         String factoryName = "ConnectionFactory";
         String destName = "QueueReq";
         Destination dest = null;
         
         try {
             // create the JNDI initial context.
-            context = new InitialContext();
+            this.context = new InitialContext();
 
             // look up the ConnectionFactory
-            factory = (ConnectionFactory) context.lookup(factoryName);
+            this.factory = (ConnectionFactory) this.context.lookup(factoryName);
 
             // look up the Destination
             dest = (Destination) context.lookup(destName);
 
             // create the connection
-            connection = factory.createConnection();
+            this.connection = this.factory.createConnection();
 
             // create the session
             this.session = connection.createSession(
@@ -92,9 +96,6 @@ public class UtilisateurSender{
             exception.printStackTrace();
         } catch (NamingException exception) {
             exception.printStackTrace();
-        } finally {
-            // close the context
-
         }
 	}
 
@@ -127,6 +128,26 @@ public class UtilisateurSender{
             exception.printStackTrace();
         }
         return false;
+	}
+	
+	public void seDeconnecter() {
+		// ferme le contexte
+		if (this.context != null) {
+		try {
+			this.context.close();
+			} catch (NamingException exception) {
+			exception.printStackTrace();
+			}
+		}
+		// ferme la connexion
+		if (connection != null) {
+			try {
+				connection.close();
+				System.out.println("You are now logged out.");
+			} catch (JMSException exception) {
+				exception.printStackTrace();
+			}
+		}
 	}
 	
 	public boolean inscrireUtilisateur(String login, String password, String nom, String prenom) {

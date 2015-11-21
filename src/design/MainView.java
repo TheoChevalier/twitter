@@ -18,6 +18,7 @@ import java.util.List;
 
 import javax.swing.SwingConstants;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -56,7 +57,7 @@ public class MainView extends JFrame {
 	public MainView(final UtilisateurSender sender, final String login) {
 		this.sender = sender;
 		this.login = login;
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 758, 1200);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -288,14 +289,37 @@ public class MainView extends JFrame {
 			}
 		});
 		btnUpdateYourProfile.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnUpdateYourProfile.setBounds(536, 60, 177, 25);
+		btnUpdateYourProfile.setBounds(415, 62, 177, 25);
 		contentPane.add(btnUpdateYourProfile);
+		
+		JButton btnLogOut = new JButton("Log Out");
+		btnLogOut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				confirm();
+			}
+		});
+		btnLogOut.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnLogOut.setBounds(604, 62, 97, 25);
+		contentPane.add(btnLogOut);
 		
 		if (listFollowArray.isEmpty()) {
 			lblResultListFollow.setText("You’re not following anyone.");
 		}
 		if (listFollowersArray.isEmpty()) {
 			lblResultListFollowers.setText("No one is following you.");
+		}
+	}
+	
+	private void close() {
+		this.dispose();
+	}
+	
+	public void confirm(){
+		int dialogButton = JOptionPane.YES_NO_OPTION;
+		int dialogResult = JOptionPane.showConfirmDialog(this, "Do you really want to log out?", "Log Out", dialogButton);
+		if(dialogResult == 0) {
+			sender.seDeconnecter();
+			close();
 		}
 	}
 }

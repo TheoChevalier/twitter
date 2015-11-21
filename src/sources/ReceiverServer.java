@@ -62,11 +62,12 @@ public class ReceiverServer implements MessageListener {
     }
     
     public static void main(String[] args) {
+    	//initialisation de la connection
+        ConnectionFactory factory = null;
+        Connection connection = null;
+        Context context = null;
+        
         try {
-            //initialisation de la connection
-            ConnectionFactory factory = null;
-            Connection connection = null;
-            Context context = null;
             //configuration
             String factoryName = "ConnectionFactory";
             // create the JNDI initial context
