@@ -1,6 +1,7 @@
 package design;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -26,6 +27,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.ListSelectionModel;
 import javax.swing.JTextPane;
 import javax.swing.JTable;
+import java.awt.ScrollPane;
+import javax.swing.AbstractListModel;
 
 public class MainView extends JFrame {
 
@@ -34,6 +37,8 @@ public class MainView extends JFrame {
 	private String login;
 	private JTextField tbxFindUser;
 	private JTable table;
+	private JTable table_1;
+	private JTable table_2;
 
 	/**
 	 * Launch the application.
@@ -58,7 +63,7 @@ public class MainView extends JFrame {
 		this.sender = sender;
 		this.login = login;
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 758, 1200);
+		setBounds(100, 100, 1047, 593);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -80,7 +85,7 @@ public class MainView extends JFrame {
 		JLabel lblWelcomeToTwitter = new JLabel("Welcome to Twitter, " + login + "!");
 		lblWelcomeToTwitter.setHorizontalAlignment(SwingConstants.CENTER);
 		lblWelcomeToTwitter.setFont(new Font("Tahoma", Font.BOLD, 22));
-		lblWelcomeToTwitter.setBounds(12, 13, 716, 27);
+		lblWelcomeToTwitter.setBounds(12, 13, 1005, 27);
 		contentPane.add(lblWelcomeToTwitter);
 
 		List<String> listFollowArray = sender.listeFollow(login);
@@ -105,7 +110,7 @@ public class MainView extends JFrame {
 		
 		JLabel lblFollowers = new JLabel("Followers:");
 		lblFollowers.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblFollowers.setBounds(536, 120, 129, 19);
+		lblFollowers.setBounds(825, 121, 129, 19);
 		contentPane.add(lblFollowers);
 		
 		List<String> listFollowersArray = sender.listeFollowers(login);
@@ -115,24 +120,24 @@ public class MainView extends JFrame {
 		}
 		final JList listFollowers = new JList(listModelFollowers);
 		
-		listFollowers.setBounds(536, 150, 165, 119);
+		listFollowers.setBounds(825, 151, 165, 119);
 		contentPane.add(listFollowers);
 		
 		JLabel lblResultListFollowers = new JLabel("");
 		lblResultListFollowers.setHorizontalAlignment(SwingConstants.CENTER);
 		lblResultListFollowers.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblResultListFollowers.setBounds(520, 282, 208, 27);
+		lblResultListFollowers.setBounds(809, 283, 208, 27);
 		contentPane.add(lblResultListFollowers);
 		
 		final JLabel lblResultResearchUser = new JLabel("");
 		lblResultResearchUser.setHorizontalAlignment(SwingConstants.CENTER);
 		lblResultResearchUser.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblResultResearchUser.setBounds(22, 503, 296, 27);
+		lblResultResearchUser.setBounds(403, 293, 296, 27);
 		contentPane.add(lblResultResearchUser);
 		
 		final JList listUserToFollow = new JList();
 		listUserToFollow.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listUserToFollow.setBounds(45, 392, 165, 98);
+		listUserToFollow.setBounds(426, 182, 165, 98);
 		contentPane.add(listUserToFollow);
 		
 		JButton btnResearch = new JButton("Search");
@@ -151,18 +156,18 @@ public class MainView extends JFrame {
 				}
 			}
 		});
-		btnResearch.setBounds(221, 356, 97, 25);
+		btnResearch.setBounds(602, 146, 97, 25);
 		contentPane.add(btnResearch);
 		
 		tbxFindUser = new JTextField();
 		tbxFindUser.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		tbxFindUser.setBounds(45, 357, 165, 22);
+		tbxFindUser.setBounds(426, 147, 165, 22);
 		contentPane.add(tbxFindUser);
 		tbxFindUser.setColumns(10);
 		
 		JLabel lblResearchAUser = new JLabel("Search a user to follow:");
 		lblResearchAUser.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblResearchAUser.setBounds(45, 324, 273, 19);
+		lblResearchAUser.setBounds(426, 114, 273, 19);
 		contentPane.add(lblResearchAUser);
 		
 		JButton btnFollow = new JButton("Follow");
@@ -186,22 +191,22 @@ public class MainView extends JFrame {
 				}
 			}
 		});
-		btnFollow.setBounds(221, 432, 97, 25);
+		btnFollow.setBounds(602, 222, 97, 25);
 		contentPane.add(btnFollow);
 		
 		JLabel lblPostAMessage = new JLabel("Post a message:");
 		lblPostAMessage.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblPostAMessage.setBounds(45, 543, 199, 33);
+		lblPostAMessage.setBounds(12, 333, 465, 33);
 		contentPane.add(lblPostAMessage);
 		
 		final JTextPane tbxContenu = new JTextPane();
-		tbxContenu.setBounds(45, 579, 381, 80);
+		tbxContenu.setBounds(12, 369, 322, 127);
 		contentPane.add(tbxContenu);
 		
 		final JLabel lblResultPostMsg = new JLabel("");
 		lblResultPostMsg.setHorizontalAlignment(SwingConstants.CENTER);
 		lblResultPostMsg.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblResultPostMsg.setBounds(45, 673, 381, 27);
+		lblResultPostMsg.setBounds(12, 509, 322, 27);
 		contentPane.add(lblResultPostMsg);
 		
 		JButton btnSend = new JButton("Send");
@@ -214,7 +219,7 @@ public class MainView extends JFrame {
 				}
 			}
 		});
-		btnSend.setBounds(438, 634, 97, 25);
+		btnSend.setBounds(346, 471, 97, 25);
 		contentPane.add(btnSend);
 		
 		final JLabel lblResultUnfollow = new JLabel("");
@@ -248,7 +253,7 @@ public class MainView extends JFrame {
 		btnUnfollow.setBounds(221, 198, 97, 25);
 		contentPane.add(btnUnfollow);
 
-        DefaultTableModel model = new DefaultTableModel(new Object[][] {
+        /*DefaultTableModel model = new DefaultTableModel(new Object[][] {
             { "some", "text" } },
             new Object[] { "Column 1", "Column 2" });
 
@@ -270,15 +275,15 @@ public class MainView extends JFrame {
         dtm.fireTableDataChanged();
         //////////////////////////*/
         
+		
 
-
-		table.setBounds(45, 800, 683, 244);
-		contentPane.add(table);
+		//table.setBounds(45, 800, 683, 244);
+		//contentPane.add(table);
 		
 		JLabel label = new JLabel("Twitter feed");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setFont(new Font("Dialog", Font.BOLD, 22));
-		label.setBounds(45, 761, 683, 27);
+		label.setBounds(471, 324, 546, 27);
 		contentPane.add(label);
 		
 		JButton btnUpdateYourProfile = new JButton("Update your profile");
@@ -289,7 +294,7 @@ public class MainView extends JFrame {
 			}
 		});
 		btnUpdateYourProfile.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnUpdateYourProfile.setBounds(415, 62, 177, 25);
+		btnUpdateYourProfile.setBounds(731, 64, 177, 25);
 		contentPane.add(btnUpdateYourProfile);
 		
 		JButton btnLogOut = new JButton("Log Out");
@@ -299,9 +304,35 @@ public class MainView extends JFrame {
 			}
 		});
 		btnLogOut.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnLogOut.setBounds(604, 62, 97, 25);
+		btnLogOut.setBounds(920, 64, 97, 25);
 		contentPane.add(btnLogOut);
 		
+	    table_2 = new JTable();
+	    table_2.setEnabled(false);
+	    table_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
+	    table_2.setModel(new DefaultTableModel(
+	    	new Object[][] {
+	    		{"Toto", "salut ça va bien ?", "22/11/2015"},
+	    		{"Titi", "Test", "20/11/2015"}
+	    	},
+	    	new String[] {
+	    		"Login", "Content", "Date"
+	    	}
+	    ));
+	    
+	    //Définition des colonnes
+	    table_2.getColumnModel().getColumn(0).setPreferredWidth(136);
+	    table_2.getColumnModel().getColumn(1).setPreferredWidth(323);
+	    table_2.getColumnModel().getColumn(2).setPreferredWidth(110);
+	    
+	    table_2.setBounds(209, 840, 421, 145);
+	    
+	    //Permet d'afficher l'en-tête
+	    JScrollPane scrollPane = new JScrollPane(table_2);
+	    scrollPane.setBounds(471, 364, 546, 172);
+	    
+	    contentPane.add(scrollPane);
+        
 		if (listFollowArray.isEmpty()) {
 			lblResultListFollow.setText("You’re not following anyone.");
 		}
