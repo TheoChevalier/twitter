@@ -1,4 +1,6 @@
 package sources;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +24,7 @@ import javax.naming.NamingException;
 import Types.TypeConnection;
 import Types.TypeFollow;
 import Types.TypeInscription;
+import Types.TypeMessage;
 import Types.TypeModificationProfil;
 import Types.TypeRecherche;
 
@@ -138,7 +141,16 @@ public class ReceiverServer implements MessageListener {
 					case "Modification":
 						TypeModificationProfil tmp = (TypeModificationProfil) om.getObject();
 				        reply(message, base.majUtilisateur(tmp));
-				        break; 
+				        break;
+					case "AjouterMessage":
+						TypeMessage tm = (TypeMessage) om.getObject();
+				        reply(message, base.ajouterMessage(tm));
+				        break;
+					case "getMessageFollow":
+						r = (TypeRecherche) om.getObject();
+						System.out.println(base.getMessageFollow(r));
+						replyMessage(message, base.getMessageFollow(r));
+				        break;
 				    default:
 				    	reply = "Oh noes! Server caught an unknown message.";
 				    	break;
@@ -150,7 +162,8 @@ public class ReceiverServer implements MessageListener {
         }
     }
     
-    // Répondre un String sur la file temporaire
+
+	// Répondre un String sur la file temporaire
     private void reply (Message message, String s) {
 	    try {
 			// Envoyer réponse sur file temporaire
@@ -220,4 +233,25 @@ public class ReceiverServer implements MessageListener {
 			e.printStackTrace();
 		}
     }
+    
+    private void replyMessage(Message message, ArrayList<TypeMessage> messageFollow) {
+		// TODO Auto-generated method stub
+    	try {
+			// Envoyer réponse sur file temporaire
+		    MessageProducer replyProducer;
+			replyProducer = session.createProducer(message.getJMSReplyTo());
+		    ObjectMessage replyMessage = session.createObjectMessage();
+		    if(! messageFollow.isEmpty()) {
+		    	replyMessage.setObject(messageFollow);
+		    	replyMessage.setIntProperty("Size", messageFollow.size());
+		    } else {
+		    	replyMessage.setIntProperty("Size", 0);
+		    }
+		    replyMessage.setJMSCorrelationID(message.getJMSMessageID());
+		    replyProducer.send(replyMessage);
+		} catch (JMSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

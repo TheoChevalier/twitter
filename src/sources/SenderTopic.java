@@ -54,9 +54,9 @@ public class SenderTopic {
 	}
 	
 	public static void main(String[] args) throws NamingException, JMSException {
-		TypeMessage m = new TypeMessage("coucou", "", "titi");
+		//TypeMessage m = new TypeMessage("coucou", "", "titi");
 		
-		publishMessage(m);
+		//publishMessage(m);
 		// close the topic connection
 		//topicConn.close();
 	}

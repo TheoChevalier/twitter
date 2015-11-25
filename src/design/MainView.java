@@ -9,12 +9,14 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import sources.SenderTopic;
 import sources.UtilisateurSender;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import java.awt.Color;
 import java.awt.Font;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.SwingConstants;
@@ -30,6 +32,9 @@ import javax.swing.JTable;
 import javax.swing.JTabbedPane;
 import javax.swing.ListModel;
 import javax.swing.table.TableModel;
+
+import Types.TypeMessage;
+
 import java.awt.ScrollPane;
 import javax.swing.AbstractListModel;
 
@@ -191,15 +196,34 @@ public class MainView extends JFrame {
 	    table_2 = new JTable();
 	    table_2.setEnabled(false);
 	    table_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
-	    table_2.setModel(new DefaultTableModel(
-	    	new Object[][] {
-	    		{"Toto", "salut ça va bien ?", "22/11/2015"},
-	    		{"Titi", "Test", "20/11/2015"}
-	    	},
-	    	new String[] {
-	    		"Login", "Content", "Date"
-	    	}
-	    ));
+	    List<TypeMessage> listMessageFollow = sender.getMessageFollow(login);
+	    
+	    //if (listMessageFollow != null) {
+	    	/*Object[][] res = new Object[listMessageFollow.size()][];
+    		listMessageFollow.toArray(res);
+    		
+    		Object[][] array = new Object[listMessageFollow.size()][];
+    		for (int i = 0; i < listMessageFollow.size(); i++) {
+    		    String[] row = {listMessageFollow.get(i).getContenu(),
+    		    		listMessageFollow.get(i).getTimestamp(),
+    		    		listMessageFollow.get(i).getLoc(),
+    		    		listMessageFollow.get(i).getLoginSender()
+    		    };
+    		    array[i] = row;
+    		}
+    		
+    		*/
+    		table_2.setModel(new DefaultTableModel(
+    				new Object[][] {
+    		    		{"Toto", "salut ça va bien ?", "22/11/2015"},
+    		    		{"Titi", "Test", "20/11/2015"}
+    		    	},
+    		    	new String[] {
+    		    		"Content", "Date", "Loc", "Login" 
+    		    	}
+    		));
+	    //}
+	     
 	    
 	    //Définition des colonnes
 	    table_2.getColumnModel().getColumn(0).setPreferredWidth(136);
@@ -341,6 +365,17 @@ public class MainView extends JFrame {
 		btnSend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(! tbxContenu.getText().isEmpty()) {
+					TypeMessage m = new TypeMessage(tbxContenu.getText(), "", login);
+					if (SenderTopic.publishMessage(m)) {
+						switch (sender.ajouterMessage(m)) {
+						case 0:
+							lblResultPostMsg.setText("Your tweet has been send.");
+							break;
+						default:
+							lblResultPostMsg.setText("An error occured while sending your tweet.");
+							break;
+						};
+					}
 					
 				} else {
 					lblResultPostMsg.setText("Please fill in all fields.");

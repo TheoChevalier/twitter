@@ -18,8 +18,15 @@ public class TypeMessage implements Serializable{
 	public TypeMessage (String contenu, String loc, String login){
 		this.contenu = contenu;
 		Date date = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyyHH:mm");
 		this.timestamp = sdf.format(date);
+		this.loc = loc;
+		this.loginSender  = login;
+	}
+	
+	public TypeMessage (String contenu, String timestamp, String loc, String login){
+		this.contenu = contenu;
+		this.timestamp = timestamp;
 		this.loc = loc;
 		this.loginSender  = login;
 	}

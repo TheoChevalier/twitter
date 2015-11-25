@@ -59,11 +59,10 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
 	public static void main(String[] args) throws Exception
     {
 		List<String> liste =  new ArrayList<String>() ;
-		liste.add("titi");
+		liste.add("toto");
 		
-                                                                      
     // set an asynchronous message listener
-    ReceiverTopic asyncSubscriber = new ReceiverTopic("TopicMessage", "toto", liste);
+    ReceiverTopic asyncSubscriber = new ReceiverTopic("TopicMessage", "titi", liste);
     asyncSubscriber.topicSubscriber.setMessageListener(asyncSubscriber);
                                                                       
     // set an asynchronous exception listener on the connection

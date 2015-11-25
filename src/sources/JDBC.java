@@ -177,7 +177,7 @@ public class JDBC {
         	return 2;
         }
 	
-        public boolean ajouterMessage(TypeMessage message) {
+        public int ajouterMessage(TypeMessage message) {
         	Statement s;
         	
 			try {
@@ -186,12 +186,30 @@ public class JDBC {
 				if (rs.next()){
 					int idU = rs.getInt(1);
 					s.execute("INSERT INTO Messages (contenuM, timestampM, locM, idU) VALUES ('" +message.getContenu() + "'," + "'" + message.getTimestamp() + "'," + "'" + message.getLoc() + "'," + idU +")") ;
-					return true;
+					return 0;
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-        	return false;
+        	return 1;
+        }
+        
+        public ArrayList<TypeMessage> getMessageFollow(TypeRecherche r){
+        	ArrayList<TypeMessage> liste =  new ArrayList<TypeMessage>();
+        	TypeMessage message;
+        	try {
+		        Statement s = conn.createStatement();
+		        ResultSet rs = s.executeQuery("SELECT M.contenuM, M.timestampM, M.locM, UE.loginU FROM Utilisateurs UE, Utilisateurs U, Messages M, Recevoir R WHERE M.idU = UE.idU AND R.idM = M.idM AND U.idU = R.idU AND U.loginU='" + r.getLogin() +"'");
+		        
+		        while (rs.next()){
+		        	message = new TypeMessage(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4));
+		        	liste.add(message);
+		        }
+		        return liste;
+        	} catch (SQLException e) {
+				e.printStackTrace();
+			}
+        	return null;
         }
         
         public List<String> rechercherUtilisateur(TypeRecherche r){
