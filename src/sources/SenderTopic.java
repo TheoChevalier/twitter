@@ -61,7 +61,7 @@ public class SenderTopic {
 		//topicConn.close();
 	}
 	
-	public static void publishMessage(TypeMessage m) {
+	public static boolean publishMessage(TypeMessage m) {
 		String login = m.getLoginSender();
 		String loc = m.getLoc();
 		
@@ -85,9 +85,11 @@ public class SenderTopic {
 			
 			// print what we did
 			System.out.println("published: " + objectMessage.getObject().toString());
+			return true;
 		} catch (JMSException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
+		}
+		return false;
 	}
 }

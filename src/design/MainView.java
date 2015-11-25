@@ -126,8 +126,8 @@ public class MainView extends JFrame {
 		label.setBounds(435, 12, 296, 27);
 		panel_1.add(label);
 		
-		JLabel label_11 = new JLabel("Welcome to Twitter, <dynamic>!");
-		label_11.setBounds(0, 15, 1188, 27);
+		JLabel label_11 = new JLabel("Welcome to Twitter, "+ login +"!");
+		label_11.setBounds(0, 16, 1188, 27);
 		contentPane.add(label_11);
 		label_11.setHorizontalAlignment(SwingConstants.CENTER);
 		label_11.setFont(new Font("Dialog", Font.BOLD, 22));
@@ -139,7 +139,7 @@ public class MainView extends JFrame {
 				frame.setVisible(true);
 			}
 		});
-		btnUpdateYourProfile.setBounds(902, 19, 177, 25);
+		btnUpdateYourProfile.setBounds(884, 33, 177, 25);
 		contentPane.add(btnUpdateYourProfile);
 		btnUpdateYourProfile.setFont(new Font("Dialog", Font.PLAIN, 15));
 		
@@ -149,7 +149,7 @@ public class MainView extends JFrame {
 				confirm();
 			}
 		});
-		btnLogOut.setBounds(1091, 19, 97, 25);
+		btnLogOut.setBounds(1073, 33, 97, 25);
 		contentPane.add(btnLogOut);
 		btnLogOut.setFont(new Font("Dialog", Font.PLAIN, 15));
 
@@ -210,7 +210,7 @@ public class MainView extends JFrame {
 	    
 	    //Permet d'afficher l'en-tête
 	    JScrollPane scrollPane = new JScrollPane(table_2);
-	    scrollPane.setBounds(471, 364, 546, 172);
+	    scrollPane.setBounds(12, 64, 1147, 575);
 	    
 	    panel_1.add(scrollPane);
 

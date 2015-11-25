@@ -16,6 +16,7 @@ import java.util.TreeMap;
 import Types.TypeConnection;
 import Types.TypeFollow;
 import Types.TypeInscription;
+import Types.TypeMessage;
 import Types.TypeModificationProfil;
 import Types.TypeRecherche;
 
@@ -176,15 +177,17 @@ public class JDBC {
         	return 2;
         }
 	
-        public boolean ajouterMessage(String contenuM, String locM) {
+        public boolean ajouterMessage(TypeMessage message) {
         	Statement s;
-        	String timestamp = String.valueOf(new Date().getTime());
-        	System.out.println(timestamp);
+        	
 			try {
 				s = conn.createStatement();
-				s.execute("INSERT INTO Messages (contenuM, timestampM, locM) VALUES ('" +contenuM + "'," + "'" + timestamp + "'," + "'" + locM + "'" + " )") ;
-				return true;
-				
+				ResultSet rs = s.executeQuery("SELECT idU FROM Utilisateurs WHERE loginU = '" + message.getLoginSender() + "'");
+				if (rs.next()){
+					int idU = rs.getInt(1);
+					s.execute("INSERT INTO Messages (contenuM, timestampM, locM, idU) VALUES ('" +message.getContenu() + "'," + "'" + message.getTimestamp() + "'," + "'" + message.getLoc() + "'," + idU +")") ;
+					return true;
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
