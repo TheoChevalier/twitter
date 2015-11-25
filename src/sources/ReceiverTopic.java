@@ -2,6 +2,12 @@ package sources;
 
 import javax.jms.*;
 import javax.naming.*;
+
+import Types.TypeConnection;
+import Types.TypeMessage;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,7 +22,7 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
 	private String topicName;
 	private String login;
 	
-	public ReceiverTopic(String topicName, String login, String from) {
+	public ReceiverTopic(String topicName, String login, List<String> listeFollow) {
 		this.topicName = topicName;
 		this.login = login;
 		 // get the initial context
@@ -36,9 +42,11 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
 		    // create a topic session
 		    this.topicSession = topicConn.createTopicSession(false,
 		        Session.AUTO_ACKNOWLEDGE);
+		    
+		    String filter = this.addFilter(listeFollow);
 		                                                                       
 		    // create a topic subscriber
-		    this.topicSubscriber = topicSession.createDurableSubscriber(topic, login, "JMSType IN ('" + from + "')", true);
+		    this.topicSubscriber = topicSession.createDurableSubscriber(topic, login, filter, true);
 		    
 		} catch (NamingException e) {
 			// TODO Auto-generated catch block
@@ -50,9 +58,12 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
 	}
 	public static void main(String[] args) throws Exception
     {
+		List<String> liste =  new ArrayList<String>() ;
+		liste.add("titi");
+		
                                                                       
     // set an asynchronous message listener
-    ReceiverTopic asyncSubscriber = new ReceiverTopic("TopicMessage", "toto", "titi");
+    ReceiverTopic asyncSubscriber = new ReceiverTopic("TopicMessage", "toto", liste);
     asyncSubscriber.topicSubscriber.setMessageListener(asyncSubscriber);
                                                                       
     // set an asynchronous exception listener on the connection
@@ -76,12 +87,15 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
      */
     public void onMessage(Message message)
     {
-    TextMessage msg = (TextMessage) message;
-    try {
-       System.out.println("received: " + msg.getText() + " from: " + msg.getJMSType());
-    } catch (JMSException ex) {
-       ex.printStackTrace();
-    }
+    	ObjectMessage om = (ObjectMessage) message;
+		TypeMessage mess;
+		try {
+			mess = (TypeMessage) om.getObject();
+			System.out.println("received: " + mess.toString());
+		} catch (JMSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
                                                                            
     /**
@@ -94,5 +108,25 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
     public void onException(JMSException exception)
     {
        System.err.println("something bad happended: " + exception);
+    }
+    
+    public String addFilter(List<String> listeFollow){
+    	String filter;
+    	
+    	if (! listeFollow.isEmpty()) {
+    		filter = "JMSType IN (";
+    		for (String login : listeFollow) {
+        		//Si c'est le dernier élément
+    			if (listeFollow.get(listeFollow.size()-1).equals(login)){
+    				filter = filter + "'" + login + "')";
+    			} else {
+    				filter = filter + "'" + login + "',";
+    			}
+    		}
+    	} else {
+    		filter = "JMSType IN ''";
+    	}
+    	
+    	return filter;
     }
 }

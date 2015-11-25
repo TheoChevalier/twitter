@@ -3,6 +3,8 @@ package sources;
 import javax.jms.*;
 import javax.naming.*;
 
+import Types.TypeMessage;
+
 
 public class SenderTopic {
 	private InitialContext ctx;
@@ -12,6 +14,8 @@ public class SenderTopic {
 	private TopicSession topicSession;
 	private TopicPublisher topicPublisher;
 	private String topicName;
+	public static SenderTopic st = new SenderTopic("TopicMessage");
+	public static SenderTopic stLoc = new SenderTopic("TopicMessageLoc");
 	
 	public SenderTopic(String topicName){
 		this.topicName = topicName;
@@ -50,29 +54,37 @@ public class SenderTopic {
 	}
 	
 	public static void main(String[] args) throws NamingException, JMSException {
+		TypeMessage m = new TypeMessage("coucou", "", "titi");
 		
-		publishMessage("titi", "Premier tweet", "");
+		publishMessage(m);
 		// close the topic connection
 		//topicConn.close();
 	}
 	
-	public static void publishMessage(String login, String mes, String loc) {
-		SenderTopic st;
-		if (loc.isEmpty()){
-			st = new SenderTopic("TopicMessage");
-		} else {
-			st = new SenderTopic("TopicMessageLoc");
-		}
+	public static void publishMessage(TypeMessage m) {
+		String login = m.getLoginSender();
+		String loc = m.getLoc();
 		
+		ObjectMessage objectMessage;
 		try {
-			TextMessage message = st.topicSession.createTextMessage();
-			message.setText(mes);
-			message.setJMSType(login);
+			if (loc.isEmpty()) {
+				objectMessage = st.topicSession.createObjectMessage(m);
+			}
+			else {
+				objectMessage = stLoc.topicSession.createObjectMessage(m);
+			}
+			objectMessage.setJMSType(login);
+			
+			
 			// publish the messages
-			st.topicPublisher.publish(message);
+			if (loc.isEmpty()) {
+				st.topicPublisher.publish(objectMessage);
+			} else {
+				stLoc.topicPublisher.publish(objectMessage);
+			}
 			
 			// print what we did
-			System.out.println("published: " + message.getText());
+			System.out.println("published: " + objectMessage.getObject().toString());
 		} catch (JMSException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
