@@ -5,128 +5,77 @@ import javax.naming.*;
 
 
 public class SenderTopic {
-
-	Session session = null;
-    MessageProducer sender = null;
-    MessageProducer senderGeo = null;
+	private InitialContext ctx;
+	private Topic topic;
+	private TopicConnectionFactory connFactory;
+	private TopicConnection topicConn;
+	private TopicSession topicSession;
+	private TopicPublisher topicPublisher;
+	private String topicName;
 	
-    
-    public SenderTopic()
-    {
-    	super();
-    	startJMSConnection();
-    }
-    
-	public void startJMSConnection() {
-        Context context = null;
-        ConnectionFactory factory = null;
-        Connection connection = null;
-        String factoryName = "ConnectionFactory";
-        
-        String topicDest = "TopicMess";
-        String topicDestGeo = "TopicMessGeo";
-        
-        Destination dest = null;
-        Destination destGeo = null;
-        
-        try {
-            // create the JNDI initial context.
-            context = new InitialContext();
-
-            // look up the ConnectionFactory
-            factory = (ConnectionFactory) context.lookup(factoryName);
-
-            // look up the Destination
-            dest = (Destination) context.lookup(topicDest);
-            destGeo = (Destination) context.lookup(topicDestGeo);
-            
-            // create the connection
-            connection = factory.createConnection();
-
-            // create the session
-            this.session = connection.createSession(
-                false, Session.AUTO_ACKNOWLEDGE);
-
-            // create the sender : deux producteurs : géolocalisé et non géolocalisé
-            this.sender = this.session.createProducer(dest);
-            this.senderGeo = this.session.createProducer(destGeo);
-            
-            
-            // start the connection, to enable message sends
-            connection.start();
-        } catch (JMSException exception) {
-            exception.printStackTrace();
-        } catch (NamingException exception) {
-            exception.printStackTrace();
-        } finally {
-            // close the context
-
-        }
-	}
-
-	
-	public void send(String message, String login, String loc)
-	{
+	public SenderTopic(String topicName){
+		this.topicName = topicName;
+		
 		try {
+			//get the initial context
+			this.ctx = new InitialContext();
 			
-			ObjectMessage objectMessage = session.createObjectMessage(message);
-			objectMessage.setStringProperty("login", login);
-			objectMessage.setStringProperty("loc", loc);
-			
-			
-			if (loc == "")
-			{
-				senderGeo.send(objectMessage);
-				System.out.println("Message envoyé sur TopicMess");
-			}
-			else
-			{
-				sender.send(objectMessage);
-				System.out.println("Message envoyé sur TopicMessGeo");
-			}
-			
-			
+			// lookup the topic object
+			this.topic = (Topic) ctx.lookup(topicName);
+			                                                                    
+			// lookup the topic connection factory
+			this.connFactory = (TopicConnectionFactory) ctx.
+			    lookup("ConnectionFactory");
+			                                                                   
+			// create a topic connection
+			this.topicConn = connFactory.createTopicConnection();
+			                                                                   
+			// create a topic session
+			this.topicSession = topicConn.createTopicSession(false, 
+			   Session.AUTO_ACKNOWLEDGE);
+			                                                                  
+			// create a topic publisher
+			this.topicPublisher = topicSession.createPublisher(topic);
+
+			this.topicPublisher.setDeliveryMode(DeliveryMode.PERSISTENT);
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (JMSException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	
+		                                                                      
+		
 	}
 	
-	
-
-	public static void main(String[] args) {
+	public static void main(String[] args) throws NamingException, JMSException {
 		
-		// Instancier la classe actuelle, lancer des connexions et créer différents types de messages
-		
-		System.out.println("Début du test");
-		
-		/*
-		UtilisateurSender senderInscription = new UtilisateurSender();
-		senderInscription.startJMSConnection();
-		senderInscription.inscrireUtilisateur("titi", "1234", "Mr Titi", "Titi");
-		
-		
-		System.out.println("Connection");	
-		
-		// Création d’un nouvel objet sender pour ne pas partager les sessions et les files temporaires
-		UtilisateurSender senderSeConnecter = new UtilisateurSender();
-		senderSeConnecter.startJMSConnection();
-		senderSeConnecter.seConnecter("toto", "1234");
-		*/
-
-		System.out.println("Préparation de l'envoi");	
-		
-		SenderTopic topic = new SenderTopic();
-
-		
-		topic.send("Coucou c'est toto", "toto", "");
-		
-		
-		
-		
-		System.out.println("Décommenter les lignes dans le main de UtilisateurSender pour créer une première fois l’utilisateur toto.");
+		publishMessage("titi", "Premier tweet", "");
+		// close the topic connection
+		//topicConn.close();
 	}
 	
-	
-	
+	public static void publishMessage(String login, String mes, String loc) {
+		SenderTopic st;
+		if (loc.isEmpty()){
+			st = new SenderTopic("TopicMessage");
+		} else {
+			st = new SenderTopic("TopicMessageLoc");
+		}
+		
+		try {
+			TextMessage message = st.topicSession.createTextMessage();
+			message.setText(mes);
+			message.setJMSType(login);
+			// publish the messages
+			st.topicPublisher.publish(message);
+			
+			// print what we did
+			System.out.println("published: " + message.getText());
+		} catch (JMSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
 }

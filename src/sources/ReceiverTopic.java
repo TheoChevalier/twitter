@@ -5,112 +5,94 @@ import javax.naming.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ReceiverTopic implements MessageListener {
-
+public class ReceiverTopic implements MessageListener, ExceptionListener {
 	
-    private MessageConsumer mc = null;
-    private Session session = null;
-    private Topic topicDest = null;
-    private String topicName = null;
-    private Connection connection = null;
-    private Context context = null;
-    private JDBC base = null;
-    
-    
-    public ReceiverTopic (Context context, Connection connection, String topic) {
-        super();
-
-        this.connection = connection;
-        this.context = context;
-        init(topic);
-    }
+	private InitialContext ctx;
+	private Topic topic;
+	private TopicConnectionFactory connFactory;
+	private TopicConnection topicConn;
+	private TopicSession topicSession;
+	private TopicSubscriber topicSubscriber;
+	private String topicName;
+	private String login;
 	
-
-    public void init(String topicName) {
-        try {
-        	topicDest = (Topic) context.lookup(topicName);
-            session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-            mc = session.createConsumer(topicDest);
-            MessageListener listener = this;
-            mc.setMessageListener(listener);
-            connection.start();
-            System.out.println("Waiting for incoming messages…");
-
-        } catch (JMSException exception) {
-            exception.printStackTrace();
-        } catch (NamingException exception) {
-            exception.printStackTrace();
-        }
-    }
-
-
-	public void onMessage(Message m) {
-
-		
-		ObjectMessage om = (ObjectMessage) m;
-		try {
-			
-			Destination dest = om.getJMSDestination();
-			String login = om.getStringProperty("login");
-			
-			TextMessage text = (TextMessage) m;
-            String message = text.getText();
-            
-            
-			if (dest.toString() == "TopicMess")
-			{
-				base.ajouterMessage(message,"");
-				//base.ajouterMessage(m.toString(),"");
-				
-				System.out.println("Message reçu de TopicMess");
-			}
-			else if (dest.toString() == "TopicMessGeo")
-			{
-				base.ajouterMessage(message,om.getStringProperty("loc"));
-				//base.ajouterMessage(m.toString(),"");
-				
-				System.out.println("Message reçu de TopicMessGeo");
-			}
-			
+	public ReceiverTopic(String topicName, String login, String from) {
+		this.topicName = topicName;
+		this.login = login;
+		 // get the initial context
+	    try {
+			this.ctx = new InitialContext();
+			// lookup the topic object
+		    this.topic = (Topic) ctx.lookup(topicName);
+		                                                                       
+		    // lookup the topic connection factory
+		    this.connFactory = (TopicConnectionFactory) ctx.
+		       lookup("ConnectionFactory");
+		                                                                      
+		    // create a topic connection
+		    this.topicConn = connFactory.createTopicConnection();
+		    topicConn.setClientID(login);
+		                                                                       
+		    // create a topic session
+		    this.topicSession = topicConn.createTopicSession(false,
+		        Session.AUTO_ACKNOWLEDGE);
+		                                                                       
+		    // create a topic subscriber
+		    this.topicSubscriber = topicSession.createDurableSubscriber(topic, login, "JMSType IN ('" + from + "')", true);
+		    
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (JMSException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-
 	}
-	
-	
-
-    public static void main(String[] args) {
-        try {
-            //initialisation de la connection
-            ConnectionFactory factory = null;
-            Connection connection = null;
-            Context context = null;
-            //configuration
-            String factoryName = "ConnectionFactory";
-            // create the JNDI initial context
-            context = new InitialContext();
-            // look up the ConnectionFactory
-            factory = (ConnectionFactory) context.lookup(factoryName);
-            // look up the Destination
-            // create the connection
-            connection = factory.createConnection();
-
-            JDBC bd = new JDBC ("Twitter");
-            ReceiverTopic topic = new ReceiverTopic(context, connection, "TopicMess");
-            ReceiverTopic topicGeo = new ReceiverTopic(context, connection, "TopicMessGeo");
-            
-            
-        } catch (JMSException exception) {
-            exception.printStackTrace();
-        } catch (NamingException exception) {
-            exception.printStackTrace();
-        }
+	public static void main(String[] args) throws Exception
+    {
+                                                                      
+    // set an asynchronous message listener
+    ReceiverTopic asyncSubscriber = new ReceiverTopic("TopicMessage", "toto", "titi");
+    asyncSubscriber.topicSubscriber.setMessageListener(asyncSubscriber);
+                                                                      
+    // set an asynchronous exception listener on the connection
+    asyncSubscriber.topicConn.setExceptionListener(asyncSubscriber);
+                                                                       
+    // start the connection
+    asyncSubscriber.topicConn.start();
+                           
+    // wait for messages
+    System.out.print("waiting for messages...");
+                                                                      
+    // close the topic connection
+    //topicConn.close();
     }
-    
-    
-    
-	
+                                                                           
+    /**
+       This method is called asynchronously by JMS when a message arrives
+       at the topic. Client applications must not throw any exceptions in
+       the onMessage method.
+       @param message A JMS message.
+     */
+    public void onMessage(Message message)
+    {
+    TextMessage msg = (TextMessage) message;
+    try {
+       System.out.println("received: " + msg.getText() + " from: " + msg.getJMSType());
+    } catch (JMSException ex) {
+       ex.printStackTrace();
+    }
+    }
+                                                                           
+    /**
+       This method is called asynchronously by JMS when some error occurs.
+       When using an asynchronous message listener it is recommended to use
+       an exception listener also since JMS have no way to report errors
+       otherwise.
+       @param exception A JMS exception.
+     */
+    public void onException(JMSException exception)
+    {
+       System.err.println("something bad happended: " + exception);
+    }
 }
