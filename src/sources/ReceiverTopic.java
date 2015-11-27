@@ -5,6 +5,7 @@ import javax.naming.*;
 
 import Types.TypeConnection;
 import Types.TypeMessage;
+import design.MainView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,6 +91,7 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
 		TypeMessage mess;
 		try {
 			mess = (TypeMessage) om.getObject();
+			//MainView.updateListTweet(mess);
 			System.out.println("received: " + mess.toString());
 		} catch (JMSException e) {
 			// TODO Auto-generated catch block

@@ -40,6 +40,7 @@ import javax.swing.AbstractListModel;
 
 public class MainView extends JFrame {
 
+	private static DefaultTableModel listTweetFeed;
 	private JPanel contentPane;
 	private UtilisateurSender sender;
 	private String login;
@@ -198,6 +199,23 @@ public class MainView extends JFrame {
 	    table_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
 	    List<TypeMessage> listMessageFollow = sender.getMessageFollow(login);
 	    
+	    int i = 0;
+	    Object[][] res;
+	    if (listMessageFollow != null) {
+	    	res = new Object[listMessageFollow.size()][5];
+		    for (TypeMessage typeMessage : listMessageFollow) {
+		    	res[i][0] = typeMessage.getContenu();
+		    	String date = typeMessage.getTimestamp();
+		    	res[i][1] = date.substring(0, 10);
+		    	res[i][2] = date.substring(10);
+		    	res[i][3] = typeMessage.getLoc();
+		    	res[i][4] = typeMessage.getLoginSender();
+		    	i++;
+			}
+	    } else {
+	    	res = new Object[0][5];
+	    }
+	    
 	    //if (listMessageFollow != null) {
 	    	/*Object[][] res = new Object[listMessageFollow.size()][];
     		listMessageFollow.toArray(res);
@@ -213,15 +231,12 @@ public class MainView extends JFrame {
     		}
     		
     		*/
-    		table_2.setModel(new DefaultTableModel(
-    				new Object[][] {
-    		    		{"Toto", "salut ça va bien ?", "22/11/2015"},
-    		    		{"Titi", "Test", "20/11/2015"}
-    		    	},
-    		    	new String[] {
-    		    		"Content", "Date", "Loc", "Login" 
-    		    	}
-    		));
+	    	listTweetFeed = new DefaultTableModel(
+				res,
+		    	new String[] {
+		    		"Content", "Date", "Heure", "Loc", "Login" 
+		    	});
+    		table_2.setModel(listTweetFeed);
 	    //}
 	     
 	    
@@ -407,5 +422,11 @@ public class MainView extends JFrame {
 			sender.seDeconnecter();
 			close();
 		}
+	}
+	
+	public static void updateListTweet(TypeMessage m){
+		String date = m.getTimestamp();
+		String row[] = {m.getContenu(), date.substring(0, 10), date.substring(10), m.getLoc(), m.getLoginSender()};
+		listTweetFeed.addRow(row);
 	}
 }

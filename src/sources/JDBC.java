@@ -3,6 +3,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -185,7 +186,24 @@ public class JDBC {
 				ResultSet rs = s.executeQuery("SELECT idU FROM Utilisateurs WHERE loginU = '" + message.getLoginSender() + "'");
 				if (rs.next()){
 					int idU = rs.getInt(1);
-					s.execute("INSERT INTO Messages (contenuM, timestampM, locM, idU) VALUES ('" +message.getContenu() + "'," + "'" + message.getTimestamp() + "'," + "'" + message.getLoc() + "'," + idU +")") ;
+					//s.execute("INSERT INTO Messages (contenuM, timestampM, locM, idU) VALUES ('" +message.getContenu() + "'," + "'" + message.getTimestamp() + "'," + "'" + message.getLoc() + "'," + idU +")") ;
+					
+					String sql = "INSERT INTO Messages (contenuM, timestampM, locM, idU) VALUES ('" +message.getContenu() + "'," + "'" + message.getTimestamp() + "'," + "'" + message.getLoc() + "'," + idU +")";
+					PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+
+					stmt.executeUpdate();
+					ResultSet result = stmt.getGeneratedKeys();
+				    rs.next();
+				    int auto_id = rs.getInt(1);
+				    System.out.println(auto_id);
+				    int idUFollower;
+				    List<String> listeFollowers = this.listeFollowers(new TypeRecherche(message.getLoginSender()));
+				    for (String login : listeFollowers) {
+				    	s.executeQuery("SELECT idU FROM Utilisateurs WHERE loginU = '" + login + "'");
+				    	idUFollower = rs.getInt(1);
+						ajouterRecevoir(auto_id, idUFollower);
+					}
 					return 0;
 				}
 			} catch (SQLException e) {
