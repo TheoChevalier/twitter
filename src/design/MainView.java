@@ -32,12 +32,9 @@ import javax.swing.JTable;
 import javax.swing.JTabbedPane;
 import javax.swing.ListModel;
 import javax.swing.table.TableModel;
-<<<<<<< Upstream, based on branch 'master' of git@github.com:TheoChevalier/twitter.git
 
 import Types.TypeMessage;
 
-=======
->>>>>>> 09b9de6 tabbed-panes UI
 import java.awt.ScrollPane;
 import javax.swing.AbstractListModel;
 
@@ -134,7 +131,6 @@ public class MainView extends JFrame {
 		label.setBounds(435, 12, 296, 27);
 		panel_1.add(label);
 		
-<<<<<<< Upstream, based on branch 'master' of git@github.com:TheoChevalier/twitter.git
 		JLabel label_11 = new JLabel("Welcome to Twitter, "+ login +"!");
 		label_11.setBounds(0, 16, 1188, 27);
 		contentPane.add(label_11);
@@ -159,32 +155,6 @@ public class MainView extends JFrame {
 			}
 		});
 		btnLogOut.setBounds(1073, 33, 97, 25);
-=======
-		JLabel label_11 = new JLabel("Welcome to Twitter, <dynamic>!");
-		label_11.setBounds(0, 15, 1188, 27);
-		contentPane.add(label_11);
-		label_11.setHorizontalAlignment(SwingConstants.CENTER);
-		label_11.setFont(new Font("Dialog", Font.BOLD, 22));
-		
-		JButton btnUpdateYourProfile = new JButton("Update your profile");
-		btnUpdateYourProfile.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				Profile frame = new Profile(sender, login);
-				frame.setVisible(true);
-			}
-		});
-		btnUpdateYourProfile.setBounds(902, 19, 177, 25);
-		contentPane.add(btnUpdateYourProfile);
-		btnUpdateYourProfile.setFont(new Font("Dialog", Font.PLAIN, 15));
-		
-		JButton btnLogOut = new JButton("Log Out");
-		btnLogOut.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				confirm();
-			}
-		});
-		btnLogOut.setBounds(1091, 19, 97, 25);
->>>>>>> 09b9de6 tabbed-panes UI
 		contentPane.add(btnLogOut);
 		btnLogOut.setFont(new Font("Dialog", Font.PLAIN, 15));
 
@@ -226,7 +196,6 @@ public class MainView extends JFrame {
 	    table_2 = new JTable();
 	    table_2.setEnabled(false);
 	    table_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
-<<<<<<< Upstream, based on branch 'master' of git@github.com:TheoChevalier/twitter.git
 	    List<TypeMessage> listMessageFollow = sender.getMessageFollow(login);
 	    
 	    //if (listMessageFollow != null) {
@@ -266,28 +235,6 @@ public class MainView extends JFrame {
 	    //Permet d'afficher l'en-tête
 	    JScrollPane scrollPane = new JScrollPane(table_2);
 	    scrollPane.setBounds(12, 64, 1147, 575);
-=======
-	    table_2.setModel(new DefaultTableModel(
-	    	new Object[][] {
-	    		{"Toto", "salut ça va bien ?", "22/11/2015"},
-	    		{"Titi", "Test", "20/11/2015"}
-	    	},
-	    	new String[] {
-	    		"Login", "Content", "Date"
-	    	}
-	    ));
-	    
-	    //Définition des colonnes
-	    table_2.getColumnModel().getColumn(0).setPreferredWidth(136);
-	    table_2.getColumnModel().getColumn(1).setPreferredWidth(323);
-	    table_2.getColumnModel().getColumn(2).setPreferredWidth(110);
-	    
-	    table_2.setBounds(209, 840, 421, 145);
-	    
-	    //Permet d'afficher l'en-tête
-	    JScrollPane scrollPane = new JScrollPane(table_2);
-	    scrollPane.setBounds(471, 364, 546, 172);
->>>>>>> 09b9de6 tabbed-panes UI
 	    
 	    panel_1.add(scrollPane);
 
@@ -418,7 +365,6 @@ public class MainView extends JFrame {
 		btnSend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(! tbxContenu.getText().isEmpty()) {
-<<<<<<< Upstream, based on branch 'master' of git@github.com:TheoChevalier/twitter.git
 					TypeMessage m = new TypeMessage(tbxContenu.getText(), "", login);
 					if (SenderTopic.publishMessage(m)) {
 						switch (sender.ajouterMessage(m)) {
@@ -430,8 +376,6 @@ public class MainView extends JFrame {
 							break;
 						};
 					}
-=======
->>>>>>> 09b9de6 tabbed-panes UI
 					
 				} else {
 					lblResultPostMsg.setText("Please fill in all fields.");
