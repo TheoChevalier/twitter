@@ -48,7 +48,6 @@ public class MainView extends JFrame {
 	private JTable table_1;
 	private JTable table_2;
 
-	//toto
 	/**
 	 * Launch the application.
 	 */
