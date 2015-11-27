@@ -410,7 +410,7 @@ public class MainView extends JFrame {
 			lblResultListFollowers.setText("No one is following you.");
 		}
 	}
-	
+
 	private void close() {
 		this.dispose();
 	}
