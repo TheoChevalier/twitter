@@ -9,6 +9,7 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import sources.ReceiverTopic;
 import sources.SenderTopic;
 import sources.UtilisateurSender;
 
@@ -36,17 +37,22 @@ import javax.swing.table.TableModel;
 import Types.TypeMessage;
 
 import java.awt.ScrollPane;
+
+import javax.jms.JMSException;
 import javax.swing.AbstractListModel;
 
 public class MainView extends JFrame {
 
 	private static DefaultTableModel listTweetFeed;
+	private ReceiverTopic asyncSubscriber;
+	private ReceiverTopic asyncSubscriber1;
 	private JPanel contentPane;
 	private UtilisateurSender sender;
 	private String login;
 	private JTextField tbxFindUser;
 	private JTable table_1;
 	private JTable table_2;
+	private JTextField tbxLoc;
 
 	/**
 	 * Launch the application.
@@ -68,8 +74,43 @@ public class MainView extends JFrame {
 	 * Create the frame.
 	 */
 	public MainView(final UtilisateurSender sender, final String login) {
+		
 		this.sender = sender;
 		this.login = login;
+		
+		List<String> listFollowersArray = sender.listeFollowers(login);
+		
+		 
+	    try {
+	    	// set an asynchronous message listener
+		    asyncSubscriber = new ReceiverTopic("TopicMessage", login, listFollowersArray);
+		    
+			asyncSubscriber.getTopicSubscriber().setMessageListener(asyncSubscriber);
+			// set an asynchronous exception listener on the connection
+		    asyncSubscriber.getTopicConn().setExceptionListener(asyncSubscriber);
+		                                                                       
+		    // start the connection
+		    asyncSubscriber.getTopicConn().start();
+		                           
+		    // set an asynchronous message listener
+		    asyncSubscriber1 = new ReceiverTopic("TopicMessageLoc", login, listFollowersArray);
+		    asyncSubscriber1.getTopicSubscriber().setMessageListener(asyncSubscriber1);
+		                                                                      
+		    // set an asynchronous exception listener on the connection
+		    asyncSubscriber1.getTopicConn().setExceptionListener(asyncSubscriber1);
+		                                                                       
+		    // start the connection
+		    asyncSubscriber1.getTopicConn().start();
+		    
+		    // wait for messages
+		    System.out.print("waiting for messages...");
+		} catch (JMSException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	                                                                      
+	    
+	    
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 1200, 800);
 		contentPane = new JPanel();
@@ -115,7 +156,8 @@ public class MainView extends JFrame {
 		panel.add(label_10);
 		
 		final JLabel lblResultPostMsg = new JLabel("");
-		lblResultPostMsg.setBounds(370, 499, 382, 15);
+		lblResultPostMsg.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblResultPostMsg.setBounds(370, 499, 382, 27);
 		panel.add(lblResultPostMsg);
 		
 		final JLabel lblResultResearchUser = new JLabel("");
@@ -276,7 +318,7 @@ public class MainView extends JFrame {
 			listModelFollow.addElement(f);
 		}
 		
-		List<String> listFollowersArray = sender.listeFollowers(login);
+
 		final DefaultListModel listModelFollowers = new DefaultListModel();
 		for(String f:listFollowersArray) {
 			listModelFollowers.addElement(f);
@@ -302,6 +344,14 @@ public class MainView extends JFrame {
 	            		lblResultUnfollow.setText("You’re not following this user anymore.");
 	            		int selectedIndex = listFollow.getSelectedIndex();
 	            		listModelFollow.remove(selectedIndex);
+	            		try {
+							asyncSubscriber.getTopicSession().unsubscribe(login);
+							asyncSubscriber1.getTopicSession().unsubscribe(login+"Loc");
+							System.out.println("Topic: unsubscribe");
+						} catch (JMSException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 	            		break;
 	            	default:
 	            		lblResultUnfollow.setText("Oops, an error occured while trying to unfollow this user. Try again later.");
@@ -381,7 +431,7 @@ public class MainView extends JFrame {
 		btnSend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(! tbxContenu.getText().isEmpty()) {
-					TypeMessage m = new TypeMessage(tbxContenu.getText(), "", login);
+					TypeMessage m = new TypeMessage(tbxContenu.getText(), tbxLoc.getText(), login);
 					if (SenderTopic.publishMessage(m)) {
 						switch (sender.ajouterMessage(m)) {
 						case 0:
@@ -400,6 +450,16 @@ public class MainView extends JFrame {
 		});
 		btnSend.setBounds(763, 432, 97, 25);
 		panel.add(btnSend);
+		
+		tbxLoc = new JTextField();
+		tbxLoc.setBounds(490, 470, 116, 22);
+		panel.add(tbxLoc);
+		tbxLoc.setColumns(10);
+		
+		JLabel lblGeolocation = new JLabel("Geolocation");
+		lblGeolocation.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblGeolocation.setBounds(370, 470, 108, 22);
+		panel.add(lblGeolocation);
 		
 
 		
@@ -421,6 +481,8 @@ public class MainView extends JFrame {
 		int dialogResult = JOptionPane.showConfirmDialog(this, "Do you really want to log out?", "Log Out", dialogButton);
 		if(dialogResult == 0) {
 			sender.seDeconnecter();
+			asyncSubscriber.seDeconnecter();
+			asyncSubscriber1.seDeconnecter();
 			close();
 		}
 	}

@@ -37,17 +37,26 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
 		       lookup("ConnectionFactory");
 		                                                                      
 		    // create a topic connection
-		    this.topicConn = connFactory.createTopicConnection();
-		    topicConn.setClientID(login);
+		    this.setTopicConn(connFactory.createTopicConnection());
+		    if(topicName.equals("TopicMessage")) {
+		    	getTopicConn().setClientID(login);
+		    } else {
+		    	getTopicConn().setClientID(login + "Loc");
+		    }
 		                                                                       
 		    // create a topic session
-		    this.topicSession = topicConn.createTopicSession(false,
-		        Session.AUTO_ACKNOWLEDGE);
+		    this.setTopicSession(getTopicConn().createTopicSession(false,
+		        Session.AUTO_ACKNOWLEDGE));
 		    
 		    String filter = this.addFilter(listeFollow);
-		                                                                       
-		    // create a topic subscriber
-		    this.topicSubscriber = topicSession.createDurableSubscriber(topic, login, filter, true);
+		    
+		    if(topicName.equals("TopicMessage")) {
+		    	// create a topic subscriber
+			    this.setTopicSubscriber(getTopicSession().createDurableSubscriber(topic, login, filter, true));
+		    } else {
+		    	// create a topic subscriber
+			    this.setTopicSubscriber(getTopicSession().createDurableSubscriber(topic, login+"Loc", filter, true));
+		    }
 		    
 		} catch (NamingException e) {
 			// TODO Auto-generated catch block
@@ -60,23 +69,33 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
 	public static void main(String[] args) throws Exception
     {
 		List<String> liste =  new ArrayList<String>() ;
-		liste.add("toto");
+		liste.add("titi");
 		
-    // set an asynchronous message listener
-    ReceiverTopic asyncSubscriber = new ReceiverTopic("TopicMessage", "titi", liste);
-    asyncSubscriber.topicSubscriber.setMessageListener(asyncSubscriber);
-                                                                      
-    // set an asynchronous exception listener on the connection
-    asyncSubscriber.topicConn.setExceptionListener(asyncSubscriber);
-                                                                       
-    // start the connection
-    asyncSubscriber.topicConn.start();
-                           
-    // wait for messages
-    System.out.print("waiting for messages...");
-                                                                      
-    // close the topic connection
-    //topicConn.close();
+	    // set an asynchronous message listener
+	    ReceiverTopic asyncSubscriber = new ReceiverTopic("TopicMessage", "toto", liste);
+	    asyncSubscriber.getTopicSubscriber().setMessageListener(asyncSubscriber);
+	                                                                      
+	    // set an asynchronous exception listener on the connection
+	    asyncSubscriber.getTopicConn().setExceptionListener(asyncSubscriber);
+	                                                                       
+	    // start the connection
+	    asyncSubscriber.getTopicConn().start();
+	                           
+	    // set an asynchronous message listener
+	    ReceiverTopic asyncSubscriber1 = new ReceiverTopic("TopicMessageLoc", "toto", liste);
+	    asyncSubscriber1.getTopicSubscriber().setMessageListener(asyncSubscriber1);
+	                                                                      
+	    // set an asynchronous exception listener on the connection
+	    asyncSubscriber1.getTopicConn().setExceptionListener(asyncSubscriber1);
+	                                                                       
+	    // start the connection
+	    asyncSubscriber1.getTopicConn().start();
+	    
+	    // wait for messages
+	    System.out.print("waiting for messages...");
+	                                                                      
+	    // close the topic connection
+	    //topicConn.close();
     }
                                                                            
     /**
@@ -125,9 +144,36 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
     			}
     		}
     	} else {
-    		filter = "JMSType IN ''";
+    		filter = "JMSType IN ('')";
     	}
     	
     	return filter;
     }
+	public TopicSubscriber getTopicSubscriber() {
+		return topicSubscriber;
+	}
+	public void setTopicSubscriber(TopicSubscriber topicSubscriber) {
+		this.topicSubscriber = topicSubscriber;
+	}
+	public TopicConnection getTopicConn() {
+		return topicConn;
+	}
+	public void setTopicConn(TopicConnection topicConn) {
+		this.topicConn = topicConn;
+	}
+	public void seDeconnecter(){
+   	 // close the topic connection
+       try {
+		topicConn.close();
+	} catch (JMSException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+   }
+	public TopicSession getTopicSession() {
+		return topicSession;
+	}
+	public void setTopicSession(TopicSession topicSession) {
+		this.topicSession = topicSession;
+	}
 }
