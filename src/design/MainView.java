@@ -344,14 +344,6 @@ public class MainView extends JFrame {
 	            		lblResultUnfollow.setText("You’re not following this user anymore.");
 	            		int selectedIndex = listFollow.getSelectedIndex();
 	            		listModelFollow.remove(selectedIndex);
-	            		try {
-							asyncSubscriber.getTopicSession().unsubscribe(login);
-							asyncSubscriber1.getTopicSession().unsubscribe(login+"Loc");
-							System.out.println("Topic: unsubscribe");
-						} catch (JMSException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
 	            		break;
 	            	default:
 	            		lblResultUnfollow.setText("Oops, an error occured while trying to unfollow this user. Try again later.");

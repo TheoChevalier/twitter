@@ -52,10 +52,10 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
 		    
 		    if(topicName.equals("TopicMessage")) {
 		    	// create a topic subscriber
-			    this.setTopicSubscriber(getTopicSession().createDurableSubscriber(topic, login, filter, true));
+			    topicSubscriber = topicSession.createDurableSubscriber(topic, login, filter, true);
 		    } else {
 		    	// create a topic subscriber
-			    this.setTopicSubscriber(getTopicSession().createDurableSubscriber(topic, login+"Loc", filter, true));
+			    topicSubscriber = topicSession.createDurableSubscriber(topic, login+"Loc", filter, true);
 		    }
 		    
 		} catch (NamingException e) {
@@ -68,34 +68,18 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
 	}
 	public static void main(String[] args) throws Exception
     {
-		List<String> liste =  new ArrayList<String>() ;
-		liste.add("titi");
-		
-	    // set an asynchronous message listener
-	    ReceiverTopic asyncSubscriber = new ReceiverTopic("TopicMessage", "toto", liste);
-	    asyncSubscriber.getTopicSubscriber().setMessageListener(asyncSubscriber);
-	                                                                      
-	    // set an asynchronous exception listener on the connection
+		SenderTopic.publishMessage(new TypeMessage("couou", "", "titi"));
+		List<String> listFollowersArray = new ArrayList<String>();
+		listFollowersArray.add("titi");
+		// set an asynchronous message listener
+	    ReceiverTopic asyncSubscriber = new ReceiverTopic("TopicMessage", "toto", listFollowersArray);
+	    
+		asyncSubscriber.getTopicSubscriber().setMessageListener(asyncSubscriber);
+		// set an asynchronous exception listener on the connection
 	    asyncSubscriber.getTopicConn().setExceptionListener(asyncSubscriber);
 	                                                                       
 	    // start the connection
 	    asyncSubscriber.getTopicConn().start();
-	                           
-	    // set an asynchronous message listener
-	    ReceiverTopic asyncSubscriber1 = new ReceiverTopic("TopicMessageLoc", "toto", liste);
-	    asyncSubscriber1.getTopicSubscriber().setMessageListener(asyncSubscriber1);
-	                                                                      
-	    // set an asynchronous exception listener on the connection
-	    asyncSubscriber1.getTopicConn().setExceptionListener(asyncSubscriber1);
-	                                                                       
-	    // start the connection
-	    asyncSubscriber1.getTopicConn().start();
-	    
-	    // wait for messages
-	    System.out.print("waiting for messages...");
-	                                                                      
-	    // close the topic connection
-	    //topicConn.close();
     }
                                                                            
     /**
