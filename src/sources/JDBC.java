@@ -242,6 +242,32 @@ public class JDBC {
         	return null;
         }
         
+
+        public static ArrayList<TypeMessage> getMessagePosted(TypeRecherche r){
+        	ArrayList<TypeMessage> liste =  new ArrayList<TypeMessage>();
+        	TypeMessage message;
+
+        	try {
+		        Statement s = conn.createStatement();
+ 
+		        ResultSet rs = s.executeQuery("SELECT M.contenuM, M.timestampM, M.locM, U.loginU FROM Messages M, Utilisateurs U WHERE U.loginU='" + r.getLogin() +"' AND M.idU=U.idU");
+		        
+
+		        while (rs.next()){
+				    // System.out.println(rs.getString(1) + rs.getString(2) + rs.getString(3) + rs.getString(4));
+		        	message = new TypeMessage(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4));
+		        	liste.add(message);
+		        }
+		        return liste;
+		        
+        	} catch (SQLException e) {
+				e.printStackTrace();
+			}
+        	return null;
+        }
+        
+        
+        
         public List<String> rechercherUtilisateur(TypeRecherche r){
         	List<String> liste =  new ArrayList<String>() ;
         	try {
@@ -430,6 +456,26 @@ public class JDBC {
         public boolean inscrireUtilisateur(TypeInscription i) {
         	return ajouterUtilisateur(i.getLogin(), i.getPassword(), i.getNom(), i.getPrenom());
         }
+        
+
+        public void ajoutsTest(){
+        	
+        	boolean insert = ajouterUtilisateur("Toto","1234","Toto","Toto");
+        	insert = ajouterUtilisateur("Titi","1234","Titi","Titi");
+        	insert = ajouterUtilisateur("Tutu","1234","Tutu","Tutu");
+        	insert = ajouterUtilisateur("Tata","1234","Tata","Tata");
+        	insert = ajouterUtilisateur("Biloute","1234","Biloute","Biloute");
+        	
+        	ajouterEst_Abonne(new TypeFollow("Titi","Toto"));
+        	ajouterEst_Abonne(new TypeFollow("Tutu","Toto"));
+        	ajouterEst_Abonne(new TypeFollow("Toto","Tata"));
+        	
+        	
+        	ajouterMessage(new TypeMessage("I Feel Good NaNaNaNaNa","Toulouse","Toto"));
+        }
+ 
+        
+        
         
         public static void main(String[] args) {
         	
