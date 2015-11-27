@@ -259,7 +259,8 @@ public class MainView extends JFrame {
 		label_1.setBounds(55, 12, 142, 19);
 		panel.add(label_1);
 		
-		JLabel lblNbMsg = new JLabel("0");
+		String nbM = Integer.toString(sender.nombreMessage(login));
+		JLabel lblNbMsg = new JLabel(nbM);
 		lblNbMsg.setFont(new Font("Dialog", Font.BOLD, 15));
 		lblNbMsg.setBounds(217, 13, 56, 16);
 		panel.add(lblNbMsg);

@@ -188,21 +188,33 @@ public class JDBC {
 					int idU = rs.getInt(1);
 					//s.execute("INSERT INTO Messages (contenuM, timestampM, locM, idU) VALUES ('" +message.getContenu() + "'," + "'" + message.getTimestamp() + "'," + "'" + message.getLoc() + "'," + idU +")") ;
 					
-					String sql = "INSERT INTO Messages (contenuM, timestampM, locM, idU) VALUES ('" +message.getContenu() + "'," + "'" + message.getTimestamp() + "'," + "'" + message.getLoc() + "'," + idU +")";
-					PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-
-
-					stmt.executeUpdate();
-					ResultSet result = stmt.getGeneratedKeys();
-				    rs.next();
-				    int auto_id = rs.getInt(1);
-				    System.out.println(auto_id);
+					//boolean ok = s.execute("INSERT INTO Messages (contenuM, timestampM, locM, idU) VALUES ('" +message.getContenu() + "'," + "'" + message.getTimestamp() + "'," + "'" + message.getLoc() + "'," + idU +")");
+					int id = -1;
+					String sql = "INSERT INTO Messages (contenuM, timestampM, locM, idU) VALUES (?, ?, ?, ?)";
+					PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+					
+					preparedStatement.setString(1, message.getContenu());
+					preparedStatement.setString(2, message.getTimestamp());
+					preparedStatement.setString(3, message.getLoc());
+					preparedStatement.setInt(4, idU);
+					preparedStatement.executeUpdate();
+					ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+					if (generatedKeys.next()) {
+					    id = generatedKeys.getInt(1);
+					} else {
+					    // Throw exception?
+					}
+				    
+				    System.out.println("Identifiant: " + id);
 				    int idUFollower;
 				    List<String> listeFollowers = this.listeFollowers(new TypeRecherche(message.getLoginSender()));
 				    for (String login : listeFollowers) {
-				    	s.executeQuery("SELECT idU FROM Utilisateurs WHERE loginU = '" + login + "'");
-				    	idUFollower = rs.getInt(1);
-						ajouterRecevoir(auto_id, idUFollower);
+				    	System.out.println("OK");
+				    	rs = s.executeQuery("SELECT idU FROM Utilisateurs WHERE loginU = '" + login + "'");
+				    	if (rs.next()){
+				    		idUFollower = rs.getInt(1);
+				    		ajouterRecevoir(id, idUFollower);
+				    	}
 					}
 					return 0;
 				}
@@ -393,7 +405,7 @@ public class JDBC {
         	Statement s;
 			try {
 				s = conn.createStatement();
-				s.execute("INSERT INTO Recevoir(" + idM + "," + idU + " )") ;
+				s.execute("INSERT INTO Recevoir VALUES (" + idM + "," + idU + " )") ;
 				return true;
 				
 			} catch (SQLException e) {
