@@ -2,6 +2,7 @@ package sources;
 
 import javax.jms.*;
 import javax.naming.*;
+import javax.swing.SwingUtilities;
 
 import Types.TypeConnection;
 import Types.TypeMessage;
@@ -22,8 +23,10 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
 	private TopicSubscriber topicSubscriber;
 	private String topicName;
 	private String login;
+	private MainView view;
 	
-	public ReceiverTopic(String topicName, String login, List<String> listeFollow) {
+	public ReceiverTopic(String topicName, String login, List<String> listeFollow, MainView view) {
+		this.view = view;
 		this.topicName = topicName;
 		this.login = login;
 		 // get the initial context
@@ -68,11 +71,16 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
 	}
 	public static void main(String[] args) throws Exception
     {
-		SenderTopic.publishMessage(new TypeMessage("couou", "", "titi"));
+		UtilisateurSender senderSeConnecter = new UtilisateurSender();
+		
+		MainView frame = new MainView(senderSeConnecter, "toto");
+		frame.setVisible(true);
+		
+		//SenderTopic.publishMessage(new TypeMessage("couou", "", "titi"));
 		List<String> listFollowersArray = new ArrayList<String>();
 		listFollowersArray.add("titi");
 		// set an asynchronous message listener
-	    ReceiverTopic asyncSubscriber = new ReceiverTopic("TopicMessage", "toto", listFollowersArray);
+	    ReceiverTopic asyncSubscriber = new ReceiverTopic("TopicMessage", "toto", listFollowersArray, frame);
 	    
 		asyncSubscriber.getTopicSubscriber().setMessageListener(asyncSubscriber);
 		// set an asynchronous exception listener on the connection
@@ -80,6 +88,7 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
 	                                                                       
 	    // start the connection
 	    asyncSubscriber.getTopicConn().start();
+	    SenderTopic.publishMessage(new TypeMessage("couou", "", "titi"));
     }
                                                                            
     /**
@@ -100,6 +109,9 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		//Test
+		view.getTbxLoc().setText("coucou");
     }
                                                                            
     /**

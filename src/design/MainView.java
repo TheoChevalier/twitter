@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.DefaultListModel;
@@ -41,34 +42,37 @@ import java.awt.ScrollPane;
 import javax.jms.JMSException;
 import javax.swing.AbstractListModel;
 
-public class MainView extends JFrame {
+public class MainView extends JFrame implements Runnable {
 
 	private static DefaultTableModel listTweetFeed;
 	private ReceiverTopic asyncSubscriber;
 	private ReceiverTopic asyncSubscriber1;
 	private JPanel contentPane;
-	private UtilisateurSender sender;
+	private static UtilisateurSender sender;
 	private String login;
 	private JTextField tbxFindUser;
 	private JTable table_1;
 	private JTable table_2;
-	private JTextField tbxLoc;
+	private static JTextField tbxLoc;
 
 	/**
 	 * Launch the application.
 	 */
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainView frame = new MainView(sender);
-					frame.setVisible(true);
+					UtilisateurSender senderSeConnecter = new UtilisateurSender();
+						
+						MainView frame = new MainView(senderSeConnecter, "toto");
+						frame.setVisible(true);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
-	}*/
+	}
 
 	/**
 	 * Create the frame.
@@ -81,9 +85,9 @@ public class MainView extends JFrame {
 		List<String> listFollowersArray = sender.listeFollowers(login);
 		
 		 
-	    try {
+	    /*try {
 	    	// set an asynchronous message listener
-		    asyncSubscriber = new ReceiverTopic("TopicMessage", login, listFollowersArray);
+		    asyncSubscriber = new ReceiverTopic("TopicMessage", login, listFollowersArray, this);
 		    
 			asyncSubscriber.getTopicSubscriber().setMessageListener(asyncSubscriber);
 			// set an asynchronous exception listener on the connection
@@ -91,9 +95,10 @@ public class MainView extends JFrame {
 		                                                                       
 		    // start the connection
 		    asyncSubscriber.getTopicConn().start();
+		    
 		                           
 		    // set an asynchronous message listener
-		    asyncSubscriber1 = new ReceiverTopic("TopicMessageLoc", login, listFollowersArray);
+		    asyncSubscriber1 = new ReceiverTopic("TopicMessageLoc", login, listFollowersArray, this);
 		    asyncSubscriber1.getTopicSubscriber().setMessageListener(asyncSubscriber1);
 		                                                                      
 		    // set an asynchronous exception listener on the connection
@@ -109,7 +114,7 @@ public class MainView extends JFrame {
 			e1.printStackTrace();
 		}
 	                                                                      
-	    
+	    */
 	    
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 1200, 800);
@@ -423,7 +428,7 @@ public class MainView extends JFrame {
 		btnSend.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(! tbxContenu.getText().isEmpty()) {
-					TypeMessage m = new TypeMessage(tbxContenu.getText(), tbxLoc.getText(), login);
+					TypeMessage m = new TypeMessage(tbxContenu.getText(), getTbxLoc().getText(), login);
 					if (SenderTopic.publishMessage(m)) {
 						switch (sender.ajouterMessage(m)) {
 						case 0:
@@ -443,10 +448,10 @@ public class MainView extends JFrame {
 		btnSend.setBounds(763, 432, 97, 25);
 		panel.add(btnSend);
 		
-		tbxLoc = new JTextField();
-		tbxLoc.setBounds(490, 470, 116, 22);
-		panel.add(tbxLoc);
-		tbxLoc.setColumns(10);
+		setTbxLoc(new JTextField());
+		getTbxLoc().setBounds(490, 470, 116, 22);
+		panel.add(getTbxLoc());
+		getTbxLoc().setColumns(10);
 		
 		JLabel lblGeolocation = new JLabel("Geolocation");
 		lblGeolocation.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -473,15 +478,39 @@ public class MainView extends JFrame {
 		int dialogResult = JOptionPane.showConfirmDialog(this, "Do you really want to log out?", "Log Out", dialogButton);
 		if(dialogResult == 0) {
 			sender.seDeconnecter();
+			
 			asyncSubscriber.seDeconnecter();
 			asyncSubscriber1.seDeconnecter();
 			close();
 		}
 	}
 	
+	public void updateGUI(String test) {
+		   getTbxLoc().setText(test);
+		   SwingUtilities.invokeLater(this);
+		}
+
+		public static synchronized void setStatus(String status) {
+		   getTbxLoc().setText(status);
+		  }
+		
 	public static void updateListTweet(TypeMessage m){
 		String date = m.getTimestamp();
 		String row[] = {m.getContenu(), date.substring(0, 10), date.substring(10), m.getLoc(), m.getLoginSender()};
 		listTweetFeed.addRow(row);
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public static JTextField getTbxLoc() {
+		return tbxLoc;
+	}
+
+	public static void setTbxLoc(JTextField tbxLoc) {
+		MainView.tbxLoc = tbxLoc;
 	}
 }

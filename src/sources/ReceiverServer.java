@@ -148,7 +148,6 @@ public class ReceiverServer implements MessageListener {
 				        break;
 					case "getMessageFollow":
 						r = (TypeRecherche) om.getObject();
-						System.out.println(base.getMessageFollow(r));
 						replyMessage(message, base.getMessageFollow(r));
 				        break;
 				    default:
