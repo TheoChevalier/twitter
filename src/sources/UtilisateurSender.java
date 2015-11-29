@@ -337,6 +337,34 @@ public class UtilisateurSender{
         return null;		
 	}
 	
+	public List<TypeMessage> getMessages(String login) {
+		Session session = this.session;
+		int i=0;
+		ArrayList<TypeMessage> liste;
+        try {
+        	// Création et envoi
+        	TypeRecherche r = new TypeRecherche(login);
+            ObjectMessage objectMessage = session.createObjectMessage(r);
+            objectMessage.setJMSType("getMessages");
+            Destination temp = session.createTemporaryQueue();
+            MessageConsumer tempConsumer = session.createConsumer(temp);
+            objectMessage.setJMSReplyTo(temp);
+            this.sender.send(objectMessage);
+            
+            // Réponse sur file temporaire
+            Message rep = tempConsumer.receive();
+
+            if (rep instanceof ObjectMessage) {
+            	ObjectMessage text = (ObjectMessage) rep;
+            	liste = (ArrayList<TypeMessage>) text.getObject();
+            	return liste;
+            }
+        } catch (JMSException exception) {
+            exception.printStackTrace();
+        }
+        return null;		
+	}
+	
 	public List<String> rechercherUtilisateur(String login, String loginAppelant) {
 		Session session = this.session;
 		int i=0;

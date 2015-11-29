@@ -8,6 +8,7 @@ import Types.TypeConnection;
 import Types.TypeMessage;
 import design.MainView;
 
+import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -71,23 +72,58 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
 	}
 	public static void main(String[] args) throws Exception
     {
-		UtilisateurSender senderSeConnecter = new UtilisateurSender();
 		
-		MainView frame = new MainView(senderSeConnecter, "toto");
-		frame.setVisible(true);
 		
-		//SenderTopic.publishMessage(new TypeMessage("couou", "", "titi"));
-		List<String> listFollowersArray = new ArrayList<String>();
-		listFollowersArray.add("titi");
-		// set an asynchronous message listener
-	    ReceiverTopic asyncSubscriber = new ReceiverTopic("TopicMessage", "toto", listFollowersArray, frame);
-	    
-		asyncSubscriber.getTopicSubscriber().setMessageListener(asyncSubscriber);
-		// set an asynchronous exception listener on the connection
-	    asyncSubscriber.getTopicConn().setExceptionListener(asyncSubscriber);
-	                                                                       
-	    // start the connection
-	    asyncSubscriber.getTopicConn().start();
+		
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					UtilisateurSender senderSeConnecter = new UtilisateurSender();
+						
+						
+						
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		System.out.println("test");
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					UtilisateurSender senderSeConnecter = new UtilisateurSender();
+					MainView frame = new MainView(senderSeConnecter, "toto");
+					frame.setVisible(true);
+					UtilisateurSender senderSeConnecterTiti = new UtilisateurSender();
+						
+					MainView frameTiti = new MainView(senderSeConnecterTiti, "titi");
+					frameTiti.setVisible(true);
+					
+					//SenderTopic.publishMessage(new TypeMessage("couou", "", "titi"));
+					List<String> listFollowersArray = new ArrayList<String>();
+					listFollowersArray.add("titi");
+					// set an asynchronous message listener
+				    ReceiverTopic asyncSubscriber = new ReceiverTopic("TopicMessage", "toto", listFollowersArray, frame);
+				    
+					asyncSubscriber.getTopicSubscriber().setMessageListener(asyncSubscriber);
+					// set an asynchronous exception listener on the connection
+				    asyncSubscriber.getTopicConn().setExceptionListener(asyncSubscriber);
+				                                                                       
+				    // start the connection
+				    asyncSubscriber.getTopicConn().start();
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		
+		
+		
+		
 	    SenderTopic.publishMessage(new TypeMessage("couou", "", "titi"));
     }
                                                                            
@@ -110,8 +146,10 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
 			e.printStackTrace();
 		}
 		
-		//Test
-		view.getTbxLoc().setText("coucou");
+		System.out.println("fenetre: " + this.view.getName());
+		System.out.println("for: "+this.login);
+		
+		
     }
                                                                            
     /**

@@ -150,6 +150,10 @@ public class ReceiverServer implements MessageListener {
 						r = (TypeRecherche) om.getObject();
 						replyMessage(message, base.getMessageFollow(r));
 				        break;
+					case "getMessages":
+						r = (TypeRecherche) om.getObject();
+						replyMessage(message, base.getMessagePosted(r));
+				        break;
 				    default:
 				    	reply = "Oh noes! Server caught an unknown message.";
 				    	break;
