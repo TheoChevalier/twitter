@@ -70,7 +70,7 @@ public class Inscription extends JFrame {
 		lblNewLabel.setBounds(65, 106, 84, 16);
 		contentPane.add(lblNewLabel);
 		
-		JLabel lblNewLabel_1 = new JLabel("Name:");
+		JLabel lblNewLabel_1 = new JLabel("Last name:");
 		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblNewLabel_1.setBounds(65, 139, 73, 19);
 		contentPane.add(lblNewLabel_1);
@@ -79,6 +79,11 @@ public class Inscription extends JFrame {
 		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		lblNewLabel_2.setBounds(65, 166, 84, 27);
 		contentPane.add(lblNewLabel_2);
+		
+		JLabel lblNewLabel_3 = new JLabel("City:");
+		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel_3.setBounds(65, 196, 84, 27);
+		contentPane.add(lblNewLabel_3);
 		
 		tbxLogin = new JTextField();
 		tbxLogin.setFont(new Font("Tahoma", Font.PLAIN, 15));
@@ -105,7 +110,7 @@ public class Inscription extends JFrame {
 		
 		tbxVille = new JTextField();
 		tbxVille.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		tbxVille.setBounds(174, 186, 162, 22);
+		tbxVille.setBounds(174, 196, 162, 22);
 		contentPane.add(tbxVille);
 		tbxVille.setColumns(10);
 		
