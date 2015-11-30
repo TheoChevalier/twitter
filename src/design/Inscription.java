@@ -25,6 +25,7 @@ public class Inscription extends JFrame {
 	private JPasswordField tbxMdp;
 	private JTextField tbxNom;
 	private JTextField tbxPrenom;
+	private JTextField tbxVille;
 
 	/**
 	 * Launch the application.
@@ -102,6 +103,12 @@ public class Inscription extends JFrame {
 		contentPane.add(tbxPrenom);
 		tbxPrenom.setColumns(10);
 		
+		tbxVille = new JTextField();
+		tbxVille.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tbxVille.setBounds(174, 186, 162, 22);
+		contentPane.add(tbxVille);
+		tbxVille.setColumns(10);
+		
 		final JLabel lblResult = new JLabel("");
 		lblResult.setHorizontalAlignment(SwingConstants.CENTER);
 		lblResult.setFont(new Font("Tahoma", Font.ITALIC, 15));
@@ -119,7 +126,8 @@ public class Inscription extends JFrame {
 								tbxLogin.getText(),
 								tbxMdp.getText(),
 								tbxNom.getText(),
-								tbxPrenom.getText()
+								tbxPrenom.getText(),
+								tbxVille.getText()
 						);
 						if (signUp) {
 							lblResult.setText("Your registration is now complete.");

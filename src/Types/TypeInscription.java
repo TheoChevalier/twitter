@@ -8,12 +8,14 @@ public class TypeInscription implements Serializable {
 	private String password;
 	private String nom;
 	private String prenom;
+	private String ville;
 	
-	public TypeInscription (String l, String pwd, String n, String p) {
+	public TypeInscription (String l, String pwd, String n, String p, String v) {
 		login = l;
 		password = pwd;
 		nom = n;
 		prenom = p;
+		ville = v;
 	}
 	
 	public String getLogin() {
@@ -27,5 +29,8 @@ public class TypeInscription implements Serializable {
 	}
 	public String getPrenom() {
 		return prenom;
+	}
+	public String getVille() {
+		return ville;
 	}
 }

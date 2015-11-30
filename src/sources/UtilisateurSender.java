@@ -151,11 +151,11 @@ public class UtilisateurSender{
 		}
 	}
 	
-	public boolean inscrireUtilisateur(String login, String password, String nom, String prenom) {
+	public boolean inscrireUtilisateur(String login, String password, String nom, String prenom, String ville) {
 		Session session = this.session;
         try {
         	// Création et envoi
-        	TypeInscription i = new TypeInscription(login, password, nom, prenom);
+        	TypeInscription i = new TypeInscription(login, password, nom, prenom, ville);
             ObjectMessage objectMessage = session.createObjectMessage(i);
             objectMessage.setJMSType("Inscription");
             Destination temp = session.createTemporaryQueue();
@@ -182,11 +182,11 @@ public class UtilisateurSender{
         return false;
 	}
 	
-	public int updateUtilisateur(String ancienLogin, String login, String password, String nom, String prenom) {
+	public int updateUtilisateur(String ancienLogin, String login, String password, String nom, String prenom, String ville) {
 		Session session = this.session;
         try {
         	// Création et envoi
-        	TypeModificationProfil mp = new TypeModificationProfil(ancienLogin, login, password, nom, prenom);
+        	TypeModificationProfil mp = new TypeModificationProfil(ancienLogin, login, password, nom, prenom, ville);
             ObjectMessage objectMessage = session.createObjectMessage(mp);
             objectMessage.setJMSType("Modification");
             Destination temp = session.createTemporaryQueue();
