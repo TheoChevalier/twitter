@@ -53,7 +53,7 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
 		        Session.AUTO_ACKNOWLEDGE));
 		    
 		    String filter = this.addFilter(listeFollow);
-		    
+		    System.out.println("filtre " + filter);
 		    if(topicName.equals("TopicMessage")) {
 		    	// create a topic subscriber
 			    topicSubscriber = topicSession.createDurableSubscriber(topic, login, filter, true);
@@ -61,6 +61,22 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
 		    	// create a topic subscriber
 			    topicSubscriber = topicSession.createDurableSubscriber(topic, login+"Loc", filter, true);
 		    }
+		    
+		    // set an asynchronous exception listener on the connection
+		    try {
+		    	System.out.println("Création recever topic");
+				this.topicSubscriber.setMessageListener(this);
+				// set an asynchronous exception listener on the connection
+				this.topicConn.setExceptionListener(this);
+				// start the connection
+			    this.getTopicConn().start();                                       
+			    // wait for messages
+			    System.out.print("waiting for messages...");
+			    
+			} catch (JMSException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		    
 		} catch (NamingException e) {
 			// TODO Auto-generated catch block
@@ -73,58 +89,6 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
 	public static void main(String[] args) throws Exception
     {
 		
-		
-		
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UtilisateurSender senderSeConnecter = new UtilisateurSender();
-						
-						
-						
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		
-		System.out.println("test");
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UtilisateurSender senderSeConnecter = new UtilisateurSender();
-					MainView frame = new MainView(senderSeConnecter, "toto");
-					frame.setVisible(true);
-					UtilisateurSender senderSeConnecterTiti = new UtilisateurSender();
-						
-					MainView frameTiti = new MainView(senderSeConnecterTiti, "titi");
-					frameTiti.setVisible(true);
-					
-					//SenderTopic.publishMessage(new TypeMessage("couou", "", "titi"));
-					List<String> listFollowersArray = new ArrayList<String>();
-					listFollowersArray.add("titi");
-					// set an asynchronous message listener
-				    ReceiverTopic asyncSubscriber = new ReceiverTopic("TopicMessage", "toto", listFollowersArray, frame);
-				    
-					asyncSubscriber.getTopicSubscriber().setMessageListener(asyncSubscriber);
-					// set an asynchronous exception listener on the connection
-				    asyncSubscriber.getTopicConn().setExceptionListener(asyncSubscriber);
-				                                                                       
-				    // start the connection
-				    asyncSubscriber.getTopicConn().start();
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-		
-		
-		
-		
-		
-	    SenderTopic.publishMessage(new TypeMessage("couou", "", "titi"));
     }
                                                                            
     /**
@@ -145,10 +109,8 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		System.out.println("fenetre: " + this.view.getName());
-		System.out.println("for: "+this.login);
-		
+		System.out.println("dans on message.");
+		view.getTbxLoc().setText("coucou");
 		
     }
                                                                            

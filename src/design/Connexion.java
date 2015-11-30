@@ -8,15 +8,18 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import Types.TypeConnection;
+import sources.ReceiverTopic;
 import sources.UtilisateurSender;
 
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
+import javax.jms.JMSException;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class Connexion extends JFrame {
@@ -25,6 +28,8 @@ public class Connexion extends JFrame {
 	private JTextField tbxLogin;
 	private JPasswordField tbxMdp;
 	private UtilisateurSender senderSeConnecter;
+	private ReceiverTopic asyncSubscriber;
+	private ReceiverTopic asyncSubscriber1;
 
 	/**
 	 * Launch the application.
@@ -93,6 +98,7 @@ public class Connexion extends JFrame {
 					senderSeConnecter = new UtilisateurSender();
 					if (senderSeConnecter.seConnecter(tbxLogin.getText(), tbxMdp.getText())) {
 						lblResult.setText("Connected.");
+						
 						MainView frame = new MainView(senderSeConnecter, tbxLogin.getText());
 						frame.setVisible(true);
 					} else {

@@ -61,7 +61,7 @@ public class MainView extends JFrame implements Runnable {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
+		/*EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					UtilisateurSender senderSeConnecter = new UtilisateurSender();
@@ -73,7 +73,7 @@ public class MainView extends JFrame implements Runnable {
 					e.printStackTrace();
 				}
 			}
-		});
+		});*/
 	}
 
 	/**
@@ -83,39 +83,8 @@ public class MainView extends JFrame implements Runnable {
 		
 		this.sender = sender;
 		this.login = login;
-		
-		List<String> listFollowersArray = sender.listeFollowers(login);
-		 
-	    try {
-	    	// set an asynchronous message listener
-		    asyncSubscriber = new ReceiverTopic("TopicMessage", login, listFollowersArray, this);
-		    
-			asyncSubscriber.getTopicSubscriber().setMessageListener(asyncSubscriber);
-			// set an asynchronous exception listener on the connection
-		    asyncSubscriber.getTopicConn().setExceptionListener(asyncSubscriber);
-		                                                                       
-		    // start the connection
-		    asyncSubscriber.getTopicConn().start();
-		    
-		                           
-		    // set an asynchronous message listener
-		    asyncSubscriber1 = new ReceiverTopic("TopicMessageLoc", login, listFollowersArray, this);
-		    asyncSubscriber1.getTopicSubscriber().setMessageListener(asyncSubscriber1);
-		                                                                      
-		    // set an asynchronous exception listener on the connection
-		    asyncSubscriber1.getTopicConn().setExceptionListener(asyncSubscriber1);
-		                                                                       
-		    // start the connection
-		    asyncSubscriber1.getTopicConn().start();
-		    
-		    // wait for messages
-		    System.out.print("waiting for messages...");
-		} catch (JMSException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	                                                                      
 	    
+	    List<String> listFollowArray = sender.listeFollow(login);
 	    
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 1165, 642);
@@ -190,12 +159,12 @@ public class MainView extends JFrame implements Runnable {
 		
 		String nbM = Integer.toString(sender.nombreMessage(login));
 		
-		List<String> listFollowArray = sender.listeFollow(login);
 		final DefaultListModel listModelFollow = new DefaultListModel();
 		for(String f:listFollowArray) {
 			listModelFollow.addElement(f);
 		}
 		
+		List<String> listFollowersArray = sender.listeFollowers(login);
 
 		final DefaultListModel listModelFollowers = new DefaultListModel();
 		for(String f:listFollowersArray) {
@@ -335,6 +304,11 @@ public class MainView extends JFrame implements Runnable {
 	            		break;
 	            	case 0:
 	            		lblResultResearchUser.setText("You’re now following this user.");
+	            		asyncSubscriber.seDeconnecter();
+	        			asyncSubscriber1.seDeconnecter();
+	        			
+	        			majFiltre();
+	        			
 	            		listModelFollow.addElement(listUserToFollow.getSelectedValue().toString());
 	            		break;
 	            	default:
@@ -355,7 +329,7 @@ public class MainView extends JFrame implements Runnable {
 				btnSend.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if(! tbxContenu.getText().isEmpty()) {
-							TypeMessage m = new TypeMessage(tbxContenu.getText(), tbxLoc.getText(), login);
+							TypeMessage m = new TypeMessage(tbxContenu.getText(), getTbxLoc().getText(), login);
 							if (SenderTopic.publishMessage(m)) {
 								switch (sender.ajouterMessage(m)) {
 								case 0:
@@ -385,11 +359,11 @@ public class MainView extends JFrame implements Runnable {
 				lblNewLabel.setBounds(12, 309, 381, 27);
 				panel.add(lblNewLabel);
 				
-				tbxLoc = new JTextField();
-				tbxLoc.setFont(new Font("Tahoma", Font.PLAIN, 15));
-				tbxLoc.setBounds(136, 440, 151, 22);
-				panel.add(tbxLoc);
-				tbxLoc.setColumns(10);
+				setTbxLoc(new JTextField());
+				getTbxLoc().setFont(new Font("Tahoma", Font.PLAIN, 15));
+				getTbxLoc().setBounds(136, 440, 151, 22);
+				panel.add(getTbxLoc());
+				getTbxLoc().setColumns(10);
 		
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Feed", null, panel_1, null);
@@ -478,6 +452,13 @@ public class MainView extends JFrame implements Runnable {
 		if (listFollowersArray.isEmpty()) {
 			lblResultListFollowers.setText("No one is following you.");
 		}
+		
+		// set an asynchronous message listener
+		this.asyncSubscriber = new ReceiverTopic("TopicMessage", login, listFollowArray, this);
+				    
+		                       
+		// set an asynchronous message listener
+		this.asyncSubscriber1 = new ReceiverTopic("TopicMessageLoc", login, listFollowArray, this);
 	}
 
 	private void close() {
@@ -506,5 +487,24 @@ public class MainView extends JFrame implements Runnable {
 	public void run() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public JTextField getTbxLoc() {
+		return tbxLoc;
+	}
+
+	public void setTbxLoc(JTextField tbxLoc) {
+		this.tbxLoc = tbxLoc;
+	}
+	
+	public void majFiltre(){
+		List<String> listFollowArray = sender.listeFollow(login);
+		 
+	    // set an asynchronous message listener
+		asyncSubscriber = new ReceiverTopic("TopicMessage", login, listFollowArray, this);
+				    
+		                       
+		// set an asynchronous message listener
+		asyncSubscriber1 = new ReceiverTopic("TopicMessageLoc", login, listFollowArray, this);
 	}
 }
