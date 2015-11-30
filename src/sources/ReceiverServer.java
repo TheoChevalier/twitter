@@ -27,6 +27,7 @@ import Types.TypeInscription;
 import Types.TypeMessage;
 import Types.TypeModificationProfil;
 import Types.TypeRecherche;
+import design.MainView;
 
 public class ReceiverServer implements MessageListener {
 
@@ -57,11 +58,18 @@ public class ReceiverServer implements MessageListener {
             connection.start();
             System.out.println("Waiting for incoming messages…");
 
+
         } catch (JMSException exception) {
             exception.printStackTrace();
         } catch (NamingException exception) {
             exception.printStackTrace();
         }
+    }
+    
+    public void test() {
+        for(MainView m:MainView.objList) {
+        	m.updateTextField("coucou à toi.");
+		}
     }
     
     public static void main(String[] args) {

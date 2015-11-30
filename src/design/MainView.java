@@ -44,7 +44,7 @@ import javax.swing.AbstractListModel;
 import java.awt.Component;
 
 public class MainView extends JFrame implements Runnable {
-
+	public static List<MainView> objList = new ArrayList<MainView>();
 	private static DefaultTableModel listTweetFeed;
 	private ReceiverTopic asyncSubscriber;
 	private ReceiverTopic asyncSubscriber1;
@@ -481,6 +481,7 @@ public class MainView extends JFrame implements Runnable {
 	}
 
 	private void close() {
+		MainView.objList.remove(this);
 		this.dispose();
 	}
 	
@@ -507,4 +508,15 @@ public class MainView extends JFrame implements Runnable {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public void updateTextField(final String m) {
+		  SwingUtilities.invokeLater(
+		    new Runnable(){
+		      @Override
+		      public void run() {
+		        System.out.println(login + ": " + m);
+		      }
+		    }
+		  );
+		}
 }
