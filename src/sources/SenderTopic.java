@@ -61,7 +61,7 @@ public class SenderTopic {
 		//topicConn.close();
 	}
 	
-	public static boolean publishMessage(TypeMessage m) {
+	public static boolean publishMessage(TypeMessage m, int idMessage) {
 		String login = m.getLoginSender();
 		String loc = m.getLoc();
 		
@@ -74,6 +74,7 @@ public class SenderTopic {
 				objectMessage = stLoc.topicSession.createObjectMessage(m);
 			}
 			objectMessage.setJMSType(login);
+			objectMessage.setIntProperty("ID", idMessage);
 			
 			
 			// publish the messages

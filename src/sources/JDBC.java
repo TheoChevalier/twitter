@@ -19,6 +19,7 @@ import Types.TypeFollow;
 import Types.TypeInscription;
 import Types.TypeMessage;
 import Types.TypeModificationProfil;
+import Types.TypeRecevoir;
 import Types.TypeRecherche;
 
 
@@ -202,27 +203,13 @@ public class JDBC {
 					ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
 					if (generatedKeys.next()) {
 					    id = generatedKeys.getInt(1);
-					} else {
-					    // Throw exception?
 					}
-				    
-				    System.out.println("Identifiant: " + id);
-				    int idUFollower;
-				    List<String> listeFollowers = this.listeFollowers(new TypeRecherche(message.getLoginSender()));
-				    for (String login : listeFollowers) {
-				    	System.out.println("OK");
-				    	rs = s.executeQuery("SELECT idU FROM Utilisateurs WHERE loginU = '" + login + "'");
-				    	if (rs.next()){
-				    		idUFollower = rs.getInt(1);
-				    		ajouterRecevoir(id, idUFollower);
-				    	}
-					}
-					return 0;
+					return id;
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-        	return 1;
+        	return -1;
         }
         
         public ArrayList<TypeMessage> getMessageFollow(TypeRecherche r){
@@ -439,8 +426,32 @@ public class JDBC {
 				e.printStackTrace();
 			}
         	return false;
-        }
+        }        
         
+        public int ajouterRecevoir(TypeRecevoir tr) {
+        	Statement s;
+        	int idSuiveur = -1;
+			String queryidUSuiveur = "SELECT idU FROM UTILISATEURS WHERE loginU ='" + tr.getLoginU() + "'";
+			 
+			// Vérifier si l’entrée existe déjà
+			try {
+				s = conn.createStatement();
+			 	
+			 	// Récupérer l’id du suiveur
+				ResultSet rs = s.executeQuery(queryidUSuiveur);
+				rs.next();
+				idSuiveur = rs.getInt(1);
+				
+				if (idSuiveur != -1) {
+					s.execute("INSERT INTO Recevoir VALUES (" + tr.getIdM() + "," + idSuiveur + " )") ;
+				}
+				return 0;
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+        	return 1;
+        }
         
         public boolean checkConnection(TypeConnection c) {
         	try {

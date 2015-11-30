@@ -23,6 +23,7 @@ import Types.TypeFollow;
 import Types.TypeInscription;
 import Types.TypeMessage;
 import Types.TypeModificationProfil;
+import Types.TypeRecevoir;
 import Types.TypeRecherche;
 
 public class UtilisateurSender{
@@ -511,6 +512,31 @@ public class UtilisateurSender{
             exception.printStackTrace();
         }
         return -1;
+	}
+	public int ajouterRecevoir(TypeRecevoir tr) {
+		// TODO Auto-generated method stub
+		Session session = this.session;
+        try {
+            ObjectMessage objectMessage = session.createObjectMessage(tr);
+            objectMessage.setJMSType("AjouterRecevoir");
+            Destination temp = session.createTemporaryQueue();
+            MessageConsumer tempConsumer = session.createConsumer(temp);
+            objectMessage.setJMSReplyTo(temp);
+            this.sender.send(objectMessage);
+            
+         // Réponse sur file temporaire
+            Message rep = tempConsumer.receive();
+
+            if (rep instanceof StreamMessage) {
+            	StreamMessage stream = (StreamMessage) rep;
+            	return stream.readInt();
+            }
+            
+        } catch (JMSException exception) {
+            exception.printStackTrace();
+        }
+        return 2;
+		
 	}
 
 }

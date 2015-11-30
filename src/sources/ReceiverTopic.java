@@ -103,14 +103,15 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
 		TypeMessage mess;
 		try {
 			mess = (TypeMessage) om.getObject();
-			//MainView.updateListTweet(mess);
+			int id = om.getIntProperty("ID");
+			view.updatelistTweetFeed(mess, id);
 			System.out.println("received: " + mess.toString());
 		} catch (JMSException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("dans on message.");
-		view.getTbxLoc().setText("coucou");
+		
+		
 		
     }
                                                                            

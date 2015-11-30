@@ -26,6 +26,7 @@ import Types.TypeFollow;
 import Types.TypeInscription;
 import Types.TypeMessage;
 import Types.TypeModificationProfil;
+import Types.TypeRecevoir;
 import Types.TypeRecherche;
 import design.MainView;
 
@@ -64,12 +65,6 @@ public class ReceiverServer implements MessageListener {
         } catch (NamingException exception) {
             exception.printStackTrace();
         }
-    }
-    
-    public void test() {
-        for(MainView m:MainView.objList) {
-        	m.updateTextField("coucou à toi.");
-		}
     }
     
     public static void main(String[] args) {
@@ -153,6 +148,10 @@ public class ReceiverServer implements MessageListener {
 					case "AjouterMessage":
 						TypeMessage tm = (TypeMessage) om.getObject();
 				        reply(message, base.ajouterMessage(tm));
+				        break;
+					case "AjouterRecevoir":
+						TypeRecevoir tr = (TypeRecevoir) om.getObject();
+				        reply(message, base.ajouterRecevoir(tr));
 				        break;
 					case "getMessageFollow":
 						r = (TypeRecherche) om.getObject();

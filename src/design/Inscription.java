@@ -48,7 +48,7 @@ public class Inscription extends JFrame {
 	 */
 	public Inscription() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 450, 322);
+		setBounds(100, 100, 450, 347);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -117,7 +117,7 @@ public class Inscription extends JFrame {
 		final JLabel lblResult = new JLabel("");
 		lblResult.setHorizontalAlignment(SwingConstants.CENTER);
 		lblResult.setFont(new Font("Tahoma", Font.ITALIC, 15));
-		lblResult.setBounds(12, 199, 408, 27);
+		lblResult.setBounds(12, 231, 408, 27);
 		contentPane.add(lblResult);
 		
 		JButton btnSignUp = new JButton("Sign Up");
@@ -149,7 +149,7 @@ public class Inscription extends JFrame {
 			}
 		});
 		btnSignUp.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnSignUp.setBounds(174, 237, 97, 25);
+		btnSignUp.setBounds(174, 262, 97, 25);
 		contentPane.add(btnSignUp);
 		
 		this.getRootPane().setDefaultButton(btnSignUp);

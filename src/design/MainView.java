@@ -19,6 +19,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
@@ -36,6 +37,7 @@ import javax.swing.ListModel;
 import javax.swing.table.TableModel;
 
 import Types.TypeMessage;
+import Types.TypeRecevoir;
 
 import java.awt.ScrollPane;
 
@@ -151,12 +153,15 @@ public class MainView extends JFrame implements Runnable {
 	    	res = new Object[0][5];
 	    }
 	    
+	    
+	 
 	    	listTweetFeed = new DefaultTableModel(
 				res,
 		    	new String[] {
 		    		"Content", "Date", "Heure", "Loc", "Login" 
 		    	});
-		
+	    	
+	    	
 		String nbM = Integer.toString(sender.nombreMessage(login));
 		
 		final DefaultListModel listModelFollow = new DefaultListModel();
@@ -304,6 +309,7 @@ public class MainView extends JFrame implements Runnable {
 	            		break;
 	            	case 0:
 	            		lblResultResearchUser.setText("You’re now following this user.");
+	            		lblResultListFollow.setText("");
 	            		asyncSubscriber.seDeconnecter();
 	        			asyncSubscriber1.seDeconnecter();
 	        			
@@ -330,17 +336,14 @@ public class MainView extends JFrame implements Runnable {
 					public void actionPerformed(ActionEvent e) {
 						if(! tbxContenu.getText().isEmpty()) {
 							TypeMessage m = new TypeMessage(tbxContenu.getText(), getTbxLoc().getText(), login);
-							if (SenderTopic.publishMessage(m)) {
-								switch (sender.ajouterMessage(m)) {
-								case 0:
-									lblResultPostMsg.setText("Your tweet has been send.");
-									break;
-								default:
+								int idMessage = sender.ajouterMessage(m);
+								if (idMessage != -1) {
+									if (SenderTopic.publishMessage(m, idMessage)) {
+										lblResultPostMsg.setText("Your tweet has been send.");
+									}
+								} else {
 									lblResultPostMsg.setText("An error occured while sending your tweet.");
-									break;
-								};
-							}
-							
+								}
 						} else {
 							lblResultPostMsg.setText("Please fill in all fields.");
 						}
@@ -509,14 +512,29 @@ public class MainView extends JFrame implements Runnable {
 		asyncSubscriber1 = new ReceiverTopic("TopicMessageLoc", login, listFollowArray, this);
 	}
 	
-	public void updateTextField(final String m) {
+	public void updateUI(final TypeMessage m, int idMessage) {
 		  SwingUtilities.invokeLater(
 		    new Runnable(){
 		      @Override
 		      public void run() {
-		        System.out.println(login + ": " + m);
+		    	  updatelistTweetFeed(m, idMessage);
 		      }
 		    }
 		  );
 		}
+	
+	public void updatelistTweetFeed(TypeMessage m, int idMessage) {
+    	String date = m.getTimestamp();
+		Object[] row = {m.getContenu(), date.substring(0, 10), date.substring(10), m.getLoc(),m.getLoginSender()};
+		listTweetFeed.addRow(row);
+		TypeRecevoir tr = new TypeRecevoir(idMessage, login);
+		switch (sender.ajouterRecevoir(tr)) {
+			case 0:
+				System.out.println("You received the message: "+m.toString());
+				break;
+			default:
+				System.out.println("An error occured while receving the message.");
+				break;
+		}
+	}
 }
