@@ -86,7 +86,8 @@ public class JDBC {
         			" loginU VARCHAR( 256 ), "+
         			" mdpU VARCHAR( 256 ), "+
         			" nomU VARCHAR( 256 ), "+
-        			" prenomU VARCHAR( 256 )) "
+        			" prenomU VARCHAR( 256 ), "+
+        			" villeU VARCHAR( 256 ))"
         			);
         }
         // On regarde si la table existe deja
@@ -143,7 +144,7 @@ public class JDBC {
          * @throws SQLException
          */
         
-        public boolean ajouterUtilisateur(String loginU, String mdpU, String nomU, String prenomU) {
+        public boolean ajouterUtilisateur(String loginU, String mdpU, String nomU, String prenomU, String villeU) {
         	Statement s;
 			try {
 				s = conn.createStatement();
@@ -151,7 +152,7 @@ public class JDBC {
 				if (rs.next()){
 					return false;
 				} else {
-					s.execute("INSERT INTO Utilisateurs (loginU, mdpU, nomU, prenomU) VALUES ('" +loginU + "'," + "'" + mdpU + "'," + "'" + nomU + "'," + "'" + prenomU + "'" + " )");
+					s.execute("INSERT INTO Utilisateurs (loginU, mdpU, nomU, prenomU, villeU) VALUES ('" +loginU + "', '" + mdpU + "', '" + nomU + "', '" + prenomU + "', '" + villeU + "')");
 					return true;
 				}				
 			} catch (SQLException e) {
@@ -170,7 +171,7 @@ public class JDBC {
 						return 1;
 					}	
 				}
-				s.execute("UPDATE Utilisateurs SET loginU = '" + tmp.getLogin() + "', mdpU = '" + tmp.getPassword() + "', nomU = '" + tmp.getNom() + "', prenomU = '" + tmp.getPrenom() + "' WHERE loginU = '" + tmp.getAncienLogin() + "'");
+				s.execute("UPDATE Utilisateurs SET loginU = '" + tmp.getLogin() + "', mdpU = '" + tmp.getPassword() + "', nomU = '" + tmp.getNom() + "', prenomU = '" + tmp.getPrenom() + "', villeU = '" + tmp.getVille() + "' WHERE loginU = '" + tmp.getAncienLogin() + "'");
 				return 0;
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -290,7 +291,7 @@ public class JDBC {
 		        Statement s = conn.createStatement();
 		        ResultSet rs = s.executeQuery("SELECT * FROM UTILISATEURS WHERE loginU = '" + r.getLogin() + "'");
 		        while (rs.next()){
-		        	user = new TypeInscription(rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
+		        	user = new TypeInscription(rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6));
 		        }
         	} catch (SQLException e) {
 				e.printStackTrace();
@@ -454,17 +455,17 @@ public class JDBC {
         }
         
         public boolean inscrireUtilisateur(TypeInscription i) {
-        	return ajouterUtilisateur(i.getLogin(), i.getPassword(), i.getNom(), i.getPrenom());
+        	return ajouterUtilisateur(i.getLogin(), i.getPassword(), i.getNom(), i.getPrenom(), i.getVille());
         }
         
 
         public void ajoutsTest(){
         	
-        	boolean insert = ajouterUtilisateur("Toto","1234","Toto","Toto");
-        	insert = ajouterUtilisateur("Titi","1234","Titi","Titi");
-        	insert = ajouterUtilisateur("Tutu","1234","Tutu","Tutu");
-        	insert = ajouterUtilisateur("Tata","1234","Tata","Tata");
-        	insert = ajouterUtilisateur("Biloute","1234","Biloute","Biloute");
+        	boolean insert = ajouterUtilisateur("Toto","1234","Toto","Toto", "Toulouse");
+        	insert = ajouterUtilisateur("Titi","1234","Titi","Titi", "Toulouse");
+        	insert = ajouterUtilisateur("Tutu","1234","Tutu","Tutu", "Toulouse");
+        	insert = ajouterUtilisateur("Tata","1234","Tata","Tata", "Toulouse");
+        	insert = ajouterUtilisateur("Biloute","1234","Biloute","Biloute","Toulouse");
         	
         	ajouterEst_Abonne(new TypeFollow("Titi","Toto"));
         	ajouterEst_Abonne(new TypeFollow("Tutu","Toto"));

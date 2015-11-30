@@ -27,6 +27,7 @@ public class Profile extends JFrame {
 	private JPasswordField tbxMdp;
 	private JTextField tbxNom;
 	private JTextField tbxPrenom;
+	private JTextField tbxVille;
 	private UtilisateurSender sender;
 	private String login;
 
@@ -88,6 +89,11 @@ public class Profile extends JFrame {
 		lblNewLabel_2.setBounds(65, 166, 84, 27);
 		contentPane.add(lblNewLabel_2);
 		
+		JLabel lblNewLabel_3 = new JLabel("City:");
+		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNewLabel_3.setBounds(65, 196, 84, 27);
+		contentPane.add(lblNewLabel_3);
+		
 		tbxLogin = new JTextField();
 		tbxLogin.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		tbxLogin.setBounds(174, 66, 162, 22);
@@ -111,6 +117,12 @@ public class Profile extends JFrame {
 		contentPane.add(tbxPrenom);
 		tbxPrenom.setColumns(10);
 		
+		tbxVille = new JTextField();
+		tbxVille.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		tbxVille.setBounds(174, 196, 162, 22);
+		contentPane.add(tbxVille);
+		tbxVille.setColumns(10);
+		
 		final JLabel lblResult = new JLabel("");
 		lblResult.setHorizontalAlignment(SwingConstants.CENTER);
 		lblResult.setFont(new Font("Tahoma", Font.ITALIC, 15));
@@ -120,14 +132,15 @@ public class Profile extends JFrame {
 		JButton btnSignUp = new JButton("Validate");
 		btnSignUp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (! tbxLogin.getText().isEmpty() && ! tbxMdp.getText().isEmpty() && ! tbxNom.getText().isEmpty() && ! tbxPrenom.getText().isEmpty()) {
+				if (! tbxLogin.getText().isEmpty() && ! tbxMdp.getText().isEmpty() && ! tbxNom.getText().isEmpty() && ! tbxPrenom.getText().isEmpty() && ! tbxVille.getText().isEmpty()) {
 					
 					int update = sender.updateUtilisateur(
 							login,
 							tbxLogin.getText(),
 							tbxMdp.getText(),
 							tbxNom.getText(),
-							tbxPrenom.getText()
+							tbxPrenom.getText(),
+							tbxVille.getText()
 					);
 					
 					switch(update) {
@@ -166,6 +179,7 @@ public class Profile extends JFrame {
 			tbxMdp.setText(user.getPassword());
 			tbxNom.setText(user.getNom());
 			tbxPrenom.setText(user.getPrenom());
+			tbxVille.setText(user.getVille());
 		} else {
 			lblResult.setText("An error occured while searching your profile.");
 		}
