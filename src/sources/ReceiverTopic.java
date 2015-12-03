@@ -55,7 +55,7 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
 		        Session.AUTO_ACKNOWLEDGE));
 		    
 		    String filter = this.addFilter(listeFollow);
-		    System.out.println("filtre " + filter);
+		    //System.out.println("filtre " + filter);
 		    if(topicName.equals("TopicMessage")) {
 		    	// create a topic subscriber
 			    topicSubscriber = topicSession.createDurableSubscriber(topic, login, filter, true);
@@ -132,7 +132,7 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
     public String addFilter(List<String> listeFollow){
     	String filter;
     	
-    	if (this.topicName.equals("MessageLoc")) {
+    	if (this.topicName.equals("TopicMessageLoc")) {
 	    	if (! listeFollow.isEmpty()) {
 	    		filter = "JMSType IN (";
 	    		for (String login : listeFollow) {
@@ -142,11 +142,12 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
 	    			} else {
 	    				filter = filter + "'" + login + "',";
 	    			}
-	    			filter = filter + " LOC = '" + this.ville + "'";
 	    		}
+	    		filter = filter + " AND LOC = '" + this.ville + "'";
 	    	} else {
 	    		filter = "JMSType IN ('')";
 	    	}
+	    	System.out.println("Filtre Loc: " + filter);
     	} else {
 	    	if (! listeFollow.isEmpty()) {
 	    		filter = "JMSType IN (";
