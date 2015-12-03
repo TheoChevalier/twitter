@@ -146,6 +146,11 @@ public class JDBC {
          */
         
         public boolean ajouterUtilisateur(String loginU, String mdpU, String nomU, String prenomU, String villeU) {
+        	loginU = loginU.replace("'", "’");
+        	mdpU = mdpU.replace("'", "’");
+        	nomU = nomU.replace("'", "’");
+        	prenomU = prenomU.replace("'", "’");
+        	villeU = villeU.replace("'", "’");
         	Statement s;
 			try {
 				s = conn.createStatement();
@@ -163,16 +168,22 @@ public class JDBC {
         }
         
         public int majUtilisateur(TypeModificationProfil tmp) {
+        	String loginU = tmp.getLogin().replace("'", "’");
+        	String mdpU = tmp.getPassword().replace("'", "’");
+        	String nomU = tmp.getNom().replace("'", "’");
+        	String prenomU = tmp.getPrenom().replace("'", "’");
+        	String villeU = tmp.getVille().replace("'", "’");
+        	System.out.println("New log: "+loginU);
         	Statement s;
 			try {
 				s = conn.createStatement();
-				if (! tmp.getAncienLogin().equals(tmp.getLogin())) {
-					ResultSet rs = s.executeQuery("SELECT loginU FROM Utilisateurs WHERE loginU = '" + tmp.getLogin() + "'");
+				if (! tmp.getAncienLogin().equals(loginU)) {
+					ResultSet rs = s.executeQuery("SELECT loginU FROM Utilisateurs WHERE loginU = '" + loginU + "'");
 					if (rs.next()){
 						return 1;
 					}	
 				}
-				s.execute("UPDATE Utilisateurs SET loginU = '" + tmp.getLogin() + "', mdpU = '" + tmp.getPassword() + "', nomU = '" + tmp.getNom() + "', prenomU = '" + tmp.getPrenom() + "', villeU = '" + tmp.getVille() + "' WHERE loginU = '" + tmp.getAncienLogin() + "'");
+				s.execute("UPDATE Utilisateurs SET loginU = '" + loginU + "', mdpU = '" + mdpU + "', nomU = '" + nomU + "', prenomU = '" + prenomU + "', villeU = '" + villeU + "' WHERE loginU = '" + tmp.getAncienLogin() + "'");
 				return 0;
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -454,9 +465,11 @@ public class JDBC {
         }
         
         public boolean checkConnection(TypeConnection c) {
+        	String loginU = c.getLogin().replace("'", "’");
+        	String mdpU = c.getPassword().replace("'", "’");
         	try {
 		        Statement s = conn.createStatement();
-		        ResultSet rs = s.executeQuery("SELECT idU, loginU, mdpU FROM UTILISATEURS WHERE loginU = '" + c.getLogin() + "' AND mdpU = '" + c.getPassword() + "'");
+		        ResultSet rs = s.executeQuery("SELECT idU, loginU, mdpU FROM UTILISATEURS WHERE loginU = '" + loginU + "' AND mdpU = '" + mdpU + "'");
 		        
 		        return rs.next();
         	} catch (SQLException e) {

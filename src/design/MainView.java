@@ -342,7 +342,10 @@ public class MainView extends JFrame implements Runnable {
 				btnSend.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if(! tbxContenu.getText().isEmpty()) {
-							TypeMessage m = new TypeMessage(tbxContenu.getText(), getTbxLoc().getText(), login);
+							String newLoc = tbxLoc.getText();
+							newLoc = newLoc.replace("'", "’");
+							System.out.println("New ville: "+newLoc);
+							TypeMessage m = new TypeMessage(tbxContenu.getText(), newLoc, login);
 								int idMessage = sender.ajouterMessage(m);
 								if (idMessage != -1) {
 									if (SenderTopic.publishMessage(m, idMessage)) {

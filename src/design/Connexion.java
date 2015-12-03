@@ -96,10 +96,11 @@ public class Connexion extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if (! tbxLogin.getText().isEmpty() && ! tbxMdp.getText().isEmpty()) {
 					senderSeConnecter = new UtilisateurSender();
-					if (senderSeConnecter.seConnecter(tbxLogin.getText(), tbxMdp.getText())) {
+					String login = tbxLogin.getText().replace("'", "’");
+					if (senderSeConnecter.seConnecter(login, tbxMdp.getText())) {
 						lblResult.setText("Connected.");
 						
-						MainView frame = new MainView(senderSeConnecter, tbxLogin.getText());
+						MainView frame = new MainView(senderSeConnecter, login);
 						frame.setVisible(true);
 					} else {
 						lblResult.setText("Not connected.");

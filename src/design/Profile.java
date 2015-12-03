@@ -134,13 +134,14 @@ public class Profile extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				if (! tbxLogin.getText().isEmpty() && ! tbxMdp.getText().isEmpty() && ! tbxNom.getText().isEmpty() && ! tbxPrenom.getText().isEmpty() && ! tbxVille.getText().isEmpty()) {
 					
+					String newVille = tbxVille.getText();
 					int update = sender.updateUtilisateur(
 							login,
 							tbxLogin.getText(),
 							tbxMdp.getText(),
 							tbxNom.getText(),
 							tbxPrenom.getText(),
-							tbxVille.getText()
+							newVille.replaceAll("'", "’")
 					);
 					
 					switch(update) {
