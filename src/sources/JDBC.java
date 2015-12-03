@@ -415,6 +415,7 @@ public class JDBC {
             	if (rs.next()) {
             		// Supprimer le follower
             		s.execute("DELETE FROM Est_Abonne WHERE idUSuiveur='" + idSuiveur + "' AND idUSuivi='" + idSuivi + "'") ;
+            		s.execute("DELETE FROM RECEVOIR WHERE idM IN (SELECT R.idM FROM RECEVOIR R, MESSAGES M WHERE R.idM = M.idM AND M.idU=" + idSuivi + ") AND idU = " + idSuiveur+";");
             		return 0;
             	} else {
             		//login1 ne follow pas login2

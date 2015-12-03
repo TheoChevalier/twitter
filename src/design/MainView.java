@@ -61,6 +61,8 @@ public class MainView extends JFrame implements Runnable {
 	private JTextField tbxLoc;
 	private JLabel lblNbMsg;
 	private final DefaultListModel listModelFollowers;
+	private JLabel lblResultListFollowers;
+	private JLabel lblResultListFollow;
 
 	/**
 	 * Launch the application.
@@ -100,6 +102,7 @@ public class MainView extends JFrame implements Runnable {
 	
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		tabbedPane.setBounds(12, 56, 1128, 532);
 		contentPane.add(tabbedPane);
 		
@@ -120,7 +123,7 @@ public class MainView extends JFrame implements Runnable {
 		});
 		btnUpdateYourProfile.setBounds(849, 33, 177, 25);
 		contentPane.add(btnUpdateYourProfile);
-		btnUpdateYourProfile.setFont(new Font("Dialog", Font.PLAIN, 15));
+		btnUpdateYourProfile.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		
 		JButton btnLogOut = new JButton("Log Out");
 		btnLogOut.addActionListener(new ActionListener() {
@@ -130,13 +133,8 @@ public class MainView extends JFrame implements Runnable {
 		});
 		btnLogOut.setBounds(1038, 33, 97, 25);
 		contentPane.add(btnLogOut);
-		btnLogOut.setFont(new Font("Dialog", Font.PLAIN, 15));
+		btnLogOut.setFont(new Font("Tahoma", Font.PLAIN, 15));
 
-		final JLabel lblResultUnfollow = new JLabel("");
-		lblResultUnfollow.setHorizontalAlignment(SwingConstants.CENTER);
-		lblResultUnfollow.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblResultUnfollow.setBounds(222, 236, 302, 27);
-		contentPane.add(lblResultUnfollow);
 	    List<TypeMessage> listMessageFollow = sender.getMessageFollow(login);
 	    
 	    int i = 0;
@@ -158,11 +156,11 @@ public class MainView extends JFrame implements Runnable {
 	    
 	    
 	 
-	    	listTweetFeed = new DefaultTableModel(
-				res,
-		    	new String[] {
-		    		"Content", "Date", "Heure", "Location", "From" 
-		    	});
+    	listTweetFeed = new DefaultTableModel(
+			res,
+	    	new String[] {
+	    		"Content", "Date", "Heure", "Location", "From" 
+	    });
 	    	
 	    	
 		String nbM = Integer.toString(sender.nombreMessage(login));
@@ -183,10 +181,11 @@ public class MainView extends JFrame implements Runnable {
 		tabbedPane.addTab("General", null, panel, null);
 		panel.setLayout(null);
 		final JTextPane tbxContenu = new JTextPane();
+		tbxContenu.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		tbxContenu.setBounds(12, 346, 381, 80);
 		panel.add(tbxContenu);
 		
-		final JLabel lblResultListFollow = new JLabel("");
+		lblResultListFollow = new JLabel("");
 		lblResultListFollow.setHorizontalAlignment(SwingConstants.CENTER);
 		lblResultListFollow.setFont(new Font("Dialog", Font.PLAIN, 15));
 		lblResultListFollow.setBounds(12, 269, 335, 27);
@@ -197,7 +196,7 @@ public class MainView extends JFrame implements Runnable {
 		label_8.setBounds(847, 44, 129, 19);
 		panel.add(label_8);
 		
-		final JLabel lblResultListFollowers = new JLabel("");
+		lblResultListFollowers = new JLabel("");
 		lblResultListFollowers.setHorizontalAlignment(SwingConstants.CENTER);
 		lblResultListFollowers.setFont(new Font("Dialog", Font.PLAIN, 15));
 		lblResultListFollowers.setBounds(847, 269, 258, 27);
@@ -220,173 +219,183 @@ public class MainView extends JFrame implements Runnable {
 		panel.add(lblResultResearchUser);
 		
 				
-				JLabel label_1 = new JLabel("Number of Tweets:");
-				label_1.setFont(new Font("Dialog", Font.PLAIN, 15));
-				label_1.setBounds(12, 13, 142, 19);
-				panel.add(label_1);
-				lblNbMsg = new JLabel(nbM);
-				lblNbMsg.setFont(new Font("Dialog", Font.BOLD, 15));
-				lblNbMsg.setBounds(174, 14, 56, 16);
-				panel.add(lblNbMsg);
-				
-				JLabel label_3 = new JLabel("Follow:");
-				label_3.setFont(new Font("Tahoma", Font.BOLD, 15));
-				label_3.setBounds(14, 44, 129, 19);
-				panel.add(label_3);
-				
-				final JList listFollow = new JList(listModelFollow);
-				listFollow.setBounds(14, 76, 216, 174);
-				panel.add(listFollow);
-				
-				final JList listFollowers = new JList(listModelFollowers);
-				listFollowers.setBounds(847, 76, 258, 174);
-				panel.add(listFollowers);
-				
-				JButton btnUnfollow = new JButton("Unfollow");
-				btnUnfollow.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						if (! listFollow.isSelectionEmpty()) {
+		JLabel label_1 = new JLabel("Number of Tweets:");
+		label_1.setFont(new Font("Dialog", Font.PLAIN, 15));
+		label_1.setBounds(12, 13, 142, 19);
+		panel.add(label_1);
+		lblNbMsg = new JLabel(nbM);
+		lblNbMsg.setFont(new Font("Dialog", Font.BOLD, 15));
+		lblNbMsg.setBounds(174, 14, 56, 16);
+		panel.add(lblNbMsg);
+		
+		JLabel label_3 = new JLabel("Follow:");
+		label_3.setFont(new Font("Tahoma", Font.BOLD, 15));
+		label_3.setBounds(14, 44, 129, 19);
+		panel.add(label_3);
+		
+		final JList listFollow = new JList(listModelFollow);
+		listFollow.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		listFollow.setBounds(14, 76, 216, 174);
+		panel.add(listFollow);
+		
+		final JList listFollowers = new JList(listModelFollowers);
+		listFollowers.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		listFollowers.setBounds(847, 76, 258, 174);
+		panel.add(listFollowers);
+		
+		JButton btnUnfollow = new JButton("Unfollow");
+		btnUnfollow.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnUnfollow.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (! listFollow.isSelectionEmpty()) {
 	            	switch(sender.unfollow(login, listFollow.getSelectedValue().toString())) {
-	            	case 1:
-	            		lblResultUnfollow.setText("You’re not following this user yet.");
-	            		break;
-	            	case 0:
-	            		lblResultUnfollow.setText("You’re not following this user anymore.");
-	            		int selectedIndex = listFollow.getSelectedIndex();
-	            		listModelFollow.remove(selectedIndex);
-	            		asyncSubscriber.seDeconnecter();
-	        			asyncSubscriber1.seDeconnecter();
-	        			
-	        			majFiltre();
-	            		break;
-	            	default:
-	            		lblResultUnfollow.setText("Oops, an error occured while trying to unfollow this user. Try again later.");
-	            		break;
-            	}
-						} else {
-							lblResultUnfollow.setText("Select a user to unfollow him.");
-						}
+		            	case 1:
+		            		lblResultListFollow.setText("You’re not following this user yet.");
+		            		break;
+		            	case 0:
+		            		lblResultListFollow.setText("You’re not following this user anymore.");
+		            		int selectedIndex = listFollow.getSelectedIndex();
+		            		listModelFollow.remove(selectedIndex);
+		            		asyncSubscriber.seDeconnecter();
+		        			asyncSubscriber1.seDeconnecter();
+		        			table_2.removeAll();
+		        			
+		        			majTweetFeed();
+		        			majFiltre();
+		            		break;
+		            	default:
+		            		lblResultListFollow.setText("Oops, an error occured while trying to unfollow this user. Try again later.");
+		            		break;
+	            	}
+				} else {
+					lblResultListFollow.setText("Select a user to unfollow him.");
+				}
+			}
+		});
+		btnUnfollow.setBounds(250, 123, 97, 25);
+		panel.add(btnUnfollow);
+		
+		JLabel label_4 = new JLabel("Search a user to follow:");
+		label_4.setFont(new Font("Tahoma", Font.BOLD, 15));
+		label_4.setBounds(436, 32, 273, 19);
+		panel.add(label_4);
+		
+		tbxFindUser = new JTextField();
+		tbxFindUser.setFont(new Font("Dialog", Font.PLAIN, 15));
+		tbxFindUser.setColumns(10);
+		tbxFindUser.setBounds(436, 73, 165, 22);
+		panel.add(tbxFindUser);
+		
+		final JList listUserToFollow = new JList();
+		listUserToFollow.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		listUserToFollow.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listUserToFollow.setBounds(436, 107, 165, 143);
+		panel.add(listUserToFollow);
+		
+		
+		JButton btnResearch = new JButton("Search");
+		btnResearch.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnResearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (! tbxFindUser.getText().isEmpty()) {
+					List<String> listUserToFollowArray = sender.rechercherUtilisateur(tbxFindUser.getText(), login);
+					listUserToFollow.setListData(listUserToFollowArray.toArray());
+					if (listUserToFollowArray.isEmpty()) {
+						lblResultResearchUser.setText("No result.");
 					}
-				});
-				btnUnfollow.setBounds(250, 123, 97, 25);
-				panel.add(btnUnfollow);
-				
-				JLabel label_4 = new JLabel("Search a user to follow:");
-				label_4.setFont(new Font("Tahoma", Font.BOLD, 15));
-				label_4.setBounds(436, 32, 273, 19);
-				panel.add(label_4);
-				
-				tbxFindUser = new JTextField();
-				tbxFindUser.setFont(new Font("Dialog", Font.PLAIN, 15));
-				tbxFindUser.setColumns(10);
-				tbxFindUser.setBounds(436, 73, 165, 22);
-				panel.add(tbxFindUser);
-				
-				final JList listUserToFollow = new JList();
-				listUserToFollow.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				listUserToFollow.setBounds(436, 107, 165, 143);
-				panel.add(listUserToFollow);
-				
-				
-				JButton btnResearch = new JButton("Search");
-				btnResearch.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						if (! tbxFindUser.getText().isEmpty()) {
-							List<String> listUserToFollowArray = sender.rechercherUtilisateur(tbxFindUser.getText(), login);
-							listUserToFollow.setListData(listUserToFollowArray.toArray());
-							if (listUserToFollowArray.isEmpty()) {
-								lblResultResearchUser.setText("No result.");
+				} else {
+					lblResultResearchUser.setText("Please type a login to search.");
+				}
+			}
+		});
+		btnResearch.setBounds(625, 72, 97, 25);
+		panel.add(btnResearch);
+		
+
+		JButton btnFollow = new JButton("Follow");
+		btnFollow.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnFollow.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (! listUserToFollow.isSelectionEmpty()) {
+        	switch(sender.follow(login, listUserToFollow.getSelectedValue().toString())) {
+        	case 1:
+        		lblResultResearchUser.setText("You’re already following this user.");
+        		break;
+        	case 0:
+        		lblResultResearchUser.setText("You’re now following this user.");
+        		lblResultListFollow.setText("");
+        		asyncSubscriber.seDeconnecter();
+    			asyncSubscriber1.seDeconnecter();
+    			
+    			majFiltre();
+    			
+        		listModelFollow.addElement(listUserToFollow.getSelectedValue().toString());
+        		break;
+        	default:
+        		lblResultResearchUser.setText("Oops, an error occured while trying to follow this user. Try again later.");
+        		break;
+    	}
+				} else {
+					lblResultResearchUser.setText("Select a user to follow him.");
+				}
+			}
+		});
+		btnFollow.setBounds(625, 123, 97, 25);
+		panel.add(btnFollow);
+		
+
+		
+		JButton btnSend = new JButton("Send");
+		btnSend.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnSend.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(! tbxContenu.getText().isEmpty()) {
+					String newLoc = tbxLoc.getText();
+					newLoc = newLoc.replace("'", "’");
+					System.out.println("New ville: "+newLoc);
+					TypeMessage m = new TypeMessage(tbxContenu.getText(), newLoc, login);
+						int idMessage = sender.ajouterMessage(m);
+						if (idMessage != -1) {
+							if (SenderTopic.publishMessage(m, idMessage)) {
+								updateListTweet(m, login);
+								lblResultPostMsg.setText("Your tweet has been sent.");
 							}
 						} else {
-							lblResultResearchUser.setText("Please type a login to search.");
+							lblResultPostMsg.setText("An error occured while sending your tweet.");
 						}
-					}
-				});
-				btnResearch.setBounds(625, 72, 97, 25);
-				panel.add(btnResearch);
-				
-
-				JButton btnFollow = new JButton("Follow");
-				btnFollow.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						if (! listUserToFollow.isSelectionEmpty()) {
-	            	switch(sender.follow(login, listUserToFollow.getSelectedValue().toString())) {
-	            	case 1:
-	            		lblResultResearchUser.setText("You’re already following this user.");
-	            		break;
-	            	case 0:
-	            		lblResultResearchUser.setText("You’re now following this user.");
-	            		lblResultListFollow.setText("");
-	            		asyncSubscriber.seDeconnecter();
-	        			asyncSubscriber1.seDeconnecter();
-	        			
-	        			majFiltre();
-	        			
-	            		listModelFollow.addElement(listUserToFollow.getSelectedValue().toString());
-	            		break;
-	            	default:
-	            		lblResultResearchUser.setText("Oops, an error occured while trying to follow this user. Try again later.");
-	            		break;
-            	}
-						} else {
-							lblResultResearchUser.setText("Select a user to follow him.");
-						}
-					}
-				});
-				btnFollow.setBounds(625, 123, 97, 25);
-				panel.add(btnFollow);
-				
-
-				
-				JButton btnSend = new JButton("Send");
-				btnSend.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						if(! tbxContenu.getText().isEmpty()) {
-							String newLoc = tbxLoc.getText();
-							newLoc = newLoc.replace("'", "’");
-							System.out.println("New ville: "+newLoc);
-							TypeMessage m = new TypeMessage(tbxContenu.getText(), newLoc, login);
-								int idMessage = sender.ajouterMessage(m);
-								if (idMessage != -1) {
-									if (SenderTopic.publishMessage(m, idMessage)) {
-										updateListTweet(m, login);
-										lblResultPostMsg.setText("Your tweet has been sent.");
-									}
-								} else {
-									lblResultPostMsg.setText("An error occured while sending your tweet.");
-								}
-						} else {
-							lblResultPostMsg.setText("Please fill in all fields.");
-						}
-					}
-				});
-				btnSend.setBounds(405, 401, 97, 25);
-				panel.add(btnSend);
-				
-				JLabel lblGeolocation = new JLabel("Geolocation");
-				lblGeolocation.setFont(new Font("Tahoma", Font.PLAIN, 15));
-				lblGeolocation.setBounds(12, 439, 108, 22);
-				panel.add(lblGeolocation);
-				
-				JLabel lblNewLabel = new JLabel("Post a message");
-				lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 17));
-				lblNewLabel.setBounds(12, 309, 381, 27);
-				panel.add(lblNewLabel);
-				
-				setTbxLoc(new JTextField());
-				getTbxLoc().setFont(new Font("Tahoma", Font.PLAIN, 15));
-				getTbxLoc().setBounds(136, 440, 151, 22);
-				panel.add(getTbxLoc());
-				getTbxLoc().setColumns(10);
-				
-				JButton btnUpdate = new JButton("Update");
-				btnUpdate.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent arg0) {
-						updateListFollowers();
-					}
-				});
-				btnUpdate.setBounds(1008, 312, 97, 25);
-				panel.add(btnUpdate);
+				} else {
+					lblResultPostMsg.setText("Please fill in all fields.");
+				}
+			}
+		});
+		btnSend.setBounds(405, 401, 97, 25);
+		panel.add(btnSend);
+		
+		JLabel lblGeolocation = new JLabel("Geolocation");
+		lblGeolocation.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblGeolocation.setBounds(12, 439, 108, 22);
+		panel.add(lblGeolocation);
+		
+		JLabel lblNewLabel = new JLabel("Post a message");
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 17));
+		lblNewLabel.setBounds(12, 309, 381, 27);
+		panel.add(lblNewLabel);
+		
+		setTbxLoc(new JTextField());
+		getTbxLoc().setFont(new Font("Tahoma", Font.PLAIN, 15));
+		getTbxLoc().setBounds(136, 440, 151, 22);
+		panel.add(getTbxLoc());
+		getTbxLoc().setColumns(10);
+		
+		JButton btnUpdate = new JButton("Update");
+		btnUpdate.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnUpdate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				updateListFollowers();
+			}
+		});
+		btnUpdate.setBounds(1008, 312, 97, 25);
+		panel.add(btnUpdate);
 		
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Feed", null, panel_1, null);
@@ -398,32 +407,32 @@ public class MainView extends JFrame implements Runnable {
 		label.setBounds(435, 12, 296, 27);
 		panel_1.add(label);
 		
-			    table_2 = new JTable();
-			    table_2.setEnabled(false);
-			    table_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
-			    table_2.setModel(listTweetFeed);
-			    
-			     
-			    
-			    //Définition des colonnes
-			    table_2.getColumnModel().getColumn(0).setPreferredWidth(500);
-			    table_2.getColumnModel().getColumn(1).setPreferredWidth(50);
-			    table_2.getColumnModel().getColumn(2).setPreferredWidth(50);
-			    
-			    table_2.setBounds(209, 840, 421, 145);
-			    
-			    //Permet d'afficher l'en-tête
-			    JScrollPane scrollPane = new JScrollPane(table_2);
-			    scrollPane.setBounds(12, 64, 1099, 425);
-			    
-			    panel_1.add(scrollPane);
+	    table_2 = new JTable();
+	    table_2.setEnabled(false);
+	    table_2.setFont(new Font("Tahoma", Font.PLAIN, 15));
+	    table_2.setModel(listTweetFeed);
+	    
+	     
+	    
+	    //Définition des colonnes
+	    table_2.getColumnModel().getColumn(0).setPreferredWidth(500);
+	    table_2.getColumnModel().getColumn(1).setPreferredWidth(50);
+	    table_2.getColumnModel().getColumn(2).setPreferredWidth(50);
+	    
+	    table_2.setBounds(209, 840, 421, 145);
+	    
+	    //Permet d'afficher l'en-tête
+	    JScrollPane scrollPane = new JScrollPane(table_2);
+	    scrollPane.setBounds(12, 64, 1099, 425);
+	    
+	    panel_1.add(scrollPane);
 		
 		JPanel panel_2 = new JPanel();
-		tabbedPane.addTab("Tweet", null, panel_2, null);
+		tabbedPane.addTab("Your tweets", null, panel_2, null);
 		panel_2.setLayout(null);
 		
-		JLabel lblTweets = new JLabel("Tweet");
-		lblTweets.setBounds(524, 5, 123, 29);
+		JLabel lblTweets = new JLabel("Your tweets");
+		lblTweets.setBounds(499, 5, 188, 29);
 		lblTweets.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTweets.setFont(new Font("Dialog", Font.BOLD, 22));
 		panel_2.add(lblTweets);
@@ -449,25 +458,25 @@ public class MainView extends JFrame implements Runnable {
 	    	resTabTweet = new Object[0][4];
 	    }
 	    
-	    	listTweetPosted = new DefaultTableModel(
-	    		resTabTweet,
-		    	new String[] {
-		    		"Content", "Date", "Heure", "Location"
-		    	});
-    		table.setModel(listTweetPosted);
-    	
-    		//Définition des colonnes
-    	    table.getColumnModel().getColumn(0).setPreferredWidth(500);
-    	    table.getColumnModel().getColumn(1).setPreferredWidth(50);
-    	    table.getColumnModel().getColumn(2).setPreferredWidth(50);
-    	    
-    	    table.setBounds(209, 840, 421, 145);
-    	    
-    	    //Permet d'afficher l'en-tête
-    	    JScrollPane scrollPane1 = new JScrollPane(table);
-    	    scrollPane1.setBounds(12, 64, 1099, 421);
-    	    
-    	    panel_2.add(scrollPane1);
+    	listTweetPosted = new DefaultTableModel(
+    		resTabTweet,
+	    	new String[] {
+	    		"Content", "Date", "Heure", "Location"
+	    	});
+		table.setModel(listTweetPosted);
+	
+		//Définition des colonnes
+	    table.getColumnModel().getColumn(0).setPreferredWidth(500);
+	    table.getColumnModel().getColumn(1).setPreferredWidth(50);
+	    table.getColumnModel().getColumn(2).setPreferredWidth(50);
+	    
+	    table.setBounds(209, 840, 421, 145);
+	    
+	    //Permet d'afficher l'en-tête
+	    JScrollPane scrollPane1 = new JScrollPane(table);
+	    scrollPane1.setBounds(12, 64, 1099, 421);
+	    
+	    panel_2.add(scrollPane1);
 
 		if (listFollowArray.isEmpty()) {
 			lblResultListFollow.setText("You’re not following anyone.");
@@ -568,5 +577,43 @@ public class MainView extends JFrame implements Runnable {
 		for(String f:listFollowersArray) {
 			listModelFollowers.addElement(f);
 		}
+		if (! listModelFollowers.isEmpty()) {
+			lblResultListFollowers.setText("");
+		}
+	}
+	
+	public void majTweetFeed() {
+		List<TypeMessage> listMessageFollow = sender.getMessageFollow(login);
+	    
+	    int i = 0;
+	    Object[][] res;
+	    if (listMessageFollow != null) {
+	    	res = new Object[listMessageFollow.size()][5];
+		    for (TypeMessage typeMessage : listMessageFollow) {
+		    	res[i][0] = typeMessage.getContenu();
+		    	String date = typeMessage.getTimestamp();
+		    	res[i][1] = date.substring(0, 10);
+		    	res[i][2] = date.substring(10);
+		    	res[i][3] = typeMessage.getLoc();
+		    	res[i][4] = typeMessage.getLoginSender();
+		    	i++;
+			}
+	    } else {
+	    	res = new Object[0][5];
+	    }
+	    
+	    
+	 
+    	listTweetFeed = new DefaultTableModel(
+			res,
+	    	new String[] {
+	    		"Content", "Date", "Heure", "Location", "From" 
+	    });
+    	
+		table_2.setModel(listTweetFeed);
+		//Définition des colonnes
+	    table_2.getColumnModel().getColumn(0).setPreferredWidth(500);
+	    table_2.getColumnModel().getColumn(1).setPreferredWidth(50);
+	    table_2.getColumnModel().getColumn(2).setPreferredWidth(50);
 	}
 }

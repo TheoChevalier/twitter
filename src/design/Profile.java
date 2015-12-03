@@ -57,7 +57,7 @@ public class Profile extends JFrame {
 		this.login = login;
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 450, 322);
+		setBounds(100, 100, 450, 373);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -91,10 +91,11 @@ public class Profile extends JFrame {
 		
 		JLabel lblNewLabel_3 = new JLabel("City:");
 		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblNewLabel_3.setBounds(65, 196, 84, 27);
+		lblNewLabel_3.setBounds(65, 202, 84, 27);
 		contentPane.add(lblNewLabel_3);
 		
 		tbxLogin = new JTextField();
+		tbxLogin.setEnabled(false);
 		tbxLogin.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		tbxLogin.setBounds(174, 66, 162, 22);
 		contentPane.add(tbxLogin);
@@ -119,14 +120,14 @@ public class Profile extends JFrame {
 		
 		tbxVille = new JTextField();
 		tbxVille.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		tbxVille.setBounds(174, 196, 162, 22);
+		tbxVille.setBounds(174, 202, 162, 22);
 		contentPane.add(tbxVille);
 		tbxVille.setColumns(10);
 		
 		final JLabel lblResult = new JLabel("");
 		lblResult.setHorizontalAlignment(SwingConstants.CENTER);
 		lblResult.setFont(new Font("Tahoma", Font.ITALIC, 15));
-		lblResult.setBounds(12, 199, 408, 27);
+		lblResult.setBounds(12, 242, 408, 27);
 		contentPane.add(lblResult);
 		
 		JButton btnSignUp = new JButton("Validate");
@@ -161,7 +162,7 @@ public class Profile extends JFrame {
 			}
 		});
 		btnSignUp.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnSignUp.setBounds(93, 237, 97, 25);
+		btnSignUp.setBounds(93, 287, 97, 25);
 		contentPane.add(btnSignUp);
 		
 		JButton btnCancel = new JButton("Cancel");
@@ -171,7 +172,7 @@ public class Profile extends JFrame {
 			}
 		});
 		btnCancel.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnCancel.setBounds(254, 238, 97, 25);
+		btnCancel.setBounds(254, 288, 97, 25);
 		contentPane.add(btnCancel);
 		
 		TypeInscription user = sender.getUtilisateur(login);
