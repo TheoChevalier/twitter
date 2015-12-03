@@ -153,8 +153,6 @@ public class MainView extends JFrame implements Runnable {
 	    } else {
 	    	res = new Object[0][5];
 	    }
-	    
-	    
 	 
     	listTweetFeed = new DefaultTableModel(
 			res,
@@ -358,6 +356,8 @@ public class MainView extends JFrame implements Runnable {
 						if (idMessage != -1) {
 							if (SenderTopic.publishMessage(m, idMessage)) {
 								updateListTweet(m, login);
+								tbxContenu.setText("");
+								tbxLoc.setText("");
 								lblResultPostMsg.setText("Your tweet has been sent.");
 							}
 						} else {
@@ -515,6 +515,7 @@ public class MainView extends JFrame implements Runnable {
 		String date = m.getTimestamp();
 		String row[] = {m.getContenu(), date.substring(0, 10), date.substring(10), m.getLoc(), m.getLoginSender()};
 		listTweetPosted.addRow(row);
+		listTweetPosted.moveRow(listTweetPosted.getRowCount()-1, listTweetPosted.getRowCount()-1, 0);
 		String nbM = Integer.toString(sender.nombreMessage(login));
 		this.lblNbMsg.setText(nbM);
 	}
@@ -560,6 +561,9 @@ public class MainView extends JFrame implements Runnable {
     	String date = m.getTimestamp();
 		Object[] row = {m.getContenu(), date.substring(0, 10), date.substring(10), m.getLoc(),m.getLoginSender()};
 		listTweetFeed.addRow(row);
+		
+		//Mettre le twwet en tete de liste
+		listTweetFeed.moveRow(listTweetFeed.getRowCount()-1, listTweetFeed.getRowCount()-1, 0);
 		TypeRecevoir tr = new TypeRecevoir(idMessage, login);
 		switch (sender.ajouterRecevoir(tr)) {
 			case 0:

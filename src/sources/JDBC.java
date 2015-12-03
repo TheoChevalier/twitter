@@ -228,7 +228,7 @@ public class JDBC {
         	TypeMessage message;
         	try {
 		        Statement s = conn.createStatement();
-		        ResultSet rs = s.executeQuery("SELECT M.contenuM, M.timestampM, M.locM, UE.loginU FROM Utilisateurs UE, Utilisateurs U, Messages M, Recevoir R WHERE M.idU = UE.idU AND R.idM = M.idM AND U.idU = R.idU AND U.loginU='" + r.getLogin() +"'");
+		        ResultSet rs = s.executeQuery("SELECT M.contenuM, M.timestampM, M.locM, UE.loginU FROM Utilisateurs UE, Utilisateurs U, Messages M, Recevoir R WHERE M.idU = UE.idU AND R.idM = M.idM AND U.idU = R.idU AND U.loginU='" + r.getLogin() +"' ORDER BY M.timestampM DESC");
 		        
 		        while (rs.next()){
 		        	message = new TypeMessage(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4));
@@ -249,7 +249,7 @@ public class JDBC {
         	try {
 		        Statement s = conn.createStatement();
  
-		        ResultSet rs = s.executeQuery("SELECT M.contenuM, M.timestampM, M.locM, U.loginU FROM Messages M, Utilisateurs U WHERE U.loginU='" + r.getLogin() +"' AND M.idU=U.idU");
+		        ResultSet rs = s.executeQuery("SELECT M.contenuM, M.timestampM, M.locM, U.loginU FROM Messages M, Utilisateurs U WHERE U.loginU='" + r.getLogin() +"' AND M.idU=U.idU ORDER BY M.timestampM DESC");
 		        
 
 		        while (rs.next()){
@@ -271,7 +271,7 @@ public class JDBC {
         	List<String> liste =  new ArrayList<String>() ;
         	try {
 		        Statement s = conn.createStatement();
-		        ResultSet rs = s.executeQuery("SELECT loginU FROM UTILISATEURS WHERE loginU LIKE '%" + r.getLogin() + "%'");
+		        ResultSet rs = s.executeQuery("SELECT loginU FROM UTILISATEURS WHERE loginU LIKE '%" + r.getLogin() + "%' ORDER BY loginU");
 		        
 		        while (rs.next()){
 		        	liste.add(rs.getString("loginU"));
@@ -301,7 +301,7 @@ public class JDBC {
         	List<String> liste =  new ArrayList<String>() ;
         	try {
 		        Statement s = conn.createStatement();
-		        ResultSet rs = s.executeQuery("SELECT U.loginU FROM EST_ABONNE E, UTILISATEURS USuiveur, UTILISATEURS U WHERE USuiveur.idu = E.iduSuiveur AND E.iduSuivi = U.idu AND USuiveur.loginu = '" + r.getLogin() + "'");
+		        ResultSet rs = s.executeQuery("SELECT U.loginU FROM EST_ABONNE E, UTILISATEURS USuiveur, UTILISATEURS U WHERE USuiveur.idu = E.iduSuiveur AND E.iduSuivi = U.idu AND USuiveur.loginu = '" + r.getLogin() + "' ORDER BY U.loginU");
 		        
 		        while (rs.next()){
 		        	liste.add(rs.getString("loginU"));
@@ -317,7 +317,7 @@ public class JDBC {
         	List<String> liste =  new ArrayList<String>() ;
         	try {
 		        Statement s = conn.createStatement();
-		        ResultSet rs = s.executeQuery("SELECT U.loginU FROM EST_ABONNE E, UTILISATEURS U, UTILISATEURS USuivi WHERE U.idu = E.iduSuiveur AND E.iduSuivi = USuivi.idu AND USuivi.loginu = '" + r.getLogin() + "'");
+		        ResultSet rs = s.executeQuery("SELECT U.loginU FROM EST_ABONNE E, UTILISATEURS U, UTILISATEURS USuivi WHERE U.idu = E.iduSuiveur AND E.iduSuivi = USuivi.idu AND USuivi.loginu = '" + r.getLogin() + "' ORDER BY U.loginU");
 		        
 		        while (rs.next()){
 		        	liste.add(rs.getString("loginU"));
