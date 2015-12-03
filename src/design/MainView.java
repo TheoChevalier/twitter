@@ -47,8 +47,8 @@ import javax.swing.AbstractListModel;
 import java.awt.Component;
 
 public class MainView extends JFrame implements Runnable {
-	public static List<MainView> objList = new ArrayList<MainView>();
 	private static DefaultTableModel listTweetFeed;
+	private static DefaultTableModel listTweetPosted;
 	private ReceiverTopic asyncSubscriber;
 	private ReceiverTopic asyncSubscriber1;
 	private JPanel contentPane;
@@ -59,6 +59,8 @@ public class MainView extends JFrame implements Runnable {
 	private JTable table_2;
 	private JTable table;
 	private JTextField tbxLoc;
+	private JLabel lblNbMsg;
+	private final DefaultListModel listModelFollowers;
 
 	/**
 	 * Launch the application.
@@ -159,7 +161,7 @@ public class MainView extends JFrame implements Runnable {
 	    	listTweetFeed = new DefaultTableModel(
 				res,
 		    	new String[] {
-		    		"Content", "Date", "Heure", "Loc", "Login" 
+		    		"Content", "Date", "Heure", "Location", "From" 
 		    	});
 	    	
 	    	
@@ -172,7 +174,7 @@ public class MainView extends JFrame implements Runnable {
 		
 		List<String> listFollowersArray = sender.listeFollowers(login);
 
-		final DefaultListModel listModelFollowers = new DefaultListModel();
+		listModelFollowers = new DefaultListModel();
 		for(String f:listFollowersArray) {
 			listModelFollowers.addElement(f);
 		}
@@ -222,7 +224,7 @@ public class MainView extends JFrame implements Runnable {
 				label_1.setFont(new Font("Dialog", Font.PLAIN, 15));
 				label_1.setBounds(12, 13, 142, 19);
 				panel.add(label_1);
-				JLabel lblNbMsg = new JLabel(nbM);
+				lblNbMsg = new JLabel(nbM);
 				lblNbMsg.setFont(new Font("Dialog", Font.BOLD, 15));
 				lblNbMsg.setBounds(174, 14, 56, 16);
 				panel.add(lblNbMsg);
@@ -252,6 +254,10 @@ public class MainView extends JFrame implements Runnable {
 	            		lblResultUnfollow.setText("You’re not following this user anymore.");
 	            		int selectedIndex = listFollow.getSelectedIndex();
 	            		listModelFollow.remove(selectedIndex);
+	            		asyncSubscriber.seDeconnecter();
+	        			asyncSubscriber1.seDeconnecter();
+	        			
+	        			majFiltre();
 	            		break;
 	            	default:
 	            		lblResultUnfollow.setText("Oops, an error occured while trying to unfollow this user. Try again later.");
@@ -340,7 +346,8 @@ public class MainView extends JFrame implements Runnable {
 								int idMessage = sender.ajouterMessage(m);
 								if (idMessage != -1) {
 									if (SenderTopic.publishMessage(m, idMessage)) {
-										lblResultPostMsg.setText("Your tweet has been send.");
+										updateListTweet(m, login);
+										lblResultPostMsg.setText("Your tweet has been sent.");
 									}
 								} else {
 									lblResultPostMsg.setText("An error occured while sending your tweet.");
@@ -368,6 +375,15 @@ public class MainView extends JFrame implements Runnable {
 				getTbxLoc().setBounds(136, 440, 151, 22);
 				panel.add(getTbxLoc());
 				getTbxLoc().setColumns(10);
+				
+				JButton btnUpdate = new JButton("Update");
+				btnUpdate.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						updateListFollowers();
+					}
+				});
+				btnUpdate.setBounds(1008, 312, 97, 25);
+				panel.add(btnUpdate);
 		
 		JPanel panel_1 = new JPanel();
 		tabbedPane.addTab("Feed", null, panel_1, null);
@@ -430,10 +446,10 @@ public class MainView extends JFrame implements Runnable {
 	    	resTabTweet = new Object[0][4];
 	    }
 	    
-	    	DefaultTableModel listTweetPosted = new DefaultTableModel(
+	    	listTweetPosted = new DefaultTableModel(
 	    		resTabTweet,
 		    	new String[] {
-		    		"Content", "Date", "Heure", "Loc"
+		    		"Content", "Date", "Heure", "Location"
 		    	});
     		table.setModel(listTweetPosted);
     	
@@ -468,7 +484,6 @@ public class MainView extends JFrame implements Runnable {
 	}
 
 	private void close() {
-		MainView.objList.remove(this);
 		this.dispose();
 	}
 	
@@ -484,10 +499,12 @@ public class MainView extends JFrame implements Runnable {
 			close();
 		}
 	}
-	public static void updateListTweet(TypeMessage m){
+	public void updateListTweet(TypeMessage m, String login){
 		String date = m.getTimestamp();
 		String row[] = {m.getContenu(), date.substring(0, 10), date.substring(10), m.getLoc(), m.getLoginSender()};
-		listTweetFeed.addRow(row);
+		listTweetPosted.addRow(row);
+		String nbM = Integer.toString(sender.nombreMessage(login));
+		this.lblNbMsg.setText(nbM);
 	}
 
 	@Override
@@ -539,6 +556,14 @@ public class MainView extends JFrame implements Runnable {
 			default:
 				System.out.println("An error occured while receving the message.");
 				break;
+		}
+	}
+	
+	public void updateListFollowers() {
+		List<String> listFollowersArray = sender.listeFollowers(login);
+		listModelFollowers.clear();
+		for(String f:listFollowersArray) {
+			listModelFollowers.addElement(f);
 		}
 	}
 }

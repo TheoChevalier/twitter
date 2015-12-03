@@ -101,7 +101,6 @@ public class Connexion extends JFrame {
 						
 						MainView frame = new MainView(senderSeConnecter, tbxLogin.getText());
 						frame.setVisible(true);
-						MainView.objList.add(frame);
 					} else {
 						lblResult.setText("Not connected.");
 					}
