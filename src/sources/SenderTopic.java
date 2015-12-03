@@ -81,6 +81,7 @@ public class SenderTopic {
 			if (loc.isEmpty()) {
 				st.topicPublisher.publish(objectMessage);
 			} else {
+				objectMessage.setStringProperty("LOC", m.getLoc());
 				stLoc.topicPublisher.publish(objectMessage);
 			}
 			
