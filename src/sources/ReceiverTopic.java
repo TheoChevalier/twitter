@@ -24,12 +24,14 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
 	private TopicSubscriber topicSubscriber;
 	private String topicName;
 	private String login;
+	private String ville;
 	private MainView view;
 	
-	public ReceiverTopic(String topicName, String login, List<String> listeFollow, MainView view) {
+	public ReceiverTopic(String topicName, String login, String ville, List<String> listeFollow, MainView view) {
 		this.view = view;
 		this.topicName = topicName;
 		this.login = login;
+		this.ville = ville;
 		 // get the initial context
 	    try {
 			this.ctx = new InitialContext();
@@ -130,18 +132,35 @@ public class ReceiverTopic implements MessageListener, ExceptionListener {
     public String addFilter(List<String> listeFollow){
     	String filter;
     	
-    	if (! listeFollow.isEmpty()) {
-    		filter = "JMSType IN (";
-    		for (String login : listeFollow) {
-        		//Si c'est le dernier élément
-    			if (listeFollow.get(listeFollow.size()-1).equals(login)){
-    				filter = filter + "'" + login + "')";
-    			} else {
-    				filter = filter + "'" + login + "',";
-    			}
-    		}
+    	if (this.topicName.equals("MessageLoc")) {
+	    	if (! listeFollow.isEmpty()) {
+	    		filter = "JMSType IN (";
+	    		for (String login : listeFollow) {
+	        		//Si c'est le dernier élément
+	    			if (listeFollow.get(listeFollow.size()-1).equals(login)){
+	    				filter = filter + "'" + login + "')";
+	    			} else {
+	    				filter = filter + "'" + login + "',";
+	    			}
+	    			filter = filter + " LOC = '" + this.ville + "'";
+	    		}
+	    	} else {
+	    		filter = "JMSType IN ('')";
+	    	}
     	} else {
-    		filter = "JMSType IN ('')";
+	    	if (! listeFollow.isEmpty()) {
+	    		filter = "JMSType IN (";
+	    		for (String login : listeFollow) {
+	        		//Si c'est le dernier élément
+	    			if (listeFollow.get(listeFollow.size()-1).equals(login)){
+	    				filter = filter + "'" + login + "')";
+	    			} else {
+	    				filter = filter + "'" + login + "',";
+	    			}
+	    		}
+	    	} else {
+	    		filter = "JMSType IN ('')";
+	    	}
     	}
     	
     	return filter;

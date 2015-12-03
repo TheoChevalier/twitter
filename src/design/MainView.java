@@ -36,6 +36,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.ListModel;
 import javax.swing.table.TableModel;
 
+import Types.TypeInscription;
 import Types.TypeMessage;
 import Types.TypeRecevoir;
 
@@ -456,12 +457,14 @@ public class MainView extends JFrame implements Runnable {
 			lblResultListFollowers.setText("No one is following you.");
 		}
 		
+		TypeInscription user = sender.getUtilisateur(login);
+		
 		// set an asynchronous message listener
-		this.asyncSubscriber = new ReceiverTopic("TopicMessage", login, listFollowArray, this);
+		this.asyncSubscriber = new ReceiverTopic("TopicMessage", login, user.getVille(), listFollowArray, this);
 				    
 		                       
 		// set an asynchronous message listener
-		this.asyncSubscriber1 = new ReceiverTopic("TopicMessageLoc", login, listFollowArray, this);
+		this.asyncSubscriber1 = new ReceiverTopic("TopicMessageLoc", login, user.getVille(), listFollowArray, this);
 	}
 
 	private void close() {
@@ -503,16 +506,17 @@ public class MainView extends JFrame implements Runnable {
 	
 	public void majFiltre(){
 		List<String> listFollowArray = sender.listeFollow(login);
+		TypeInscription user = sender.getUtilisateur(login);
 		 
 	    // set an asynchronous message listener
-		asyncSubscriber = new ReceiverTopic("TopicMessage", login, listFollowArray, this);
+		asyncSubscriber = new ReceiverTopic("TopicMessage", login, user.getVille(), listFollowArray, this);
 				    
 		                       
 		// set an asynchronous message listener
-		asyncSubscriber1 = new ReceiverTopic("TopicMessageLoc", login, listFollowArray, this);
+		asyncSubscriber1 = new ReceiverTopic("TopicMessageLoc", login, user.getVille(), listFollowArray, this);
 	}
 	
-	public void updateUI(final TypeMessage m, int idMessage) {
+	public void updateUI(final TypeMessage m, final int idMessage) {
 		  SwingUtilities.invokeLater(
 		    new Runnable(){
 		      @Override
